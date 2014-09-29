@@ -1,18 +1,11 @@
 #tag Class
 Protected Class Capture
 	#tag Method, Flags = &h0
-		Sub BreakLoop()
-		   pcap_breakloop(mHandle)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub Close()
 		  If mHandle <> Nil Then 
 		    pcap_close(mHandle)
-		    Instances.Remove(Token)
+		    mHandle = Nil
 		  End If
-		  mHandle = Nil
 		  
 		End Sub
 	#tag EndMethod
@@ -20,54 +13,60 @@ Protected Class Capture
 	#tag Method, Flags = &h0
 		Sub Constructor(pcap_t As Ptr)
 		  mHandle = pcap_t
-		  PacketTimer = New Timer
-		  AddHandler PacketTimer.Action, WeakAddressOf PacketTimerHandler
-		  PacketTimer.Period = 100
-		  If Instances = Nil Then Instances = New Dictionary
-		  Static mtoken As Integer
-		  mtoken = mtoken + 1
-		  Token = mtoken
-		  Instances.Value(Token) = Me
+		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Dispatch(Count As Integer) As Integer
-		  Return pcap_dispatch(mHandle, Count, AddressOf _pcapCallback, Ptr(Token))
+		Function EOF() As Boolean
+		  Return mEOF
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DoLoop(Count As Integer) As Integer
-		  Return pcap_loop(mHandle, Count, AddressOf _pcapCallback, Ptr(Token))
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Sub PacketTimerHandler(Sender As Timer)
-		  If UBound(Pending) > -1 Then
-		    Sender.Mode = Timer.ModeOff
-		    RaiseEvent PacketsAvailable()
+		Function Read() As PCAP.Packet
+		  Dim h, d As MemoryBlock
+		  Dim ret As PCAP.Packet
+		  h = New MemoryBlock(4)
+		  d = New MemoryBlock(4)
+		  
+		  Select Case pcap_next_ex(mHandle, h, d)
+		  Case 1 ' ok
+		    Dim pk As pcap_pkthdr
+		    h = h.Ptr(0)
+		    d = d.Ptr(0)
+		    pk.StringValue(TargetLittleEndian) = h.StringValue(0, pk.Size)
+		    d = d.StringValue(0, pk.caplen)
+		    ret = New PCAP.Packet(pk, d)
+		    
+		  Case 0 ' timeout
+		    Raise New IOException
+		    
+		  Case -1 ' error
+		    Raise New IOException
+		    
+		  Case -2 ' eof
+		    mEOF = True
+		    
+		  Else
+		    Raise New IOException
+		    
+		  End Select
+		  
+		  If NextPacket = Nil And ret <> Nil Then
+		    NextPacket = ret
+		    Return Me.Read
+		    
+		  ElseIf ret <> Nil Then
+		    Dim p As PCAP.Packet = NextPacket
+		    NextPacket = ret
+		    ret = p
+		  Else
+		    ret = NextPacket
+		    NextPacket = Nil
 		  End If
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Attributes( hidden = true ) Private Sub pcapCallback(Header As pcap_pkthdr, HeaderRaw As Ptr)
-		  Pending.Insert(0, New PCAP.Packet(header, headerraw))
-		  PacketTimer.Mode = Timer.ModeMultiple
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Poll()
-		  Call pcap_next(mHandle, Nil)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function ReadNextPacket() As PCAP.Packet
-		  If UBound(Pending) > -1 Then Return Pending.Pop
+		  If ret = Nil Then Break
+		  Return ret
 		End Function
 	#tag EndMethod
 
@@ -84,26 +83,9 @@ Protected Class Capture
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Attributes( hidden = true ) Private Shared Sub _pcapCallback(UserData As Ptr, Header As pcap_pkthdr, HeaderRaw As Ptr)
-		  #pragma X86CallingConvention StdCall
-		  Dim instance As PCAP.Capture = Instances.Lookup(Integer(UserData), Nil)
-		  If instance <> Nil Then
-		    instance.pcapCallback(header, headerraw)
-		  Else
-		    Break
-		  End If
-		End Sub
-	#tag EndMethod
 
-
-	#tag Hook, Flags = &h0
-		Event PacketsAvailable()
-	#tag EndHook
-
-
-	#tag Property, Flags = &h21
-		Private Shared Instances As Dictionary
+	#tag Property, Flags = &h1
+		Protected mEOF As Boolean
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -111,15 +93,7 @@ Protected Class Capture
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private PacketTimer As Timer
-	#tag EndProperty
-
-	#tag Property, Flags = &h21
-		Private Pending() As PCAP.Packet
-	#tag EndProperty
-
-	#tag Property, Flags = &h21
-		Private Token As Integer
+		Private NextPacket As PCAP.Packet
 	#tag EndProperty
 
 

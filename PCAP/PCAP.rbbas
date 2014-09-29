@@ -10,7 +10,7 @@ Protected Module PCAP
 		Protected Function OpenCaptureFile(CaptureFile As FolderItem, SnapLen As Integer, Flags As Integer) As PCAP.Capture
 		  Dim p As Ptr
 		  mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLen, Flags, -1, Nil, mLastErrorMessage)
+		  p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLen, Flags, 1000, Nil, mLastErrorMessage)
 		  If p <> Nil Then
 		    Return New PCAP.Capture(p)
 		  End If
@@ -52,6 +52,10 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_next_ex Lib "wpcap" (pcap_t As Ptr, pckhdr As Ptr, pkt_data As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_open Lib "wpcap" (source As CString, snaplen As Integer, Flags As Integer, ReadTimeout As Integer, auth As Ptr, errbuff As Ptr) As Ptr
 	#tag EndExternalMethod
 
@@ -69,6 +73,9 @@ Protected Module PCAP
 	#tag EndConstant
 
 	#tag Constant, Name = MODE_STAT, Type = Double, Dynamic = False, Default = \"1", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = OPENFLAG_PROMISCUOUS, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
 	#tag EndConstant
 
 	#tag Constant, Name = PCAP_ERRBUF_SIZE, Type = Double, Dynamic = False, Default = \"256", Scope = Private

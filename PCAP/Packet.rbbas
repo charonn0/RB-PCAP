@@ -1,14 +1,15 @@
 #tag Class
 Protected Class Packet
 	#tag Method, Flags = &h0
-		Sub Constructor(pHeader As pcap_pkthdr, RawPacket As Ptr)
+		Sub Constructor(pHeader As pcap_pkthdr, RawPacket As MemoryBlock)
 		  mHeader = pHeader
+		  mRaw = RawPacket
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValue(Start As Integer, Length As Integer) As String
-		  
+		Function StringValue() As String
+		  Return mRaw.StringValue(0, mHeader.caplen)
 		End Function
 	#tag EndMethod
 
@@ -18,7 +19,7 @@ Protected Class Packet
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mRaw As Ptr
+		Protected mRaw As MemoryBlock
 	#tag EndProperty
 
 
