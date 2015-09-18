@@ -9,8 +9,8 @@ Protected Class Adaptor
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Sub Constructor(iface As pcap_if, IfaceIndex As Integer)
+	#tag Method, Flags = &h0
+		Sub Constructor(iface As pcap_if, IfaceIndex As Integer)
 		  Me.iface = iface
 		  mIndex = IfaceIndex
 		  refcount = refcount + 1
@@ -33,20 +33,6 @@ Protected Class Adaptor
 		    refcount = 0
 		  End If
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		 Shared Function GetFirstAdaptor() As PCAP.Adaptor
-		  Dim iface As pcap_if
-		  ref = New MemoryBlock(4)
-		  PCAP.mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, PCAP.mLastErrorMessage) = 0 Then
-		    ref = ref.Ptr(0)
-		    Dim mb As MemoryBlock = ref
-		    iface.StringValue(TargetLittleEndian) = mb.StringValue(0, iface.Size)
-		    Return New PCAP.Adaptor(iface, 0)
-		  End If
-		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -75,19 +61,13 @@ Protected Class Adaptor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function NextAdaptor() As PCAP.Adaptor
-		  If iface.next_if = Nil Then Return Nil
-		  Dim i As pcap_if
-		  Dim p As MemoryBlock = iface.next_if
-		  i.StringValue(TargetLittleEndian) = p.StringValue(0, pcap_if.Size)
-		  Return New PCAP.Adaptor(i, mIndex + 1)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Open(SnapLen As Integer, Flags As Integer, Timeout As Integer) As PCAP.Capture
 		  mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  
+		  Dim p As Ptr
+		  p = pcap_open(Me.Name, SnapLen, Flags, TimeOut, Nil, mLastErrorMessage)
+		  If p <> Nil Then
+		    Return New PCAP.Capture(p)
+		  End If
 		End Function
 	#tag EndMethod
 

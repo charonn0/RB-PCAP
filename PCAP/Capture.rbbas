@@ -24,7 +24,7 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Read() As PCAP.Packet
+		Function ReadNext() As PCAP.Packet
 		  Dim h, d As MemoryBlock
 		  Dim ret As PCAP.Packet
 		  h = New MemoryBlock(4)
@@ -55,7 +55,7 @@ Protected Class Capture
 		  
 		  If NextPacket = Nil And ret <> Nil Then
 		    NextPacket = ret
-		    Return Me.Read
+		    Return Me.ReadNext
 		    
 		  ElseIf ret <> Nil Then
 		    Dim p As PCAP.Packet = NextPacket
