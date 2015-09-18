@@ -61,16 +61,6 @@ Protected Class Adaptor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function NextAdaptor() As PCAP.Adaptor
-		  If iface.next_if = Nil Then Return Nil
-		  Dim i As pcap_if
-		  Dim p As MemoryBlock = iface.next_if
-		  i.StringValue(TargetLittleEndian) = p.StringValue(0, pcap_if.Size)
-		  Return New PCAP.Adaptor(i, mIndex + 1)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Open(SnapLen As Integer, Flags As Integer, Timeout As Integer) As PCAP.Capture
 		  mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  Dim p As Ptr
