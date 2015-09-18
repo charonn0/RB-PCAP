@@ -1,25 +1,63 @@
 #tag Module
 Protected Module PCAP
 	#tag Method, Flags = &h1
+		Protected Function CaptureDeviceCount() As Integer
+		  Dim ref As New MemoryBlock(4)
+		  PCAP.mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
+		  If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, PCAP.mLastErrorMessage) = 0 Then
+		    Dim count As Integer
+		    Do
+		      Dim iface As pcap_if
+		      ref = ref.Ptr(0)
+		      Dim mb As MemoryBlock = ref
+		      If mb = Nil Then Exit Do
+		      iface.StringValue(TargetLittleEndian) = mb.StringValue(0, iface.Size)
+		      count = count + 1
+		    Loop Until ref = Nil
+		    Return count
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function GetCaptureDevice(Index As Integer) As PCAP.Adaptor
+		  Dim ref As New MemoryBlock(4)
+		  PCAP.mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
+		  If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, PCAP.mLastErrorMessage) = 0 Then
+		    Dim count As Integer
+		    Do
+		      Dim iface As pcap_if
+		      ref = ref.Ptr(0)
+		      Dim mb As MemoryBlock = ref
+		      If mb = Nil Then Raise New OutOfBoundsException
+		      iface.StringValue(TargetLittleEndian) = mb.StringValue(0, iface.Size)
+		      If count = Index Then Return New PCAP.Adaptor(iface, count)
+		      count = count + 1
+		    Loop Until count > Index
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function IsAvailable() As Boolean
+		  Return System.IsFunctionAvailable("pcap_open", "wpcap")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function LastErrorMessage() As String
 		  Return mLastErrorMessage.CString(0)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function OpenCaptureFile(CaptureFile As FolderItem, SnapLen As Integer, Flags As Integer) As PCAP.Capture
+		Protected Function OpenCaptureFile(CaptureFile As FolderItem, SnapLen As Integer, Flags As Integer = 0) As PCAP.Capture
 		  Dim p As Ptr
 		  mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLen, Flags, 1000, Nil, mLastErrorMessage)
 		  If p <> Nil Then
 		    Return New PCAP.Capture(p)
 		  End If
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h1
-		Protected Function OpenNetworkInterface(CaptureInterface As NetworkInterface, SnapLen As Integer, Flags As Integer, Timeout As Integer) As PCAP.Capture
-		  
 		End Function
 	#tag EndMethod
 

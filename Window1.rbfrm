@@ -28,16 +28,5 @@ End
 #tag EndWindow
 
 #tag WindowCode
-	#tag Event
-		Sub Open()
-		  Dim a As PCAP.Adaptor = PCAP.Adaptor.GetFirstAdaptor
-		  Do Until a = Nil
-		    MsgBox(a.Name)
-		    a = a.NextAdaptor
-		  Loop
-		End Sub
-	#tag EndEvent
-
-
 #tag EndWindowCode
 
