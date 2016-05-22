@@ -14,6 +14,12 @@ Protected Class Packet
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Length() As UInt32
+		  Return mHeader.caplen
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function StringValue() As String
 		  Return mRaw.StringValue(0, mHeader.caplen)
 		End Function
