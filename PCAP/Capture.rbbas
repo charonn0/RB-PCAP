@@ -25,19 +25,16 @@ Protected Class Capture
 
 	#tag Method, Flags = &h0
 		Function ReadNext() As PCAP.Packet
-		  Dim h, d As MemoryBlock
+		  Dim h, d As Ptr
 		  Dim ret As PCAP.Packet
-		  h = New MemoryBlock(4)
-		  d = New MemoryBlock(4)
 		  
 		  Select Case pcap_next_ex(mHandle, h, d)
 		  Case 1 ' ok
-		    Dim pk As pcap_pkthdr
-		    h = h.Ptr(0)
-		    d = d.Ptr(0)
-		    pk.StringValue(TargetLittleEndian) = h.StringValue(0, pk.Size)
-		    d = d.StringValue(0, pk.caplen)
-		    ret = New PCAP.Packet(pk, d)
+		    Dim pk As pcap_pkthdr = h.pcap_pkthdr
+		    Dim data As MemoryBlock = d
+		    data = data.StringValue(0, pk.caplen)
+		    data.LittleEndian = False ' network byte order
+		    ret = New PCAP.Packet(pk, data)
 		    
 		  Case 0 ' timeout
 		    Return Nil
