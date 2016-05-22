@@ -8,6 +8,12 @@ Protected Class Packet
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Header() As PCAP.pcap_pkthdr
+		  Return mHeader
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function StringValue() As String
 		  Return mRaw.StringValue(0, mHeader.caplen)
 		End Function

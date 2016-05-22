@@ -14,6 +14,8 @@ Protected Class Adaptor
 		  Me.iface = iface
 		  mIndex = IfaceIndex
 		  refcount = refcount + 1
+		  Dim p As MemoryBlock = Me.iface.name
+		  mName = p.CString(0)
 		End Sub
 	#tag EndMethod
 
@@ -24,8 +26,8 @@ Protected Class Adaptor
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Sub Destructor()
+	#tag Method, Flags = &h21
+		Private Sub Destructor()
 		  refcount = refcount - 1
 		  If ref <> Nil And refcount <= 0 Then
 		    pcap_freealldevs(ref)
@@ -55,8 +57,7 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h0
 		Function Name() As String
-		  Dim p As MemoryBlock = iface.name
-		  Return p.CString(0)
+		  Return mName
 		End Function
 	#tag EndMethod
 
@@ -71,6 +72,13 @@ Protected Class Adaptor
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function SendPacket(RawPacket As PCAP.Packet) As Boolean
+		  Dim data As MemoryBlock = RawPacket.StringValue
+		  Return pcap_sendpacket(iface, data, data.Size) = 0
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h1
 		Protected iface As pcap_if
@@ -82,6 +90,10 @@ Protected Class Adaptor
 
 	#tag Property, Flags = &h1
 		Protected mLastErrorMessage As MemoryBlock
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mName As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

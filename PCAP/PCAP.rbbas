@@ -98,6 +98,10 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_sendpacket Lib "wpcap" (Adaptor As pcap_if, PacketBuffer As Ptr, BufferSize As Integer) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_stats Lib "wpcap" (pcap_t As Ptr, pcapstats As Ptr) As Integer
 	#tag EndExternalMethod
 
@@ -120,6 +124,21 @@ Protected Module PCAP
 	#tag EndConstant
 
 	#tag Constant, Name = PCAP_IF_LOOPBACK, Type = Double, Dynamic = False, Default = \"&h00000001", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_OPENFLAG_DATATX_UDP, Type = Double, Dynamic = False, Default = \"2", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_OPENFLAG_MAX_RESPONSIVENESS, Type = Double, Dynamic = False, Default = \"16", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_OPENFLAG_NOCAPTURE_LOCAL, Type = Double, Dynamic = False, Default = \"8", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_OPENFLAG_NOCAPTURE_RPCAP, Type = Double, Dynamic = False, Default = \"4", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_OPENFLAG_PROMISCUOUS, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
 	#tag EndConstant
 
 	#tag Constant, Name = PCAP_SRC_FILE_STRING, Type = String, Dynamic = False, Default = \"file://", Scope = Private
@@ -145,7 +164,7 @@ Protected Module PCAP
 		flags As UInt32
 	#tag EndStructure
 
-	#tag Structure, Name = pcap_pkthdr, Flags = &h21
+	#tag Structure, Name = pcap_pkthdr, Flags = &h1
 		ts As timeval
 		  caplen As UInt32
 		len As UInt32
