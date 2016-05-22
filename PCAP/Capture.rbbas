@@ -2,7 +2,7 @@
 Protected Class Capture
 	#tag Method, Flags = &h0
 		Sub Close()
-		  If mHandle <> Nil Then 
+		  If mHandle <> Nil Then
 		    pcap_close(mHandle)
 		    mHandle = Nil
 		  End If
@@ -40,7 +40,7 @@ Protected Class Capture
 		    ret = New PCAP.Packet(pk, d)
 		    
 		  Case 0 ' timeout
-		    Raise New IOException
+		    Return Nil
 		    
 		  Case -1 ' error
 		    Raise New IOException
@@ -53,18 +53,6 @@ Protected Class Capture
 		    
 		  End Select
 		  
-		  If NextPacket = Nil And ret <> Nil Then
-		    NextPacket = ret
-		    Return Me.ReadNext
-		    
-		  ElseIf ret <> Nil Then
-		    Dim p As PCAP.Packet = NextPacket
-		    NextPacket = ret
-		    ret = p
-		  Else
-		    ret = NextPacket
-		    NextPacket = Nil
-		  End If
 		  If ret = Nil Then Break
 		  Return ret
 		End Function
@@ -90,10 +78,6 @@ Protected Class Capture
 
 	#tag Property, Flags = &h1
 		Protected mHandle As Ptr
-	#tag EndProperty
-
-	#tag Property, Flags = &h21
-		Private NextPacket As PCAP.Packet
 	#tag EndProperty
 
 
