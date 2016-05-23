@@ -40,6 +40,12 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Handle() As Ptr
+		  Return mHandle
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		 Shared Function Open(CaptureFile As FolderItem, SnapLength As Integer = 65536, Flags As Integer = 0) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  Dim p As Ptr
@@ -64,10 +70,7 @@ Protected Class Capture
 		  Select Case pcap_next_ex(mHandle, h, d)
 		  Case 1 ' ok
 		    Dim pk As pcap_pkthdr = h.pcap_pkthdr
-		    Dim data As MemoryBlock = d
-		    data = data.StringValue(0, pk.caplen)
-		    data.LittleEndian = False ' network byte order
-		    ret = New PCAP.Packet(pk, data)
+		    ret = New PCAP.Packet(pk, d)
 		    
 		  Case 0 ' timeout
 		    Return Nil

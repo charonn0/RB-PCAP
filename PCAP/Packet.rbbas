@@ -4,11 +4,12 @@ Protected Class Packet
 		Sub Constructor(pHeader As pcap_pkthdr, RawPacket As MemoryBlock)
 		  mHeader = pHeader
 		  mRaw = RawPacket
+		  mRaw.LittleEndian = False ' network byte order
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Header() As PCAP.pcap_pkthdr
+		Function Header() As pcap_pkthdr
 		  Return mHeader
 		End Function
 	#tag EndMethod
@@ -20,7 +21,14 @@ Protected Class Packet
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Attributes( hidden )  Function Raw() As Ptr
+		  If mRaw <> Nil Then Return mRaw
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function StringValue() As String
+		  'mRaw.LittleEndian = False ' network byte order
 		  Return mRaw.StringValue(0, mHeader.caplen)
 		End Function
 	#tag EndMethod

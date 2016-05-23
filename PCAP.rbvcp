@@ -6,6 +6,7 @@ Window=Window1;Window1.rbfrm;&h3A8A97FF;&h0;false
 MenuBar=MenuBar1;MenuBar1.rbmnu;&h637D7FF;&h0;false
 BuildSteps=Build Automation;Build Automation.rbbas;&h1866BFFF;&h0;false
 Module=PCAP;PCAP/PCAP.rbbas;&hA44CFFF;&h0;false
+Class=DumpFile;PCAP/DumpFile.rbbas;&h3F32D7FF;&hA44CFFF;false
 Class=Packet;PCAP/Packet.rbbas;&h6EE77FFF;&hA44CFFF;false
 Class=Capture;PCAP/Capture.rbbas;&h48D557FF;&hA44CFFF;false
 Class=Adaptor;PCAP/Adaptor.rbbas;&h4AA56FFF;&hA44CFFF;false

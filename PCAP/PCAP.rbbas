@@ -33,6 +33,26 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Sub pcap_dump Lib "wpcap" (pcap_dumper_t As Ptr, ByRef Header As pcap_pkthdr, RawData As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Sub pcap_dump_close Lib "wpcap" (pcap_dumper_t As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_dump_flush Lib "wpcap" (pcap_dumper_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_dump_ftell Lib "wpcap" (pcap_dumper_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_dump_open Lib "wpcap" (pcap_t As Ptr, FileName As CString) As Ptr
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_findalldevs_ex Lib "wpcap" (source As CString, auth As Ptr, ByRef alldevs As Ptr, errbuff As Ptr) As Integer
 	#tag EndExternalMethod
 
@@ -118,7 +138,7 @@ Protected Module PCAP
 		flags As UInt32
 	#tag EndStructure
 
-	#tag Structure, Name = pcap_pkthdr, Flags = &h1
+	#tag Structure, Name = pcap_pkthdr, Flags = &h21
 		ts As timeval
 		  caplen As UInt32
 		len As UInt32
