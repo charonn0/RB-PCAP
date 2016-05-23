@@ -20,13 +20,6 @@ Protected Class Adaptor
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function Description() As String
-		  Dim p As MemoryBlock = iface.description
-		  Return p.CString(0)
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h21
 		Private Sub Destructor()
 		  refcount = refcount - 1
@@ -39,37 +32,42 @@ Protected Class Adaptor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Index() As Integer
-		  Return mIndex
+		 Shared Function GetAdaptor(Index As Integer) As PCAP.Adaptor
+		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
+		  If ref = Nil And pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Return Nil
+		  Dim ret As PCAP.Adaptor
+		  Dim count As Integer
+		  Dim lst As Ptr = ref
+		  Do Until ret <> Nil
+		    If lst = Nil Then Raise New OutOfBoundsException
+		    Dim iface As pcap_if = lst.pcap_if
+		    If count = Index Then 
+		      ret = New PCAP.Adaptor(iface, count)
+		      Exit Do
+		    End If
+		    lst = iface.next_if
+		    count = count + 1
+		  Loop Until count > Index
+		  Return ret
+		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LastErrorMessage() As String
-		  If mLastErrorMessage <> Nil Then Return mLastErrorMessage.CString(0)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Loopback() As Boolean
-		  Return BitAnd(iface.flags, PCAP_IF_LOOPBACK) = PCAP_IF_LOOPBACK
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Name() As String
-		  Return mName
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Open(SnapLen As Integer, Flags As Integer, Timeout As Integer) As PCAP.Capture
-		  mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  Dim p As Ptr
-		  p = pcap_open(Me.Name, SnapLen, Flags, TimeOut, Nil, mLastErrorMessage)
-		  If p <> Nil Then
-		    Return New PCAP.Capture(p)
+		 Shared Function GetAdaptorCount() As Integer
+		  If ref = Nil Then
+		    Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
+		    If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Return 0
 		  End If
+		  Dim count As Integer
+		  Dim lst As Ptr = ref
+		  Do
+		    If lst = Nil Then Exit Do
+		    lst = lst.Ptr(0)
+		    count = count + 1
+		  Loop
+		  Return Count
+		  
 		End Function
 	#tag EndMethod
 
@@ -81,21 +79,63 @@ Protected Class Adaptor
 	#tag EndMethod
 
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Dim p As MemoryBlock = iface.description
+			  Return p.CString(0)
+			End Get
+		#tag EndGetter
+		Description As String
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return iface.flags
+			End Get
+		#tag EndGetter
+		Flags As UInt32
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h1
 		Protected iface As pcap_if
 	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return mIndex
+			End Get
+		#tag EndGetter
+		Index As Integer
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return BitAnd(iface.flags, PCAP_IF_LOOPBACK) = PCAP_IF_LOOPBACK
+			End Get
+		#tag EndGetter
+		Loopback As Boolean
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h1
 		Protected mIndex As Integer
 	#tag EndProperty
 
-	#tag Property, Flags = &h1
-		Protected mLastErrorMessage As MemoryBlock
-	#tag EndProperty
-
 	#tag Property, Flags = &h21
 		Private mName As String
 	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return mName
+			End Get
+		#tag EndGetter
+		Name As String
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
 		Private Shared ref As Ptr
