@@ -46,6 +46,10 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_datalink Lib "wpcap" (pcap_t As Ptr) As PCAP.LinkType
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_dispatch Lib "wpcap" (pcap_t As Ptr, Count As Integer, pcap_handler As Ptr, u_char As Ptr) As Integer
 	#tag EndExternalMethod
 
@@ -107,6 +111,10 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_setfilter Lib "wpcap" (pcap_t As Ptr, FilterProgram As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_set_datalink Lib "wpcap" (pcap_t As Ptr, NewValue As PCAP . LinkType) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21

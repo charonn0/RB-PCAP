@@ -134,6 +134,22 @@ Protected Class Capture
 	#tag EndMethod
 
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  If mHandle <> Nil Then Return pcap_datalink(mHandle)
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  If mHandle <> Nil Then
+			    If pcap_set_datalink(mHandle, value) <> 0 Then Raise New RuntimeException
+			  End If
+			End Set
+		#tag EndSetter
+		DataLink As PCAP.LinkType
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h1
 		Protected mCurrentFilter As PCAP.Filter
 	#tag EndProperty
