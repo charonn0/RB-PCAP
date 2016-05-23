@@ -23,8 +23,8 @@ Protected Module PCAP
 	#tag Method, Flags = &h1
 		Protected Function IsValidFilter(Expression As String) As Boolean
 		  If PCAP.IsAvailable And CaptureDeviceCount > 0 Then
-		    Dim cap As Capture = Capture.Create(GetCaptureDevice(0))
-		    Return Filter.Validate(Expression, cap) <> Nil
+		    'Dim cap As Capture = Capture.Create(GetCaptureDevice(0))
+		    Return Filter.Validate(Expression) <> Nil
 		  End If
 		End Function
 	#tag EndMethod
@@ -39,6 +39,10 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_compile Lib "wpcap" (pcap_t As Ptr, ByRef BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_compile_nopcap Lib "wpcap" (SnapLength As Integer, LinkType As Integer, ByRef BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
@@ -71,6 +75,10 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Sub pcap_freealldevs Lib "wpcap" (alldevs As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Sub pcap_freecode Lib "wpcap" (FilterProgram As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21

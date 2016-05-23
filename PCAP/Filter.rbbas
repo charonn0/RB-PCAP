@@ -3,7 +3,11 @@ Protected Class Filter
 	#tag Method, Flags = &h1
 		Protected Shared Function Compile(Expression As String, ActiveCapture As PCAP.Capture, Optimize As Integer, Netmask As UInt32) As Ptr
 		  Dim program As Ptr
-		  If pcap_compile(ActiveCapture.Handle, program, Expression, Optimize, Netmask) <> 0 Then Return Nil
+		  If ActiveCapture <> Nil Then
+		    If pcap_compile(ActiveCapture.Handle, program, Expression, Optimize, Netmask) <> 0 Then Return Nil
+		  Else
+		    If pcap_compile_nopcap(65536, Integer(PCAP.LinkType.RAW), program, Expression, Optimize, Netmask) <> 0 Then Return Nil
+		  End If
 		  Return program
 		End Function
 	#tag EndMethod
@@ -46,14 +50,12 @@ Protected Class Filter
 
 	#tag Method, Flags = &h0
 		Sub Operator_Convert(Expression As String)
-		  'Me.Constructor(Expression, Capture.CreateDead, False)
-		  Me.Constructor(Expression, Capture.Create(GetCaptureDevice(0)), False)
+		  Me.Constructor(Expression, Nil, False)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		 Shared Function Validate(Expression As String, Optional ActiveCapture As PCAP.Capture) As PCAP.Filter
-		  If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead
 		  Dim program As Ptr = Compile(Expression, ActiveCapture, 0, 0)
 		  If program <> Nil Then Return New Filter(Expression, program)
 		End Function
