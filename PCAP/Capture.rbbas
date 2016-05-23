@@ -34,6 +34,35 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		 Shared Function CreateDead(LinkType As PCAP.LinkType = PCAP.LinkType.RAW, SnapLength As Integer = 65536) As PCAP.Capture
+		  Dim p As Ptr
+		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
+		  p = pcap_open_dead(LinkType, SnapLength)
+		  If p <> Nil Then
+		    Dim ret As New PCAP.Capture(p)
+		    Return ret
+		  Else
+		    Dim err As New IOException
+		    err.Message = errmsg
+		    Raise err
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function CurrentFilter() As PCAP.Filter
+		  Return mCurrentFilter
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub CurrentFilter(Assigns NewFilterProgram As PCAP.Filter)
+		  If pcap_setfilter(mHandle, NewFilterProgram.Handle) <> 0 Then Raise New RuntimeException
+		  mCurrentFilter = NewFilterProgram
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function EOF() As Boolean
 		  Return mEOF
 		End Function
@@ -104,6 +133,10 @@ Protected Class Capture
 		End Function
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h1
+		Protected mCurrentFilter As PCAP.Filter
+	#tag EndProperty
 
 	#tag Property, Flags = &h1
 		Protected mEOF As Boolean

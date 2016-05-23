@@ -29,7 +29,6 @@ Protected Class DumpFile
 
 	#tag Method, Flags = &h0
 		Sub WritePacket(Packet As PCAP.Packet)
-		  Dim data As MemoryBlock = Packet.Raw
 		  Dim h As pcap_pkthdr = Packet.Header
 		  If mDump <> Nil Then pcap_dump(mDump, h, Packet.Raw)
 		End Sub

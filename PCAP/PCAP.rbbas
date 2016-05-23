@@ -20,12 +20,25 @@ Protected Module PCAP
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Function IsValidFilter(Expression As String) As Boolean
+		  If PCAP.IsAvailable And CaptureDeviceCount > 0 Then
+		    Dim cap As Capture = Capture.Create(GetCaptureDevice(0))
+		    Return Filter.Validate(Expression, cap) <> Nil
+		  End If
+		End Function
+	#tag EndMethod
+
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Sub pcap_breakloop Lib "wpcap" (pcap_t As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Sub pcap_close Lib "wpcap" (pcap_t As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_compile Lib "wpcap" (pcap_t As Ptr, ByRef BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
@@ -77,7 +90,15 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_open_dead Lib "wpcap" (LinkType As PCAP . LinkType, SnapLength As Integer) As Ptr
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_sendpacket Lib "wpcap" (Adaptor As pcap_if, PacketBuffer As Ptr, BufferSize As Integer) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_setfilter Lib "wpcap" (pcap_t As Ptr, FilterProgram As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
@@ -160,6 +181,34 @@ Protected Module PCAP
 		tv_sec As Integer
 		tv_usec As Integer
 	#tag EndStructure
+
+
+	#tag Enum, Name = LinkType, Type = Integer, Flags = &h1
+		NULL=0
+		  ETHERNET=1
+		  AX25=3
+		  IEEE_805_5=6
+		  ARCNET_BSD=7
+		  SLIP=8
+		  PPP=9
+		  FDDI=10
+		  PPP_HDLC=50
+		  PPP_ETHER=51
+		  ATM_RFC1483=100
+		  RAW=101
+		  C_HDLC=104
+		  IEEE_802_11=105
+		  FRELAY=107
+		  LOOPBACK=108
+		  LINUX_SLL=113
+		  LTALK=114
+		  PFLOG=117
+		  IEEE802_11_PRISM=119
+		  IP_OVER_FC=122
+		  SUNATM=123
+		  IEEE_802_11_RADIOTAP=127
+		ARCNET_LINUX=129
+	#tag EndEnum
 
 
 	#tag ViewBehavior
