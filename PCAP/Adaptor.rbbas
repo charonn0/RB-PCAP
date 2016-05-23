@@ -11,6 +11,7 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h0
 		Sub Constructor(iface As pcap_if, IfaceIndex As Integer)
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  Me.iface = iface
 		  mIndex = IfaceIndex
 		  refcount = refcount + 1

@@ -2,39 +2,13 @@
 Protected Module PCAP
 	#tag Method, Flags = &h1
 		Protected Function CaptureDeviceCount() As Integer
-		  Dim ref As New MemoryBlock(4)
-		  PCAP.mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, PCAP.mLastErrorMessage) = 0 Then
-		    Dim count As Integer
-		    Do
-		      Dim iface As pcap_if
-		      ref = ref.Ptr(0)
-		      Dim mb As MemoryBlock = ref
-		      If mb = Nil Then Exit Do
-		      iface.StringValue(TargetLittleEndian) = mb.StringValue(0, iface.Size)
-		      count = count + 1
-		    Loop Until ref = Nil
-		    Return count
-		  End If
+		  Return PCAP.Adaptor.GetAdaptorCount()
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
 		Protected Function GetCaptureDevice(Index As Integer) As PCAP.Adaptor
-		  Dim ref As New MemoryBlock(4)
-		  PCAP.mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, PCAP.mLastErrorMessage) = 0 Then
-		    Dim count As Integer
-		    Do
-		      Dim iface As pcap_if
-		      ref = ref.Ptr(0)
-		      Dim mb As MemoryBlock = ref
-		      If mb = Nil Then Raise New OutOfBoundsException
-		      iface.StringValue(TargetLittleEndian) = mb.StringValue(0, iface.Size)
-		      If count = Index Then Return New PCAP.Adaptor(iface, count)
-		      count = count + 1
-		    Loop Until count > Index
-		  End If
+		  Return PCAP.Adaptor.GetAdaptor(Index)
 		End Function
 	#tag EndMethod
 
@@ -74,7 +48,7 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_findalldevs_ex Lib "wpcap" (source As CString, auth As Ptr, alldevs As Ptr, errbuff As Ptr) As Integer
+		Private Soft Declare Function pcap_findalldevs_ex Lib "wpcap" (source As CString, auth As Ptr, ByRef alldevs As Ptr, errbuff As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
@@ -104,11 +78,6 @@ Protected Module PCAP
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_stats Lib "wpcap" (pcap_t As Ptr, pcapstats As Ptr) As Integer
 	#tag EndExternalMethod
-
-
-	#tag Property, Flags = &h21
-		Private mLastErrorMessage As MemoryBlock
-	#tag EndProperty
 
 
 	#tag Constant, Name = MODE_CAPT, Type = Double, Dynamic = False, Default = \"0", Scope = Private
