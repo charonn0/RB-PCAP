@@ -14,24 +14,9 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function IsAvailable() As Boolean
-		  Return System.IsFunctionAvailable("pcap_open", "wpcap")
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h1
-		Protected Function LastErrorMessage() As String
-		  Return mLastErrorMessage.CString(0)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h1
-		Protected Function OpenCaptureFile(CaptureFile As FolderItem, SnapLen As Integer, Flags As Integer = 0) As PCAP.Capture
-		  Dim p As Ptr
-		  mLastErrorMessage = New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLen, Flags, 1000, Nil, mLastErrorMessage)
-		  If p <> Nil Then
-		    Return New PCAP.Capture(p)
-		  End If
+		  Static available As Boolean
+		  If Not available Then available = System.IsFunctionAvailable("pcap_open", "wpcap")
+		  Return available
 		End Function
 	#tag EndMethod
 
