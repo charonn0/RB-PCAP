@@ -132,7 +132,7 @@ Protected Class Capture
 		    
 		  Case -2 ' eof
 		    mEOF = True
-		    If mEpoch < 1.0 Then mEpoch = ret.TimeStamp
+		    
 		  Else
 		    Raise New IOException
 		    
