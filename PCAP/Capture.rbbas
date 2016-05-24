@@ -123,6 +123,7 @@ Protected Class Capture
 		  Case 1 ' ok
 		    Dim pk As pcap_pkthdr = h.pcap_pkthdr
 		    ret = New PCAP.Packet(pk, d)
+		    If mEpoch < 1.0 Then mEpoch = ret.TimeStamp
 		    
 		  Case 0 ' timeout
 		    Return Nil
@@ -138,7 +139,6 @@ Protected Class Capture
 		    
 		  End Select
 		  
-		  If ret = Nil Then Break
 		  Return ret
 		End Function
 	#tag EndMethod
