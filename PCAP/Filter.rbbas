@@ -17,7 +17,7 @@ Protected Class Filter
 		  Dim opt As Integer
 		  If Optimize Then opt = 1
 		  Dim prgm As Ptr = Compile(Expression, ActiveCapture, opt, 0)
-		  If prgm = Nil Then Raise New RuntimeException
+		  If prgm = Nil Then Raise New PCAPException(ActiveCapture)
 		  Me.Constructor(Expression, prgm)
 		End Sub
 	#tag EndMethod
@@ -49,6 +49,12 @@ Protected Class Filter
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		 Shared Function LastCompileError() As String
+		  If mLastCompileError <> Nil Then Return mLastCompileError.CString(0)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Operator_Convert(Expression As String)
 		  Me.Constructor(Expression, Nil, False)
 		End Sub
@@ -64,6 +70,10 @@ Protected Class Filter
 
 	#tag Property, Flags = &h1
 		Protected mExpression As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected Shared mLastCompileError As MemoryBlock
 	#tag EndProperty
 
 	#tag Property, Flags = &h1

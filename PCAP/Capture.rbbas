@@ -57,7 +57,7 @@ Protected Class Capture
 
 	#tag Method, Flags = &h0
 		Sub CurrentFilter(Assigns NewFilterProgram As PCAP.Filter)
-		  If pcap_setfilter(mHandle, NewFilterProgram.Handle) <> 0 Then Raise New RuntimeException
+		  If pcap_setfilter(mHandle, NewFilterProgram.Handle) <> 0 Then Raise New PCAPException(Me)
 		  mCurrentFilter = NewFilterProgram
 		End Sub
 	#tag EndMethod
@@ -143,7 +143,7 @@ Protected Class Capture
 		#tag Setter
 			Set
 			  If mHandle <> Nil Then
-			    If pcap_set_datalink(mHandle, value) <> 0 Then Raise New RuntimeException
+			    If pcap_set_datalink(mHandle, value) <> 0 Then Raise New PCAPException(Me)
 			  End If
 			End Set
 		#tag EndSetter

@@ -12,6 +12,13 @@ Protected Module PCAP
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Function GetError(ActiveCapture As PCAP.Capture) As String
+		  Dim mb As MemoryBlock = pcap_geterr(ActiveCapture.Handle)
+		  If mb <> Nil Then Return mb.CString(0)
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Function IsAvailable() As Boolean
 		  Static available As Boolean
@@ -83,6 +90,10 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Sub pcap_freecode Lib "wpcap" (FilterProgram As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_geterr Lib "wpcap" (pcap_t As Ptr) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21

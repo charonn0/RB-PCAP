@@ -12,6 +12,7 @@ Class=DumpFile;PCAP/DumpFile.rbbas;&h3F32D7FF;&hA44CFFF;false
 Class=Packet;PCAP/Packet.rbbas;&h6EE77FFF;&hA44CFFF;false
 Class=Capture;PCAP/Capture.rbbas;&h48D557FF;&hA44CFFF;false
 Class=Adaptor;PCAP/Adaptor.rbbas;&h4AA56FFF;&hA44CFFF;false
+FileTypeSet=FileTypes1;FileTypes1.rbbas;&h376017FF;&h0;false
 DefaultWindow=Window1
 AppMenuBar=MenuBar1
 MajorVersion=1

@@ -10,7 +10,7 @@ Protected Class DumpFile
 	#tag Method, Flags = &h0
 		Sub Constructor(ActiveCapture As PCAP.Capture, DumpTo As FolderItem)
 		  mDump = pcap_dump_open(ActiveCapture.Handle, DumpTo.AbsolutePath)
-		  If mDump = Nil Then Raise New RuntimeException
+		  If mDump = Nil Then Raise New PCAPException(ActiveCapture)
 		  mDumpFile = DumpTo
 		End Sub
 	#tag EndMethod
@@ -23,7 +23,7 @@ Protected Class DumpFile
 
 	#tag Method, Flags = &h0
 		Sub Flush()
-		  If mDump <> Nil And pcap_dump_flush(mDump) <> 0 Then Raise New RuntimeException
+		  If mDump <> Nil And pcap_dump_flush(mDump) <> 0 Then Raise New IOException
 		End Sub
 	#tag EndMethod
 
