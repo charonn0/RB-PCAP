@@ -18,13 +18,13 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer = 65536, TimeOut As Integer = 1000, Flags As Integer = 0) As PCAP.Capture
+		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000, Flags As Integer = 0) As PCAP.Capture
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  p = pcap_open(CaptureDevice.Name, SnapLength, Flags, TimeOut, Nil, errmsg)
 		  If p <> Nil Then
 		    Dim ret As New PCAP.Capture(p)
-		    ret.mIsLive = True
+		    ret.mSource = CaptureDevice
 		    Return ret
 		  Else
 		    Dim err As New IOException
@@ -35,7 +35,7 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function CreateDead(LinkType As PCAP.LinkType = PCAP.LinkType.RAW, SnapLength As Integer = 65536) As PCAP.Capture
+		 Shared Function CreateDead(LinkType As PCAP.LinkType = PCAP.LinkType.RAW, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH) As PCAP.Capture
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  p = pcap_open_dead(LinkType, SnapLength)
@@ -72,7 +72,7 @@ Protected Class Capture
 	#tag Method, Flags = &h1
 		Protected Function GetStatistics() As pcap_stat
 		  Dim stat As pcap_stat
-		  If mIsLive Then
+		  If mSource <> Nil Then
 		    If pcap_stats(mHandle, stat) <> 0 Then Raise New PCAPException(Me)
 		  Else
 		    Dim count As Integer
@@ -91,11 +91,11 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function Open(CaptureFile As FolderItem, SnapLength As Integer = 65536, Flags As Integer = 0) As PCAP.Capture
+		 Shared Function Open(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As Integer = 0) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 1000, Nil, errmsg)
+		  p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 0, Nil, errmsg)
 		  If p <> Nil Then
 		    Dim ret As New PCAP.Capture(p)
 		    Return ret
@@ -136,6 +136,12 @@ Protected Class Capture
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function Source() As PCAP.Adaptor
+		  Return mSource
+		End Function
+	#tag EndMethod
+
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
@@ -169,7 +175,7 @@ Protected Class Capture
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  return mIsLive
+			  return mSource <> Nil
 			End Get
 		#tag EndGetter
 		IsLive As Boolean
@@ -187,8 +193,8 @@ Protected Class Capture
 		Protected mHandle As Ptr
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private mIsLive As Boolean
+	#tag Property, Flags = &h1
+		Protected mSource As PCAP.Adaptor
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
@@ -207,11 +213,21 @@ Protected Class Capture
 
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="DropCount"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="Index"
 			Visible=true
 			Group="ID"
 			InitialValue="-2147483648"
 			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLive"
+			Group="Behavior"
+			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -225,6 +241,11 @@ Protected Class Capture
 			Visible=true
 			Group="ID"
 			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="PacketCount"
+			Group="Behavior"
+			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"

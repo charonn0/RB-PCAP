@@ -1,7 +1,7 @@
 #tag Module
 Protected Module PCAP
 	#tag Method, Flags = &h1
-		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = 65536, TimeOut As Integer = 1000) As PCAP.Capture
+		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000) As PCAP.Capture
 		  Dim flags As Integer
 		  If PromiscuousMode Then flags = PCAP_OPENFLAG_PROMISCUOUS
 		  Return PCAP.Capture.Create(CaptureDevice, SnapLength, TimeOut, flags)
@@ -64,7 +64,7 @@ Protected Module PCAP
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = 65536, Flags As UInt32 = 0) As PCAP.Capture
+		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As UInt32 = 0) As PCAP.Capture
 		  Return PCAP.Capture.Open(CaptureFile, SnapLength, Flags)
 		End Function
 	#tag EndMethod
@@ -78,7 +78,7 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_compile Lib "wpcap" (pcap_t As Ptr, ByRef BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
+		Private Soft Declare Function pcap_compile Lib "wpcap" (pcap_t As Ptr, BPFProgram As Ptr, FilterString As Ptr, Optimize As Integer, NetMask As UInt32) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
@@ -169,6 +169,9 @@ Protected Module PCAP
 		Private Soft Declare Function pcap_stats_ex Lib "wpcap" (pcap_t As Ptr, ByRef StatSize As Integer) As pcap_stat
 	#tag EndExternalMethod
 
+
+	#tag Constant, Name = MAX_SNAP_LENGTH, Type = Double, Dynamic = False, Default = \"65536", Scope = Protected
+	#tag EndConstant
 
 	#tag Constant, Name = MODE_CAPT, Type = Double, Dynamic = False, Default = \"0", Scope = Private
 	#tag EndConstant
