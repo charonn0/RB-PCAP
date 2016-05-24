@@ -16,13 +16,22 @@ Protected Class Packet
 
 	#tag Method, Flags = &h0
 		Function Length() As UInt32
-		  Return mHeader.caplen
+		  ' the length of the original packet (not necessarily the length of the captured data; see SnapLength)
+		  Return mHeader.len
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Attributes( hidden )  Function Raw() As Ptr
+		Function Operator_Convert() As Ptr
+		  ' converts to a Ptr to a memory block SnapLength bytes long containing raw packet data. 
 		  If mRaw <> Nil Then Return mRaw
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function SnapLength() As UInt32
+		  ' the length of the captured data, which may be less or equal to than the length of the original packet
+		  Return mHeader.caplen
 		End Function
 	#tag EndMethod
 
