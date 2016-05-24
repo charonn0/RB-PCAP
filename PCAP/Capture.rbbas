@@ -77,16 +77,17 @@ Protected Class Capture
 
 	#tag Method, Flags = &h1
 		Protected Function GetStatistics() As pcap_stat
-		  Dim stat As pcap_stat
-		  If mSource <> Nil Then
-		    If pcap_stats(mHandle, stat) <> 0 Then Raise New PCAPException(Me)
-		  Else
-		    Dim count As Integer
-		    stat = pcap_stats_ex(mHandle, count)
-		    If count = 0 Then Raise New PCAPException(Me)
-		  End If
-		  Return stat
-		  
+		  'If mSource = Nil Then
+		  'Dim stat As pcap_stat
+		  'If pcap_stats(mHandle, stat) <> 0 Then Raise New PCAPException(Me)
+		  'Return stat
+		  'Else
+		  Dim stat As Ptr
+		  Dim count As Integer
+		  stat = pcap_stats_ex(mHandle, count)
+		  If count = 0 Then Raise New PCAPException(Me)
+		  Return stat.pcap_stat
+		  'End If
 		End Function
 	#tag EndMethod
 
@@ -218,6 +219,19 @@ Protected Class Capture
 			End Get
 		#tag EndGetter
 		PacketCount As Integer
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Try
+			    Return Me.GetStatistics.ps_recv
+			  Catch
+			    Return 0
+			  End Try
+			End Get
+		#tag EndGetter
+		TotalPacketCount As Integer
 	#tag EndComputedProperty
 
 
