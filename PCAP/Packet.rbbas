@@ -42,6 +42,12 @@ Protected Class Packet
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function TimeStamp() As Double
+		  Return CDbl(Str(mHeader.ts.tv_sec) + "." + Str(mHeader.ts.tv_usec))
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h1
 		Protected mHeader As pcap_pkthdr

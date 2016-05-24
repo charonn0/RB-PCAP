@@ -69,6 +69,12 @@ Protected Class Capture
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function Epoch() As Double
+		  Return mEpoch
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Function GetStatistics() As pcap_stat
 		  Dim stat As pcap_stat
@@ -125,7 +131,7 @@ Protected Class Capture
 		    
 		  Case -2 ' eof
 		    mEOF = True
-		    
+		    If mEpoch < 1.0 Then mEpoch = ret.TimeStamp
 		  Else
 		    Raise New IOException
 		    
@@ -187,6 +193,10 @@ Protected Class Capture
 
 	#tag Property, Flags = &h1
 		Protected mEOF As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected mEpoch As Double
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
