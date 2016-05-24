@@ -1,6 +1,14 @@
 #tag Module
 Protected Module PCAP
 	#tag Method, Flags = &h1
+		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = 65536, TimeOut As Integer = 1000) As PCAP.Capture
+		  Dim flags As Integer
+		  If PromiscuousMode Then flags = PCAP_OPENFLAG_PROMISCUOUS
+		  Return PCAP.Capture.Create(CaptureDevice, SnapLength, TimeOut, flags)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function CaptureDeviceCount() As Integer
 		  Return PCAP.Adaptor.GetAdaptorCount()
 		End Function
@@ -27,12 +35,37 @@ Protected Module PCAP
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function IsPCAPFile(Extends CaptureFile As FolderItem) As Boolean
+		  If CaptureFile = Nil Or CaptureFile.Directory Then Return False
+		  Dim bs As BinaryStream = BinaryStream.Open(CaptureFile)
+		  Dim magic As Integer = bs.ReadInt32
+		  Dim iscap As Boolean
+		  If magic = &ha1b2c3d4 Then
+		    ' PCAP file with correct byte order
+		    iscap = True
+		  ElseIf magic = &hd4c3b2a1 Then
+		    ' PCAP file with swapped byte order
+		    iscap = True
+		  End If
+		  bs.Close
+		  Return iscap
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Function IsValidFilter(Expression As String) As Boolean
 		  If PCAP.IsAvailable And CaptureDeviceCount > 0 Then
 		    'Dim cap As Capture = Capture.Create(GetCaptureDevice(0))
 		    Return Filter.Validate(Expression) <> Nil
 		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = 65536, Flags As UInt32 = 0) As PCAP.Capture
+		  Return PCAP.Capture.Open(CaptureFile, SnapLength, Flags)
 		End Function
 	#tag EndMethod
 
