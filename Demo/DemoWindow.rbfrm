@@ -103,7 +103,7 @@ Begin Window DemoWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   245
+      Left            =   260
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -116,15 +116,15 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   46
+      Top             =   57
       Underline       =   ""
       Visible         =   True
       Width           =   110
    End
-   Begin CheckBox Promiscuous
+   Begin CheckBox DumpCap
       AutoDeactivate  =   True
       Bold            =   ""
-      Caption         =   "Promiscuous"
+      Caption         =   "Dump to File"
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
@@ -133,7 +133,7 @@ Begin Window DemoWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   122
+      Left            =   479
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -147,11 +147,74 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   46
+      Top             =   59
       Underline       =   ""
       Value           =   False
       Visible         =   True
       Width           =   100
+   End
+   Begin CheckBox Promiscuous
+      AutoDeactivate  =   True
+      Bold            =   ""
+      Caption         =   "Promiscuous"
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   375
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      State           =   0
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   59
+      Underline       =   ""
+      Value           =   False
+      Visible         =   True
+      Width           =   100
+   End
+   Begin PushButton PushButton2
+      AutoDeactivate  =   True
+      Bold            =   ""
+      ButtonStyle     =   0
+      Cancel          =   ""
+      Caption         =   "Open CaptureFile"
+      Default         =   ""
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   4
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   5
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   57
+      Underline       =   ""
+      Visible         =   True
+      Width           =   124
    End
 End
 #tag EndWindow
@@ -179,12 +242,29 @@ End
 		    Return
 		  End If
 		  Dim a As PCAP.Adaptor = Adaptors.RowTag(Adaptors.ListIndex)
-		  Dim f As FolderItem = GetSaveFolderItem(FileTypes1.PacketCaptureFile, "Untitled.pcap")
-		  If f <> Nil Then
-		    Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, 200)
-		    If capture <> Nil Then
+		  Dim f As FolderItem 
+		  If DumpCap.Value Then
+		    f = GetSaveFolderItem(FileTypes1.PacketCaptureFile, "Untitled.pcap")
+		    If f = Nil Then Return
+		  End If
+		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, 200)
+		  If capture <> Nil Then
+		    Dim capwin As New CapWindow
+		    capwin.BeginCapture(capture, f)
+		  End If
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PushButton2
+	#tag Event
+		Sub Action()
+		  Dim f As FolderItem = GetOpenFolderItem(FileTypes1.PacketCaptureFile)
+		  If f <> Nil And f.Exists Then
+		    Dim cap As PCAP.Capture = PCAP.OpenCapture(f)
+		    If cap <> Nil Then
 		      Dim capwin As New CapWindow
-		      capwin.BeginCapture(capture, f)
+		      capwin.OpenCapture(cap)
 		    End If
 		  End If
 		End Sub

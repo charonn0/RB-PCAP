@@ -2,12 +2,12 @@
 Begin Window CapWindow
    BackColor       =   &hFFFFFF
    Backdrop        =   ""
-   CloseButton     =   False
+   CloseButton     =   True
    Composite       =   False
    Frame           =   3
    FullScreen      =   False
    HasBackColor    =   False
-   Height          =   1.01e+2
+   Height          =   2.7e+2
    ImplicitInstance=   False
    LiveResize      =   True
    MacProcID       =   0
@@ -262,25 +262,25 @@ Begin Window CapWindow
    Begin Timer Timer1
       Height          =   32
       Index           =   -2147483648
-      Left            =   415
+      Left            =   -44
       LockedInPosition=   False
       Mode            =   0
       Period          =   100
       Scope           =   0
       TabPanelIndex   =   0
-      Top             =   -25
+      Top             =   -18
       Width           =   32
    End
    Begin Thread CapThread
       Height          =   32
       Index           =   -2147483648
-      Left            =   415
+      Left            =   -44
       LockedInPosition=   False
       Priority        =   1
       Scope           =   0
       StackSize       =   0
       TabPanelIndex   =   0
-      Top             =   18
+      Top             =   25
       Width           =   32
    End
    Begin PushButton PushButton2
@@ -314,18 +314,210 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   80
    End
+   Begin Listbox PacketList
+      AutoDeactivate  =   True
+      AutoHideScrollbars=   True
+      Bold            =   ""
+      Border          =   True
+      ColumnCount     =   1
+      ColumnsResizable=   ""
+      ColumnWidths    =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      DefaultRowHeight=   -1
+      Enabled         =   True
+      EnableDrag      =   ""
+      EnableDragReorder=   ""
+      GridLinesHorizontal=   0
+      GridLinesVertical=   0
+      HasHeading      =   ""
+      HeadingIndex    =   -1
+      Height          =   156
+      HelpTag         =   ""
+      Hierarchical    =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      InitialValue    =   ""
+      Italic          =   ""
+      Left            =   7
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      RequiresSelection=   ""
+      Scope           =   0
+      ScrollbarHorizontal=   ""
+      ScrollBarVertical=   True
+      SelectionType   =   0
+      TabIndex        =   8
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   103
+      Underline       =   ""
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   225
+      _ScrollWidth    =   -1
+   End
+   Begin HexViewer PacketView
+      AcceptFocus     =   ""
+      AcceptTabs      =   ""
+      AutoDeactivate  =   True
+      Backdrop        =   ""
+      Bold            =   ""
+      Border          =   ""
+      ByteBackgroundColor=   "&cFFFFFF00"
+      ByteBackgroundColorAlt=   "&cC0C0C000"
+      ByteColor       =   "&c0000FF00"
+      BytesLittleEndian=   True
+      DoubleBuffer    =   False
+      Enabled         =   True
+      EraseBackground =   True
+      GutterColor     =   "&cFFFFFF00"
+      GutterColorAlt  =   "&cC0C0C000"
+      Height          =   156
+      HelpTag         =   ""
+      Hilight         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   237
+      LineNumbersColor=   "&c80000000"
+      LineNumbersLittleEndian=   False
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      ShowOffsets     =   ""
+      TabIndex        =   9
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextBackGroundColor=   "&cFFFFFF00"
+      TextBackGroundColorAlt=   "&cC0C0C000"
+      TextSize        =   ""
+      Top             =   103
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   306
+   End
 End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Event
+		Function CancelClose(appQuitting as Boolean) As Boolean
+		  If mCapture <> Nil Then
+		    Return MsgBox("Confirm close?", 4 + 48, "Capture in progress") <> 6
+		  End If
+		  
+		End Function
+	#tag EndEvent
+
+	#tag Event
+		Sub Close()
+		  Timer1.Mode = Timer.ModeOff
+		  If CapThread <> Nil And CapThread.State = Thread.Running Then CapThread.Kill
+		  If mCapture <> Nil Then mCapture.Close
+		  If mDump <> Nil Then mDump.Close
+		End Sub
+	#tag EndEvent
+
+
 	#tag Method, Flags = &h0
 		Sub BeginCapture(ActiveCapture As PCAP.Capture, SaveTo As FolderItem)
 		  mCapture = ActiveCapture
 		  mCapLock = New Semaphore
-		  mDump = New PCAP.DumpFile(ActiveCapture, SaveTo)
-		  Self.Title = "Capturing - " + SaveTo.Name
+		  If SaveTo <> Nil Then
+		    mDump = New PCAP.DumpFile(ActiveCapture, SaveTo)
+		    Self.Title = "Capturing to '" + SaveTo.Name + "'"
+		  Else
+		    Self.Title = "Capturing on '" + ActiveCapture.Source.Name + "'"
+		  End If
 		  Timer1.Mode = Timer.ModeMultiple
-		  CapThread.Run
+		  
+		  Self.Show
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function FormatBytes(bytes As UInt64, precision As Integer = 2) As String
+		  'Converts raw byte counts into SI formatted strings. 1KB = 1024 bytes.
+		  'Optionally pass an integer representing the number of decimal places to return. The default is two decimal places. You may specify
+		  'between 0 and 16 decimal places. Specifying more than 16 will append extra zeros to make up the length. Passing 0
+		  'shows no decimal places and no decimal point.
+		  
+		  Const kilo = 1024
+		  Static mega As UInt64 = kilo * kilo
+		  Static giga As UInt64 = kilo * mega
+		  Static tera As UInt64 = kilo * giga
+		  Static peta As UInt64 = kilo * tera
+		  Static exab As UInt64 = kilo * peta
+		  
+		  Dim suffix, precisionZeros As String
+		  Dim strBytes As Double
+		  
+		  
+		  If bytes < kilo Then
+		    strbytes = bytes
+		    If bytes = 1 Then suffix = " byte" Else suffix = " bytes"
+		    precision = 0
+		  ElseIf bytes >= kilo And bytes < mega Then
+		    strbytes = bytes / kilo
+		    suffix = "KB"
+		  ElseIf bytes >= mega And bytes < giga Then
+		    strbytes = bytes / mega
+		    suffix = "MB"
+		  ElseIf bytes >= giga And bytes < tera Then
+		    strbytes = bytes / giga
+		    suffix = "GB"
+		  ElseIf bytes >= tera And bytes < peta Then
+		    strbytes = bytes / tera
+		    suffix = "TB"
+		  ElseIf bytes >= tera And bytes < exab Then
+		    strbytes = bytes / peta
+		    suffix = "PB"
+		  ElseIf bytes >= exab Then
+		    strbytes = bytes / exab
+		    suffix = "EB"
+		  End If
+		  
+		  
+		  While precisionZeros.Len < precision
+		    precisionZeros = precisionZeros + "0"
+		  Wend
+		  If precisionZeros.Trim <> "" Then precisionZeros = "." + precisionZeros
+		  
+		  Return Format(strBytes, "#,###0" + precisionZeros) + suffix
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub OpenCapture(ActiveCapture As PCAP.Capture)
+		  mCapture = ActiveCapture
+		  mCapLock = New Semaphore
+		  Self.Title = "Reading capture file"
+		  'Timer1.Mode = Timer.ModeMultiple
+		  
+		  'DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
+		  'PacketCount.Text = Format(mCapture.PacketCount, "###,###,###,##0")
+		  Dim c As Integer = PacketList.ListCount
+		  Dim added As Boolean
+		  Do Until mCapture.EOF
+		    Dim p As PCAP.Packet = mCapture.ReadNext
+		    If p = Nil Then Continue
+		    PacketList.AddRow("#" + Format(c, "###,###,###,##0") + " (" + FormatBytes(p.SnapLength) + ")")
+		    PacketList.RowTag(c) = p
+		    c = c + 1
+		    added = True
+		  Loop
+		  If added Then PacketList.ScrollPosition = c
 		  Self.Show
 		End Sub
 	#tag EndMethod
@@ -343,6 +535,10 @@ End
 		Private mDump As PCAP.DumpFile
 	#tag EndProperty
 
+	#tag Property, Flags = &h21
+		Private mPackets() As PCAP.Packet
+	#tag EndProperty
+
 
 #tag EndWindowCode
 
@@ -353,12 +549,13 @@ End
 		    App.YieldToNextThread
 		  Loop
 		  Try
-		    If CapThread.State = Thread.Running Then CapThread.Kill
-		    mDump.Flush
-		    mDump.Close
+		    If CapThread.State = Thread.Running Then 
+		      CapThread.Suspend
+		      PushButton2.Caption = "Start"
+		    End If
+		    If mDump <> Nil Then mDump.Flush
 		  Finally
 		    mCapLock.Release
-		    Self.Close()
 		  End Try
 		End Sub
 	#tag EndEvent
@@ -368,10 +565,30 @@ End
 		Sub Action()
 		  If mCapture = Nil Then Return
 		  If Not mCapLock.TrySignal Then Return
+		  If CapThread.State = Thread.Suspended Then 
+		    CapThread.Resume 
+		  ElseIf CapThread.State <> Thread.Running Then 
+		    CapThread.Run
+		  End If
 		  Try
-		    AdaptorPath.Text = mCapture.Source.Name
+		    If mCapture.Source <> Nil Then AdaptorPath.Text = mCapture.Source.Name
 		    DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
 		    PacketCount.Text = Format(mCapture.PacketCount, "###,###,###,##0")
+		    'PacketList.Visible = False
+		    PacketList.Enabled = False
+		    Dim c As Integer = PacketList.ListCount
+		    Dim added As Boolean
+		    Do Until UBound(mPackets) = -1
+		      Dim p As PCAP.Packet = mPackets.Pop
+		      'PacketList.AddRow("#" + Format(c, "###,###,###,##0") + " (" + FormatBytes(p.SnapLength) + ")")
+		      PacketList.AddRow("+" + Format(p.TimeStamp - mCapture.Epoch, "0.0###") + " (" + FormatBytes(p.SnapLength) + ")")
+		      PacketList.RowTag(c) = p
+		      c = c + 1
+		      added = True
+		    Loop
+		    If added Then PacketList.ScrollPosition = c
+		    'PacketList.Visible = True
+		    PacketList.Enabled = True
 		  Finally
 		    mCapLock.Release
 		  End Try
@@ -381,13 +598,17 @@ End
 #tag Events CapThread
 	#tag Event
 		Sub Run()
-		  Do Until mCapture = Nil
+		  Do
+		    If mCapLock = Nil Then Continue
 		    Do Until mCapLock.TrySignal
 		      App.YieldToNextThread
 		    Loop
 		    Try
 		      Dim p As PCAP.Packet = mCapture.ReadNext()
-		      If p <> Nil Then mDump.WritePacket(p)
+		      If p <> Nil Then 
+		        If mDump <> Nil Then mDump.WritePacket(p)
+		        mPackets.Append(p)
+		      End If
 		    Finally
 		      mCapLock.Release
 		    End Try
@@ -399,12 +620,22 @@ End
 #tag Events PushButton2
 	#tag Event
 		Sub Action()
-		  If Timer1.Mode <> Timer.ModeMultiple Then
-		    Timer1.Mode = Timer.ModeMultiple
+		  If CapThread.State = Thread.Suspended Then
+		    CapThread.Resume
 		    Me.Caption = "Pause"
 		  Else
-		    Timer1.Mode = Timer.ModeOff
+		    CapThread.Suspend
 		    Me.Caption = "Resume"
+		  End If
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PacketList
+	#tag Event
+		Sub Change()
+		  If Me.ListIndex <> -1 Then
+		    Dim p As PCAP.Packet = Me.RowTag(Me.ListIndex)
+		    PacketView.ShowData(New BinaryStream(p), p.SnapLength)
 		  End If
 		End Sub
 	#tag EndEvent
