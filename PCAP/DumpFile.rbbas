@@ -30,7 +30,7 @@ Protected Class DumpFile
 	#tag Method, Flags = &h0
 		Sub WritePacket(Packet As PCAP.Packet)
 		  Dim h As pcap_pkthdr = Packet.Header
-		  If mDump <> Nil Then pcap_dump(mDump, h, Packet.Raw)
+		  If mDump <> Nil Then pcap_dump(mDump, h, Packet)
 		End Sub
 	#tag EndMethod
 
