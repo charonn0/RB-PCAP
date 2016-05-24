@@ -166,7 +166,7 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_stats_ex Lib "wpcap" (pcap_t As Ptr, ByRef StatSize As Integer) As pcap_stat
+		Private Soft Declare Function pcap_stats_ex Lib "wpcap" (pcap_t As Ptr, ByRef StatSize As Integer) As Ptr
 	#tag EndExternalMethod
 
 

@@ -2,9 +2,7 @@
 Protected Class Adaptor
 	#tag Method, Flags = &h1
 		Protected Function Address() As pcap_addr
-		  Dim p As pcap_addr
-		  Dim mb As MemoryBlock = iface.addresses
-		  p.StringValue(TargetLittleEndian) = mb.StringValue(0, pcap_addr.Size)
+		  Dim p As pcap_addr = iface.addresses.pcap_addr
 		  Return p
 		End Function
 	#tag EndMethod
