@@ -24,6 +24,7 @@ Protected Class Capture
 		  p = pcap_open(CaptureDevice.Name, SnapLength, Flags, TimeOut, Nil, errmsg)
 		  If p <> Nil Then
 		    Dim ret As New PCAP.Capture(p)
+		    ret.mIsLive = True
 		    Return ret
 		  Else
 		    Dim err As New IOException
@@ -65,6 +66,21 @@ Protected Class Capture
 	#tag Method, Flags = &h0
 		Function EOF() As Boolean
 		  Return mEOF
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function GetStatistics() As pcap_stat
+		  Dim stat As pcap_stat
+		  If mIsLive Then
+		    If pcap_stats(mHandle, stat) <> 0 Then Raise New PCAPException(Me)
+		  Else
+		    Dim count As Integer
+		    stat = pcap_stats_ex(mHandle, count)
+		    If count = 0 Then Raise New PCAPException(Me)
+		  End If
+		  Return stat
+		  
 		End Function
 	#tag EndMethod
 
@@ -120,19 +136,6 @@ Protected Class Capture
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function Statistics() As pcap_stat
-		  Dim stat As pcap_stat
-		  Dim p As Ptr = New MemoryBlock(stat.Size)
-		  If pcap_stats(mHandle, p) = 0 Then
-		    Dim mb As MemoryBlock = p
-		    stat.StringValue(TargetLittleEndian) = mb.StringValue(0, stat.Size)
-		    Return stat
-		  End If
-		  
-		End Function
-	#tag EndMethod
-
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
@@ -150,6 +153,28 @@ Protected Class Capture
 		DataLink As PCAP.LinkType
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Try
+			    Return Me.GetStatistics.ps_drop
+			  Catch
+			    Return 0
+			  End Try
+			End Get
+		#tag EndGetter
+		DropCount As Integer
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return mIsLive
+			End Get
+		#tag EndGetter
+		IsLive As Boolean
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h1
 		Protected mCurrentFilter As PCAP.Filter
 	#tag EndProperty
@@ -161,6 +186,23 @@ Protected Class Capture
 	#tag Property, Flags = &h1
 		Protected mHandle As Ptr
 	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mIsLive As Boolean
+	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Try
+			    Return Me.GetStatistics.ps_recv
+			  Catch
+			    Return 0
+			  End Try
+			End Get
+		#tag EndGetter
+		PacketCount As Integer
+	#tag EndComputedProperty
 
 
 	#tag ViewBehavior
