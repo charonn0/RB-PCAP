@@ -1,14 +1,21 @@
 #tag Class
 Protected Class Filter
 	#tag Method, Flags = &h1
-		Protected Shared Function Compile(Expression As String, ActiveCapture As PCAP.Capture, Optimize As Integer, Netmask As UInt32) As Ptr
-		  Dim program As Ptr
+		Protected Shared Function Compile(Expression As String, ActiveCapture As PCAP.Capture, Optimize As Integer, Netmask As UInt32 = &hffffff) As Ptr
+		  Dim program As New MemoryBlock(1024 * 64)
+		  Dim p As Ptr = program
 		  If ActiveCapture <> Nil Then
-		    If pcap_compile(ActiveCapture.Handle, program, Expression, Optimize, Netmask) <> 0 Then Return Nil
+		    Dim mb As New MemoryBlock(Expression.LenB + 1)
+		    mb.CString(0) = Expression
+		    Dim err As Integer = pcap_compile(ActiveCapture.Handle, p, mb, Optimize, Netmask)
+		    If err <> 0 Then p = Nil
 		  Else
-		    If pcap_compile_nopcap(65536, Integer(PCAP.LinkType.RAW), program, Expression, Optimize, Netmask) <> 0 Then Return Nil
+		    'If pcap_compile_nopcap(65536, Integer(PCAP.LinkType.RAW), program, Expression, Optimize, Netmask) <> 0 Then program = Nil
 		  End If
-		  Return program
+		  'Dim tmp As Ptr
+		  'If program <> Nil Then tmp = program
+		  'If program = Nil Or Integer(tmp) < 512 Then Return Nil
+		  Return p
 		End Function
 	#tag EndMethod
 
@@ -16,9 +23,9 @@ Protected Class Filter
 		Sub Constructor(Expression As String, ActiveCapture As PCAP.Capture, Optimize As Boolean = False)
 		  Dim opt As Integer
 		  If Optimize Then opt = 1
-		  Dim prgm As Ptr = Compile(Expression, ActiveCapture, opt, 0)
-		  If prgm = Nil Then Raise New PCAPException(ActiveCapture)
-		  Me.Constructor(Expression, prgm)
+		  mProgram = Compile(Expression, ActiveCapture, opt, 0)
+		  If mProgram = Nil Then Raise New PCAPException(ActiveCapture)
+		  mExpression = Expression
 		End Sub
 	#tag EndMethod
 
@@ -56,7 +63,8 @@ Protected Class Filter
 
 	#tag Method, Flags = &h0
 		Sub Operator_Convert(Expression As String)
-		  Me.Constructor(Expression, Nil, False)
+		  Dim dead As PCAP.Capture = PCAP.Capture.CreateDead()
+		  Me.Constructor(Expression, dead, False)
 		End Sub
 	#tag EndMethod
 
