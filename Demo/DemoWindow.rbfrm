@@ -247,7 +247,7 @@ End
 		    f = GetSaveFolderItem(FileTypes1.PacketCaptureFile, "Untitled.pcap")
 		    If f = Nil Then Return
 		  End If
-		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, 200)
+		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, 50)
 		  If capture <> Nil Then
 		    Dim capwin As New CapWindow
 		    capwin.BeginCapture(capture, f)
