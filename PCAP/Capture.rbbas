@@ -63,6 +63,12 @@ Protected Class Capture
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub Destructor()
+		  Me.Close
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function EOF() As Boolean
 		  Return mEOF
