@@ -103,7 +103,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   188
+      Left            =   172
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -192,7 +192,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   123
+      Width           =   91
    End
    Begin Label DropCount
       AutoDeactivate  =   True
@@ -205,7 +205,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   265
+      Left            =   249
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -406,12 +406,81 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   306
    End
+   Begin Label ByteCount
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   77
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   10
+      TabPanelIndex   =   0
+      Text            =   0
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   50
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   91
+   End
+   Begin Label Label4
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   0
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   11
+      TabPanelIndex   =   0
+      Text            =   "Byte count:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   50
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   65
+   End
 End
 #tag EndWindow
 
 #tag WindowCode
 	#tag Event
 		Function CancelClose(appQuitting as Boolean) As Boolean
+		  #pragma Unused appQuitting
 		  If mCapture <> Nil Then
 		    Return MsgBox("Confirm close?", 4 + 48, "Capture in progress") <> 6
 		  End If
@@ -524,6 +593,10 @@ End
 
 
 	#tag Property, Flags = &h21
+		Private mByteCount As UInt64
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
 		Private mCapLock As Semaphore
 	#tag EndProperty
 
@@ -549,7 +622,7 @@ End
 		    App.YieldToNextThread
 		  Loop
 		  Try
-		    If CapThread.State = Thread.Running Then 
+		    If CapThread.State = Thread.Running Then
 		      CapThread.Suspend
 		      PushButton2.Caption = "Start"
 		    End If
@@ -582,6 +655,7 @@ End
 		      Dim p As PCAP.Packet = mPackets.Pop
 		      'PacketList.AddRow("#" + Format(c, "###,###,###,##0") + " (" + FormatBytes(p.SnapLength) + ")")
 		      PacketList.AddRow("+" + Format(p.TimeStamp - mCapture.Epoch, "0.0###") + " (" + FormatBytes(p.SnapLength) + ")")
+		      mByteCount = mByteCount + p.Length
 		      PacketList.RowTag(c) = p
 		      c = c + 1
 		      added = True
@@ -589,6 +663,7 @@ End
 		    If added Then PacketList.ScrollPosition = c
 		    'PacketList.Visible = True
 		    PacketList.Enabled = True
+		    ByteCount.Text = FormatBytes(mByteCount)
 		  Finally
 		    mCapLock.Release
 		  End Try
