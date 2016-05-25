@@ -70,6 +70,29 @@ Protected Class Adaptor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function SendPacket(RawPackets() As PCAP.Packet, Synchronize As Boolean = False) As Boolean
+		  Dim sz As UInt32
+		  For Each p As Packet In RawPackets
+		    sz = sz + p.SnapLength
+		  Next
+		  Dim queue As Ptr = pcap_sendqueue_alloc(sz)
+		  If queue = Nil Then Raise New OutOfMemoryException
+		  Dim ret As Boolean
+		  Try
+		    For i As Integer = 0 To UBound(RawPackets)
+		      If pcap_sendqueue_queue(queue, RawPackets(i).Header, RawPackets(i)) <> 0 Then Raise New PCAPException("Unable to queue the packet!")
+		    Next
+		    Dim sync As Integer
+		    If Synchronize Then sync = 1
+		    ret = (sz = pcap_sendqueue_transmit(iface, queue, sync))
+		  Finally
+		    pcap_sendqueue_destroy(queue)
+		  End Try
+		  Return ret
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function SendPacket(RawPacket As PCAP.Packet) As Boolean
 		  Dim data As MemoryBlock = RawPacket.StringValue
 		  Return pcap_sendpacket(iface, data, data.Size) = 0

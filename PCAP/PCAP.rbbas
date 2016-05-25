@@ -154,6 +154,22 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_sendqueue_alloc Lib "wpcap" (MemSize As UInt32) As Ptr
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Sub pcap_sendqueue_destroy Lib "wpcap" (Queue As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_sendqueue_queue Lib "wpcap" (Queue As Ptr, Header As pcap_pkthdr, Data As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_sendqueue_transmit Lib "wpcap" (Adaptor As pcap_if, Queue As Ptr, Synchronize As Integer) As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_setfilter Lib "wpcap" (pcap_t As Ptr, FilterProgram As Ptr) As Integer
 	#tag EndExternalMethod
 
