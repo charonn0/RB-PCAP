@@ -1,10 +1,9 @@
 #tag Class
 Protected Class Packet
 	#tag Method, Flags = &h0
-		Sub Constructor(pHeader As pcap_pkthdr, RawPacket As MemoryBlock)
+		Sub Constructor(pHeader As pcap_pkthdr, RawPacket As Ptr)
 		  mHeader = pHeader
 		  mRaw = RawPacket
-		  mRaw.LittleEndian = False ' network byte order
 		End Sub
 	#tag EndMethod
 
@@ -23,8 +22,8 @@ Protected Class Packet
 
 	#tag Method, Flags = &h0
 		Function Operator_Convert() As Ptr
-		  ' converts to a Ptr to a memory block SnapLength bytes long containing raw packet data. 
-		  If mRaw <> Nil Then Return mRaw
+		  ' converts to a Ptr to a memory block SnapLength bytes long containing raw packet data.
+		  Return mRaw
 		End Function
 	#tag EndMethod
 
@@ -37,8 +36,10 @@ Protected Class Packet
 
 	#tag Method, Flags = &h0
 		Function StringValue() As String
-		  'mRaw.LittleEndian = False ' network byte order
-		  Return mRaw.StringValue(0, mHeader.caplen)
+		  If mRaw = Nil Then Return ""
+		  Dim tmp As MemoryBlock = mRaw
+		  tmp.LittleEndian = False ' network byte order
+		  Return tmp.StringValue(0, mHeader.caplen)
 		End Function
 	#tag EndMethod
 
@@ -54,7 +55,7 @@ Protected Class Packet
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mRaw As MemoryBlock
+		Protected mRaw As Ptr
 	#tag EndProperty
 
 
