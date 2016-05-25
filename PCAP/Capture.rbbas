@@ -35,7 +35,7 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function CreateDead(LinkType As PCAP.LinkType = PCAP.LinkType.RAW, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH) As PCAP.Capture
+		 Shared Function CreateDead(LinkType As PCAP.LinkType = PCAP.LinkType.ETHERNET, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH) As PCAP.Capture
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  p = pcap_open_dead(LinkType, SnapLength)
