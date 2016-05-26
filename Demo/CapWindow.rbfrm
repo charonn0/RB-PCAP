@@ -474,6 +474,38 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   65
    End
+   Begin CheckBox Autoscroll
+      AutoDeactivate  =   True
+      Bold            =   ""
+      Caption         =   "Autoscroll"
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   20
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      State           =   1
+      TabIndex        =   12
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   71
+      Underline       =   ""
+      Value           =   True
+      Visible         =   True
+      Width           =   100
+   End
 End
 #tag EndWindow
 
@@ -660,7 +692,7 @@ End
 		      c = c + 1
 		      added = True
 		    Loop
-		    If added Then PacketList.ScrollPosition = c
+		    If Autoscroll.Value And added Then PacketList.ScrollPosition = c
 		    'PacketList.Visible = True
 		    PacketList.Enabled = True
 		    ByteCount.Text = FormatBytes(mByteCount)
