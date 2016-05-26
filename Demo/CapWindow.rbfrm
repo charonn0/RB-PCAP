@@ -7,7 +7,7 @@ Begin Window CapWindow
    Frame           =   3
    FullScreen      =   False
    HasBackColor    =   False
-   Height          =   2.7e+2
+   Height          =   2.97e+2
    ImplicitInstance=   False
    LiveResize      =   True
    MacProcID       =   0
@@ -506,6 +506,113 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   100
    End
+   Begin TextField FilterString
+      AcceptTabs      =   ""
+      Alignment       =   0
+      AutoDeactivate  =   True
+      AutomaticallyCheckSpelling=   False
+      BackColor       =   &hFFFFFF
+      Bold            =   ""
+      Border          =   True
+      CueText         =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Format          =   ""
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      Italic          =   ""
+      Left            =   61
+      LimitText       =   0
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Mask            =   ""
+      Password        =   ""
+      ReadOnly        =   ""
+      Scope           =   0
+      TabIndex        =   13
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   263
+      Underline       =   ""
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   420
+   End
+   Begin Label Label5
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   7
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   14
+      TabPanelIndex   =   0
+      Text            =   "Filter:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   264
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   50
+   End
+   Begin PushButton PushButton3
+      AutoDeactivate  =   True
+      Bold            =   ""
+      ButtonStyle     =   0
+      Cancel          =   ""
+      Caption         =   "Apply"
+      Default         =   ""
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   485
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   15
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   263
+      Underline       =   ""
+      Visible         =   True
+      Width           =   58
+   End
 End
 #tag EndWindow
 
@@ -531,9 +638,11 @@ End
 
 
 	#tag Method, Flags = &h0
-		Sub BeginCapture(ActiveCapture As PCAP.Capture, SaveTo As FolderItem)
+		Sub BeginCapture(ActiveCapture As PCAP.Capture, SaveTo As FolderItem, InitialFilter As PCAP.Filter)
 		  mCapture = ActiveCapture
 		  mCapLock = New Semaphore
+		  mFilter = InitialFilter
+		  If mFilter <> Nil Then FilterString.Text = mFilter.Expression
 		  If SaveTo <> Nil Then
 		    mDump = New PCAP.DumpFile(ActiveCapture, SaveTo)
 		    Self.Title = "Capturing to '" + SaveTo.Name + "'"
@@ -641,6 +750,10 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
+		Private mFilter As PCAP.Filter
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
 		Private mPackets() As PCAP.Packet
 	#tag EndProperty
 
@@ -670,9 +783,9 @@ End
 		Sub Action()
 		  If mCapture = Nil Then Return
 		  If Not mCapLock.TrySignal Then Return
-		  If CapThread.State = Thread.Suspended Then 
-		    CapThread.Resume 
-		  ElseIf CapThread.State <> Thread.Running Then 
+		  If CapThread.State = Thread.Suspended Then
+		    CapThread.Resume
+		  ElseIf CapThread.State <> Thread.Running Then
 		    CapThread.Run
 		  End If
 		  Try
@@ -712,7 +825,7 @@ End
 		    Loop
 		    Try
 		      Dim p As PCAP.Packet = mCapture.ReadNext()
-		      If p <> Nil Then 
+		      If p <> Nil Then
 		        If mDump <> Nil Then mDump.WritePacket(p)
 		        mPackets.Append(p)
 		      End If
@@ -744,6 +857,28 @@ End
 		    Dim p As PCAP.Packet = Me.RowTag(Me.ListIndex)
 		    PacketView.ShowData(New BinaryStream(p), p.SnapLength)
 		  End If
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PushButton3
+	#tag Event
+		Sub Action()
+		  Dim f As PCAP.Filter = PCAP.Filter.Validate(FilterString.Text, mCapture)
+		  If f = Nil Then
+		    MsgBox("Invalid filter. " + PCAP.Filter.LastCompileError)
+		    Return
+		  End If
+		  
+		  Do Until mCapLock.TrySignal
+		    App.YieldToNextThread
+		  Loop
+		  Try
+		    mCapture.CurrentFilter = f
+		    mFilter = f
+		    MsgBox("Filter changed")
+		  Finally
+		    mCapLock.Release
+		  End Try
 		End Sub
 	#tag EndEvent
 #tag EndEvents

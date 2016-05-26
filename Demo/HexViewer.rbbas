@@ -85,7 +85,7 @@ Inherits Canvas
 		    
 		    If ShowOffsets Then
 		      Dim tmp As String
-		      For i As Integer = 1 To 3
+		      For i As Integer = 1 To 8
 		        tmp = tmp + "0"
 		      Next
 		      gw = bg.StringWidth(tmp) + 1
@@ -120,7 +120,7 @@ Inherits Canvas
 		      Do Until TextHeight > BinGraphics.Height Or Stream.EOF
 		        rowoffset = Stream.Position
 		        Do Until BinGraphics.StringWidth(data) >= BinGraphics.Width - bytewidth
-		          If Stream.EOF Or (mStreamLen > -1 And mStreamLen < Stream.Position) Then
+		          If Stream.EOF Then
 		            data = data + " "
 		            Exit Do
 		          End If
@@ -166,8 +166,8 @@ Inherits Canvas
 		        BinGraphics.DrawString(data, 0, TextHeight - 2)
 		        TextGraphics.DrawString(txt, 0, TextHeight - 2)
 		        GutterGraphics.ForeColor = LineNumbersColor
-		        Dim linenumber As String = Hex(rowoffset, 4, LineNumbersLittleEndian)
-		        GutterGraphics.DrawString(linenumber, 0, TextHeight - 2)
+		        'Dim linenumber As String = Hex(rowoffset, 4, LineNumbersLittleEndian)
+		        GutterGraphics.DrawString(Right("00000000" + Hex(rowoffset), 8), 0, TextHeight - 2)
 		        
 		        data = ""
 		        txt = ""
@@ -210,7 +210,7 @@ Inherits Canvas
 		        TextGraphics.FillRect(0, TextHeight - LineHeight, TextGraphics.Width, LineHeight)
 		        GutterGraphics.FillRect(0, TextHeight - LineHeight, GutterGraphics.Width, LineHeight)
 		        GutterGraphics.ForeColor = LineNumbersColor
-		        Dim linenumber As String = Hex(rowoffset, 4, LineNumbersLittleEndian)
+		        Dim linenumber As String = Hex(rowoffset, 8, LineNumbersLittleEndian)
 		        GutterGraphics.DrawString(linenumber, 0, TextHeight - 1)
 		      Loop
 		    End If
@@ -377,7 +377,7 @@ Inherits Canvas
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ShowData(DataStream As BinaryStream, DataLength As Integer = -1)
+		Sub ShowData(DataStream As BinaryStream, DataLength As Integer = - 1)
 		  Me.Stream = DataStream
 		  Me.Stream.Position = 0
 		  Offset = 0
@@ -698,7 +698,7 @@ Inherits Canvas
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mStreamLen As Integer = -1
+		Private mStreamLen As UInt64
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -733,7 +733,7 @@ Inherits Canvas
 		#tag EndGetter
 		#tag Setter
 			Set
-			  If Stream = Nil Or (StreamLen > -1 And value > StreamLen) Or value >= Stream.Length Then Return
+			  If Stream = Nil Or value >= Stream.Length Then Return
 			  mOffset = value
 			  Buffer = Nil
 			  Me.Update(True)
