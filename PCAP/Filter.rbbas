@@ -1,21 +1,14 @@
 #tag Class
 Protected Class Filter
 	#tag Method, Flags = &h1
-		Protected Shared Function Compile(Expression As String, ActiveCapture As PCAP.Capture, Optimize As Integer, Netmask As UInt32 = &hffffff) As Ptr
-		  Dim program As New MemoryBlock(1024 * 64)
-		  Dim p As Ptr = program
+		Protected Shared Function Compile(Expression As String, ActiveCapture As PCAP.Capture, Program As MemoryBlock, Optimize As Integer, Netmask As UInt32 = &hffffff) As Boolean
 		  If ActiveCapture <> Nil Then
-		    Dim mb As New MemoryBlock(Expression.LenB + 1)
-		    mb.CString(0) = Expression
-		    Dim err As Integer = pcap_compile(ActiveCapture.Handle, p, mb, Optimize, Netmask)
-		    If err <> 0 Then p = Nil
+		    Return pcap_compile(ActiveCapture.Handle, program, Expression, Optimize, Netmask) = 0
 		  Else
-		    'If pcap_compile_nopcap(65536, Integer(PCAP.LinkType.RAW), program, Expression, Optimize, Netmask) <> 0 Then program = Nil
+		    If pcap_compile_nopcap(65536, Integer(PCAP.LinkType.ETHERNET), program, Expression, Optimize, Netmask) <> 0 Then program = Nil
+		    Return Program <> Nil
 		  End If
-		  'Dim tmp As Ptr
-		  'If program <> Nil Then tmp = program
-		  'If program = Nil Or Integer(tmp) < 512 Then Return Nil
-		  Return p
+		  
 		End Function
 	#tag EndMethod
 
@@ -23,9 +16,10 @@ Protected Class Filter
 		Sub Constructor(Expression As String, ActiveCapture As PCAP.Capture, Optimize As Boolean = False)
 		  Dim opt As Integer
 		  If Optimize Then opt = 1
-		  mProgram = Compile(Expression, ActiveCapture, opt, 0)
-		  If mProgram = Nil Then Raise New PCAPException(ActiveCapture)
+		  mProgram = New MemoryBlock(8)
 		  mExpression = Expression
+		  mSource = ActiveCapture
+		  If Not Compile(mExpression, mSource, mProgram, opt, 0) Then Raise New PCAPException(Me, ActiveCapture)
 		End Sub
 	#tag EndMethod
 
@@ -57,7 +51,7 @@ Protected Class Filter
 
 	#tag Method, Flags = &h0
 		 Shared Function LastCompileError() As String
-		  If mLastCompileError <> Nil Then Return mLastCompileError.CString(0)
+		  Return mLastCompileError
 		End Function
 	#tag EndMethod
 
@@ -69,9 +63,21 @@ Protected Class Filter
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Source() As PCAP.Capture
+		  Return mSource
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		 Shared Function Validate(Expression As String, Optional ActiveCapture As PCAP.Capture) As PCAP.Filter
-		  Dim program As Ptr = Compile(Expression, ActiveCapture, 0, 0)
-		  If program <> Nil Then Return New Filter(Expression, program)
+		  Try
+		    If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead
+		    Return New Filter(Expression, ActiveCapture)
+		  Catch Err As PCAPException
+		    mLastCompileError = Err.Message
+		  End Try
+		  
+		  Return Nil
 		End Function
 	#tag EndMethod
 
@@ -81,11 +87,15 @@ Protected Class Filter
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected Shared mLastCompileError As MemoryBlock
+		Protected Shared mLastCompileError As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mProgram As Ptr
+		Protected mProgram As MemoryBlock
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected mSource As PCAP.Capture
 	#tag EndProperty
 
 

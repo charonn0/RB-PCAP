@@ -78,11 +78,11 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_compile Lib "wpcap" (pcap_t As Ptr, BPFProgram As Ptr, FilterString As Ptr, Optimize As Integer, NetMask As UInt32) As Integer
+		Private Soft Declare Function pcap_compile Lib "wpcap" (pcap_t As Ptr, BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_compile_nopcap Lib "wpcap" (SnapLength As Integer, LinkType As Integer, ByRef BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
+		Private Soft Declare Function pcap_compile_nopcap Lib "wpcap" (SnapLength As Integer, LinkType As Integer, BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21

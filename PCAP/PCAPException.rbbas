@@ -3,8 +3,18 @@ Protected Class PCAPException
 Inherits RuntimeException
 	#tag Method, Flags = &h0
 		Sub Constructor(ActiveCapture As PCAP.Capture)
-		  Me.Message = GetError(ActiveCapture)
-		  
+		  If ActiveCapture <> Nil Then
+		    Me.Message = GetError(ActiveCapture)
+		  Else
+		    Me.Message = "Unknown PCAP error"
+		  End If
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000
+		Sub Constructor(BadFilter As PCAP.Filter, ActiveCapture As PCAP.Capture)
+		  Me.Constructor(ActiveCapture)
+		  Me.Message = Me.Message + EndOfLine + "Filter: " + BadFilter.Expression
 		End Sub
 	#tag EndMethod
 
