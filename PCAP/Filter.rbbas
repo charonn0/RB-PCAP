@@ -18,8 +18,7 @@ Protected Class Filter
 		  If Optimize Then opt = 1
 		  mProgram = New MemoryBlock(8)
 		  mExpression = Expression
-		  mSource = ActiveCapture
-		  If Not Compile(mExpression, mSource, mProgram, opt, 0) Then Raise New PCAPException(Me, ActiveCapture)
+		  If Not Compile(mExpression, ActiveCapture, mProgram, opt, 0) Then Raise New PCAPException(Me, ActiveCapture)
 		End Sub
 	#tag EndMethod
 
@@ -63,12 +62,6 @@ Protected Class Filter
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Source() As PCAP.Capture
-		  Return mSource
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		 Shared Function Validate(Expression As String, Optional ActiveCapture As PCAP.Capture) As PCAP.Filter
 		  Try
 		    If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead
@@ -92,10 +85,6 @@ Protected Class Filter
 
 	#tag Property, Flags = &h1
 		Protected mProgram As MemoryBlock
-	#tag EndProperty
-
-	#tag Property, Flags = &h1
-		Protected mSource As PCAP.Capture
 	#tag EndProperty
 
 
