@@ -230,6 +230,16 @@ Protected Class Capture
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  If mHandle <> Nil Then Return pcap_snapshot(mHandle)
+			  Return -1
+			End Get
+		#tag EndGetter
+		SnapLength As Integer
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
 			  Try
 			    Return Me.GetStatistics.ps_recv
 			  Catch

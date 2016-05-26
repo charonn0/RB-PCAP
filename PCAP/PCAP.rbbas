@@ -178,6 +178,10 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_snapshot Lib "wpcap" (pcap_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_stats Lib "wpcap" (pcap_t As Ptr, ByRef Stats As pcap_stat) As Integer
 	#tag EndExternalMethod
 
