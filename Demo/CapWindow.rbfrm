@@ -46,17 +46,17 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   0
       TabPanelIndex   =   0
-      Text            =   "Adaptor:"
+      Text            =   "Source:"
       TextAlign       =   2
       TextColor       =   &h000000
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   6
+      Top             =   3
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   65
+      Width           =   87
    End
    Begin Label Label2
       AutoDeactivate  =   True
@@ -80,17 +80,17 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   1
       TabPanelIndex   =   0
-      Text            =   "Packets:"
+      Text            =   "Packets seen:"
       TextAlign       =   2
       TextColor       =   &h000000
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   30
+      Top             =   21
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   65
+      Width           =   87
    End
    Begin Label Label3
       AutoDeactivate  =   True
@@ -103,7 +103,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   172
+      Left            =   429
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -120,7 +120,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   30
+      Top             =   21
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
@@ -137,7 +137,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   77
+      Left            =   99
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -154,11 +154,11 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   6
+      Top             =   3
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   474
+      Width           =   452
    End
    Begin Label PacketCount
       AutoDeactivate  =   True
@@ -171,7 +171,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   77
+      Left            =   99
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -188,7 +188,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   30
+      Top             =   21
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
@@ -205,7 +205,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   249
+      Left            =   506
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -222,42 +222,11 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   30
+      Top             =   21
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   123
-   End
-   Begin PushButton PushButton1
-      AutoDeactivate  =   True
-      Bold            =   ""
-      ButtonStyle     =   0
-      Cancel          =   ""
-      Caption         =   "Stop"
-      Default         =   ""
-      Enabled         =   True
-      Height          =   22
-      HelpTag         =   ""
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Italic          =   ""
-      Left            =   278
-      LockBottom      =   ""
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
-      LockTop         =   True
-      Scope           =   0
-      TabIndex        =   6
-      TabPanelIndex   =   0
-      TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0
-      TextUnit        =   0
-      Top             =   69
-      Underline       =   ""
-      Visible         =   True
-      Width           =   80
+      Width           =   45
    End
    Begin Timer Timer1
       Height          =   32
@@ -296,7 +265,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   193
+      Left            =   231
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -309,7 +278,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   69
+      Top             =   271
       Underline       =   ""
       Visible         =   True
       Width           =   80
@@ -417,7 +386,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   77
+      Left            =   99
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -434,7 +403,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   50
+      Top             =   37
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
@@ -462,17 +431,17 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   11
       TabPanelIndex   =   0
-      Text            =   "Byte count:"
+      Text            =   "Bytes captured:"
       TextAlign       =   2
       TextColor       =   &h000000
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   50
+      Top             =   37
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   65
+      Width           =   87
    End
    Begin CheckBox Autoscroll
       AutoDeactivate  =   True
@@ -486,7 +455,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   20
+      Left            =   7
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -500,7 +469,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   71
+      Top             =   257
       Underline       =   ""
       Value           =   True
       Visible         =   True
@@ -542,7 +511,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   263
+      Top             =   63
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
@@ -576,7 +545,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   264
+      Top             =   64
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
@@ -608,10 +577,78 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   263
+      Top             =   63
       Underline       =   ""
       Visible         =   True
       Width           =   58
+   End
+   Begin Label PacketCount1
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   296
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   16
+      TabPanelIndex   =   0
+      Text            =   0
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   21
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   91
+   End
+   Begin Label Label6
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   187
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   17
+      TabPanelIndex   =   0
+      Text            =   "Packets captured:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   21
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   97
    End
 End
 #tag EndWindow
@@ -709,25 +746,18 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub OpenCapture(ActiveCapture As PCAP.Capture)
+		Sub OpenCapture(ActiveCapture As PCAP.Capture, SourceFile As FolderItem, InitialFilter As PCAP.Filter)
 		  mCapture = ActiveCapture
-		  mCapLock = New Semaphore
+		  AdaptorPath.Text = SourceFile.AbsolutePath
+		  mFilter = InitialFilter
+		  If mFilter <> Nil Then FilterString.Text = mFilter.Expression
 		  Self.Title = "Reading capture file"
-		  'Timer1.Mode = Timer.ModeMultiple
-		  
-		  'DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
-		  'PacketCount.Text = Format(mCapture.PacketCount, "###,###,###,##0")
-		  Dim c As Integer = PacketList.ListCount
-		  Dim added As Boolean
 		  Do Until mCapture.EOF
 		    Dim p As PCAP.Packet = mCapture.ReadNext
 		    If p = Nil Then Continue
-		    PacketList.AddRow("#" + Format(c, "###,###,###,##0") + " (" + FormatBytes(p.SnapLength) + ")")
-		    PacketList.RowTag(c) = p
-		    c = c + 1
-		    added = True
+		    mPackets.Append(p)
 		  Loop
-		  If added Then PacketList.ScrollPosition = c
+		  Timer1.Mode = Timer.ModeMultiple
 		  Self.Show
 		End Sub
 	#tag EndMethod
@@ -746,6 +776,10 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
+		Private mCount As Integer
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
 		Private mDump As PCAP.DumpFile
 	#tag EndProperty
 
@@ -760,57 +794,43 @@ End
 
 #tag EndWindowCode
 
-#tag Events PushButton1
-	#tag Event
-		Sub Action()
-		  Do Until mCapLock.TrySignal
-		    App.YieldToNextThread
-		  Loop
-		  Try
-		    If CapThread.State = Thread.Running Then
-		      CapThread.Suspend
-		      PushButton2.Caption = "Start"
-		    End If
-		    If mDump <> Nil Then mDump.Flush
-		  Finally
-		    mCapLock.Release
-		  End Try
-		End Sub
-	#tag EndEvent
-#tag EndEvents
 #tag Events Timer1
 	#tag Event
 		Sub Action()
 		  If mCapture = Nil Then Return
-		  If Not mCapLock.TrySignal Then Return
-		  If CapThread.State = Thread.Suspended Then
-		    CapThread.Resume
-		  ElseIf CapThread.State <> Thread.Running Then
-		    CapThread.Run
+		  If mCapLock <> Nil Then
+		    If Not mCapLock.TrySignal Then Return
+		    If CapThread.State = Thread.Suspended Then
+		      CapThread.Resume
+		    ElseIf CapThread.State <> Thread.Running Then
+		      CapThread.Run
+		    End If
 		  End If
 		  Try
-		    If mCapture.Source <> Nil Then AdaptorPath.Text = mCapture.Source.Name
-		    DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
-		    PacketCount.Text = Format(mCapture.PacketCount, "###,###,###,##0")
-		    'PacketList.Visible = False
+		    If mCapture.IsLive Then
+		      If mCapture.Source <> Nil Then AdaptorPath.Text = mCapture.Source.Name
+		      DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
+		      PacketCount.Text = Format(mCapture.PacketCount, "###,###,###,##0")
+		    End If
 		    PacketList.Enabled = False
 		    Dim c As Integer = PacketList.ListCount
 		    Dim added As Boolean
 		    Do Until UBound(mPackets) = -1
 		      Dim p As PCAP.Packet = mPackets.Pop
-		      'PacketList.AddRow("#" + Format(c, "###,###,###,##0") + " (" + FormatBytes(p.SnapLength) + ")")
 		      PacketList.AddRow("+" + Format(p.TimeStamp - mCapture.Epoch, "0.0###") + " (" + FormatBytes(p.SnapLength) + ")")
 		      mByteCount = mByteCount + p.Length
+		      mCount = mCount + 1
 		      PacketList.RowTag(c) = p
 		      c = c + 1
 		      added = True
 		    Loop
+		    PacketCount1.Text = Format(mCount, "###,###,###,##0")
 		    If Autoscroll.Value And added Then PacketList.ScrollPosition = c
 		    'PacketList.Visible = True
 		    PacketList.Enabled = True
 		    ByteCount.Text = FormatBytes(mByteCount)
 		  Finally
-		    mCapLock.Release
+		    If mCapLock <> Nil Then mCapLock.Release
 		  End Try
 		End Sub
 	#tag EndEvent
@@ -841,10 +861,12 @@ End
 	#tag Event
 		Sub Action()
 		  If CapThread.State = Thread.Suspended Then
+		    Timer1.Mode = Timer.ModeMultiple
 		    CapThread.Resume
 		    Me.Caption = "Pause"
 		  Else
 		    CapThread.Suspend
+		    Timer1.Mode = Timer.ModeOff
 		    Me.Caption = "Resume"
 		  End If
 		End Sub

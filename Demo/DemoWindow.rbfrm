@@ -434,8 +434,10 @@ End
 		  If f <> Nil And f.Exists Then
 		    Dim cap As PCAP.Capture = PCAP.OpenCapture(f)
 		    If cap <> Nil Then
+		      Dim filter As PCAP.Filter = PCAP.Filter.Validate(FilterString.Text, cap)
+		      If filter <> Nil Then cap.CurrentFilter = filter
 		      Dim capwin As New CapWindow
-		      capwin.OpenCapture(cap)
+		      capwin.OpenCapture(cap, f, filter)
 		    End If
 		  End If
 		End Sub
