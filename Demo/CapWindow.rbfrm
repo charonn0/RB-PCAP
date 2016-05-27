@@ -373,7 +373,7 @@ Begin Window CapWindow
       Top             =   103
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   306
+      Width           =   294
    End
    Begin Label ByteCount
       AutoDeactivate  =   True
@@ -650,6 +650,34 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   97
    End
+   Begin ScrollBar ScrollBar1
+      AcceptFocus     =   true
+      AutoDeactivate  =   True
+      Enabled         =   True
+      Height          =   156
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Left            =   534
+      LineStep        =   1
+      LiveScroll      =   True
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   True
+      Maximum         =   100
+      Minimum         =   0
+      PageStep        =   20
+      Scope           =   0
+      TabIndex        =   18
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Top             =   103
+      Value           =   0
+      Visible         =   True
+      Width           =   16
+   End
 End
 #tag EndWindow
 
@@ -791,6 +819,10 @@ End
 		Private mPackets() As PCAP.Packet
 	#tag EndProperty
 
+	#tag Property, Flags = &h21
+		Private mScrollLock As Boolean
+	#tag EndProperty
+
 
 #tag EndWindowCode
 
@@ -877,9 +909,22 @@ End
 		Sub Change()
 		  If Me.ListIndex <> -1 Then
 		    Dim p As PCAP.Packet = Me.RowTag(Me.ListIndex)
+		    PacketView.StreamLen = PacketView.StreamLen + p.SnapLength
 		    PacketView.ShowData(New BinaryStream(p), p.SnapLength)
 		  End If
 		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PacketView
+	#tag Event
+		Function Scrolled(LinesDelta As Integer, BytesDelta As Integer) As Boolean
+		  #pragma Unused BytesDelta
+		  
+		  ScrollBar1.Maximum = PacketView.LineCount - (PacketView.VisibleLineCount \ 2)
+		  ScrollBar1.Value = ScrollBar1.Value + LinesDelta
+		  
+		  Return True ' Since we're updating the offset in ScrollBar1.ValueChanged, we return true to prevent the HexViewer from updating it too.
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag Events PushButton3
@@ -901,6 +946,16 @@ End
 		  Finally
 		    mCapLock.Release
 		  End Try
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events ScrollBar1
+	#tag Event
+		Sub ValueChanged()
+		  If mScrollLock Then Return
+		  mScrollLock = True
+		  PacketView.Offset = Me.Value * PacketView.BytesPerLine
+		  mScrollLock = False
 		End Sub
 	#tag EndEvent
 #tag EndEvents
