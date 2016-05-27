@@ -4,6 +4,7 @@ Protected Class Packet
 		Sub Constructor(pHeader As pcap_pkthdr, RawPacket As Ptr)
 		  mHeader = pHeader
 		  mRaw = RawPacket
+		  mRaw = mRaw.StringValue(0, pHeader.caplen)
 		End Sub
 	#tag EndMethod
 
@@ -55,7 +56,7 @@ Protected Class Packet
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mRaw As Ptr
+		Protected mRaw As MemoryBlock
 	#tag EndProperty
 
 
