@@ -285,10 +285,10 @@ Inherits Canvas
 	#tag Method, Flags = &h0
 		Function LineCount() As Integer
 		  If Stream = Nil Then Return 0
-		  If Stream.Length Mod BytesPerLine = 0 Then
-		    Return Stream.Length \ BytesPerLine
+		  If mStreamLen Mod BytesPerLine = 0 Then
+		    Return mStreamLen \ BytesPerLine
 		  Else
-		    Return (Stream.Length \ BytesPerLine) + 1
+		    Return (mStreamLen \ BytesPerLine) + 1
 		  End If
 		End Function
 	#tag EndMethod
@@ -733,7 +733,7 @@ Inherits Canvas
 		#tag EndGetter
 		#tag Setter
 			Set
-			  If Stream = Nil Or value >= Stream.Length Then Return
+			  If Stream = Nil Or value >= mStreamLen Then Return
 			  mOffset = value
 			  Buffer = Nil
 			  Me.Update(True)
@@ -794,12 +794,12 @@ Inherits Canvas
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  return Stream.Length
+			  return mStreamLen
 			End Get
 		#tag EndGetter
 		#tag Setter
 			Set
-			  Stream.Length = value
+			  mStreamLen = value
 			  Me.Update(True)
 			End Set
 		#tag EndSetter
