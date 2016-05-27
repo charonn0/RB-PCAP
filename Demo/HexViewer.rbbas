@@ -293,8 +293,8 @@ Inherits Canvas
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function LineFromOffset(BytesOffset As UInt64) As Integer
+	#tag Method, Flags = &h0
+		Function LineFromOffset(BytesOffset As UInt64) As Integer
 		  If BytesOffset Mod BytesPerLine = 0 Then
 		    Return BytesOffset \ BytesPerLine
 		  Else
@@ -312,8 +312,8 @@ Inherits Canvas
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function OffsetFromLine(Line As Integer) As UInt64
+	#tag Method, Flags = &h0
+		Function OffsetFromLine(Line As Integer) As UInt64
 		  Return BytesPerLine * Line
 		End Function
 	#tag EndMethod

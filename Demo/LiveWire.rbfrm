@@ -199,13 +199,18 @@ End
 		    Do Until UBound(mPackets) = -1
 		      Dim p As PCAP.Packet = mPackets.Pop
 		      mPacketStream.Write(p.StringValue)
+		      offset = offset + p.SnapLength
 		      added = True
 		    Loop
 		  Finally
 		    mCapLock.Release
 		  End Try
-		  mPacketStream.Position = offset
-		  If Added Then HexViewer1.Offset = mPacketStream.Length - (HexViewer1.VisibleLineCount * HexViewer1.BytesPerLine)
+		  If Added Then
+		    Dim lastline As Integer = HexViewer1.LineFromOffset(Max(offset - (HexViewer1.BytesPerLine * 1), 0))
+		    offset = HexViewer1.OffsetFromLine(lastline)
+		    System.DebugLog("Setting an offset of  " + str(offset) + " for a length of " + Str(mPacketStream.Length))
+		    HexViewer1.Offset = offset
+		  End If
 		End Sub
 	#tag EndEvent
 #tag EndEvents
