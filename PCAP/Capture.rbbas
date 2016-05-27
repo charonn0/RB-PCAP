@@ -58,6 +58,7 @@ Protected Class Capture
 
 	#tag Method, Flags = &h0
 		Sub CurrentFilter(Assigns NewFilterProgram As PCAP.Filter)
+		  If Not (NewFilterProgram.Source Is Me) Then Raise New PCAPException("Filters may not be shared among captures.")
 		  If pcap_setfilter(mHandle, NewFilterProgram.Handle) <> 0 Then Raise New PCAPException(Me)
 		  mCurrentFilter = NewFilterProgram
 		End Sub
@@ -135,7 +136,7 @@ Protected Class Capture
 		    Return Nil
 		    
 		  Case -1 ' error
-		    Raise New IOException
+		    Raise New PCAPException(Me)
 		    
 		  Case -2 ' eof
 		    mEOF = True
