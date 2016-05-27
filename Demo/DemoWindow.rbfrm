@@ -418,7 +418,7 @@ End
 		  End If
 		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, 50)
 		  If capture <> Nil Then
-		    Dim filter As PCAP.Filter = PCAP.Filter.Validate(FilterString.Text, capture)
+		    Dim filter As PCAP.Filter = PCAP.Filter.Compile(FilterString.Text, capture)
 		    If filter <> Nil Then capture.CurrentFilter = filter
 		    Dim capwin As New CapWindow
 		    capwin.BeginCapture(capture, f, filter)
@@ -434,7 +434,7 @@ End
 		  If f <> Nil And f.Exists Then
 		    Dim cap As PCAP.Capture = PCAP.OpenCapture(f)
 		    If cap <> Nil Then
-		      Dim filter As PCAP.Filter = PCAP.Filter.Validate(FilterString.Text, cap)
+		      Dim filter As PCAP.Filter = PCAP.Filter.Compile(FilterString.Text, cap)
 		      If filter <> Nil Then cap.CurrentFilter = filter
 		      Dim capwin As New CapWindow
 		      capwin.OpenCapture(cap, f, filter)
@@ -446,7 +446,7 @@ End
 #tag Events PushButton3
 	#tag Event
 		Sub Action()
-		  Dim f As PCAP.Filter = PCAP.Filter.Validate(FilterString.Text)
+		  Dim f As PCAP.Filter = PCAP.Filter.Compile(FilterString.Text)
 		  If f = Nil Then
 		    MsgBox("Invalid filter. " + PCAP.Filter.LastCompileError)
 		  Else

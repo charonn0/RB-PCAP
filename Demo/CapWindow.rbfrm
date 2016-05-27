@@ -930,7 +930,7 @@ End
 #tag Events PushButton3
 	#tag Event
 		Sub Action()
-		  Dim f As PCAP.Filter = PCAP.Filter.Validate(FilterString.Text, mCapture)
+		  Dim f As PCAP.Filter = PCAP.Filter.Compile(FilterString.Text, mCapture)
 		  If f = Nil Then
 		    MsgBox("Invalid filter. " + PCAP.Filter.LastCompileError)
 		    Return

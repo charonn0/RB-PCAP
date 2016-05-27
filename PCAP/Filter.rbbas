@@ -1,5 +1,20 @@
 #tag Class
 Protected Class Filter
+	#tag Method, Flags = &h0
+		 Shared Function Compile(Expression As String, Optional ActiveCapture As PCAP.Capture, Optimize As Boolean = False) As PCAP.Filter
+		  If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead
+		  Dim opt As Integer
+		  If Optimize Then opt = 1
+		  Dim filt As New PCAP.Filter(Expression, Nil, ActiveCapture)
+		  filt.mProgram = New MemoryBlock(8)
+		  If Not Compile(Expression, ActiveCapture, filt.mProgram, opt, 0) Then 
+		    mLastCompileError = GetError(ActiveCapture)
+		    Return Nil
+		  End If
+		  Return filt
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Shared Function Compile(Expression As String, ActiveCapture As PCAP.Capture, Program As MemoryBlock, Optimize As Integer, Netmask As UInt32 = &hffffff) As Boolean
 		  If ActiveCapture <> Nil Then
@@ -12,20 +27,11 @@ Protected Class Filter
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub Constructor(Expression As String, ActiveCapture As PCAP.Capture, Optimize As Boolean = False)
-		  Dim opt As Integer
-		  If Optimize Then opt = 1
-		  mProgram = New MemoryBlock(8)
-		  mExpression = Expression
-		  If Not Compile(mExpression, ActiveCapture, mProgram, opt, 0) Then Raise New PCAPException(Me, ActiveCapture)
-		End Sub
-	#tag EndMethod
-
 	#tag Method, Flags = &h1
-		Protected Sub Constructor(Expression As String, Program As Ptr)
+		Protected Sub Constructor(Expression As String, Program As Ptr, ActiveCapture As PCAP.Capture)
 		  mProgram = Program
 		  mExpression = Expression
+		  mCapture = ActiveCapture
 		End Sub
 	#tag EndMethod
 
@@ -56,24 +62,23 @@ Protected Class Filter
 
 	#tag Method, Flags = &h0
 		Sub Operator_Convert(Expression As String)
-		  Dim dead As PCAP.Capture = PCAP.Capture.CreateDead()
-		  Me.Constructor(Expression, dead, False)
+		  mCapture = PCAP.Capture.CreateDead()
+		  mProgram = New MemoryBlock(8)
+		  mExpression = Expression
+		  If Not Compile(Expression, mCapture, mProgram, 0) Then Raise New PCAPException(Me, mCapture)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function Validate(Expression As String, Optional ActiveCapture As PCAP.Capture) As PCAP.Filter
-		  Try
-		    If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead
-		    Return New Filter(Expression, ActiveCapture)
-		  Catch Err As PCAPException
-		    mLastCompileError = Err.Message
-		  End Try
-		  
-		  Return Nil
+		Function Source() As PCAP.Capture
+		  Return mCapture
 		End Function
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h1
+		Protected mCapture As PCAP.Capture
+	#tag EndProperty
 
 	#tag Property, Flags = &h1
 		Protected mExpression As String
