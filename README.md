@@ -9,18 +9,20 @@ This example [captures](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Capture) 6
   Dim capture As PCAP.Capture = PCAP.BeginCapture(iface) ' open the device
   Dim dumpfile As New PCAP.DumpFile(capture, SpecialFolder.Desktop.Child("test.pcap")) ' create dump file
   
-  Dim filter As PCAP.Filter = PCAP.Filter.Validate("host example.com", capture) ' create filter
-  If filter <> Nil Then 
-    capture.CurrentFilter = filter 
-  Else 
+  Dim expression As String = "host example.net and port 80 and tcp"
+  Dim filter As PCAP.Filter = PCAP.Filter.Compile(expression, capture) ' create filter
+   If filter <> Nil Then
+    capture.CurrentFilter = filter ' assign the filter to the capture
+    
+    ' begin reading packets from the capture buffer
+    Do Until capture.EOF Or dumpfile.Position > 1024 * 64
+      Dim p As PCAP.Packet = capture.ReadNext() 'waits for next packet or timeout
+      If p <> Nil Then dumpfile.WritePacket(p)
+    Loop
+    
+  Else ' invalid expression
     MsgBox(PCAP.Filter.LastCompileError)
   End If
-  
-  ' begin capturing
-  Do Until capture.EOF Or dumpfile.Position > 1024 * 64
-    Dim p As PCAP.Packet = capture.ReadNext() 'waits for next packet or timeout
-    If p <> Nil Then dumpfile.WritePacket(p)
-  Loop
   
   dumpfile.Close
   capture.Close
