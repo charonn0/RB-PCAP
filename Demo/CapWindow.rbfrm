@@ -245,7 +245,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       Left            =   -44
       LockedInPosition=   False
-      Priority        =   1
+      Priority        =   5
       Scope           =   0
       StackSize       =   0
       TabPanelIndex   =   0
@@ -265,7 +265,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   246
+      Left            =   200
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
@@ -343,11 +343,11 @@ Begin Window CapWindow
       ByteBackgroundColorAlt=   "&cC0C0C000"
       ByteColor       =   "&c0000FF00"
       BytesLittleEndian=   True
-      DoubleBuffer    =   False
+      DoubleBuffer    =   True
       Enabled         =   True
-      EraseBackground =   True
       GutterColor     =   "&cFFFFFF00"
       GutterColorAlt  =   "&cC0C0C000"
+      EraseBackground =   False
       Height          =   363
       HelpTag         =   ""
       Hilight         =   ""
@@ -363,7 +363,7 @@ Begin Window CapWindow
       LockRight       =   True
       LockTop         =   True
       Scope           =   0
-      ShowOffsets     =   ""
+      ShowOffsets     =   True
       TabIndex        =   9
       TabPanelIndex   =   0
       TabStop         =   True
@@ -678,6 +678,105 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   16
    End
+   Begin PushButton PushButton4
+      AutoDeactivate  =   True
+      Bold            =   ""
+      ButtonStyle     =   0
+      Cancel          =   ""
+      Caption         =   "Stop"
+      Default         =   ""
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   292
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   False
+      Scope           =   0
+      TabIndex        =   19
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   478
+      Underline       =   ""
+      Visible         =   True
+      Width           =   80
+   End
+   Begin Label PendingCount
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   296
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   20
+      TabPanelIndex   =   0
+      Text            =   0
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   37
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   91
+   End
+   Begin Label Label7
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   187
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   21
+      TabPanelIndex   =   0
+      Text            =   "Packets Pending:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   37
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   97
+   End
 End
 #tag EndWindow
 
@@ -715,7 +814,13 @@ End
 		    Self.Title = "Capturing on '" + ActiveCapture.Source.Name + "'"
 		  End If
 		  Timer1.Mode = Timer.ModeMultiple
-		  
+		  If mCapLock <> Nil Then
+		    If CapThread.State = Thread.Suspended Then
+		      CapThread.Resume
+		    ElseIf CapThread.State <> Thread.Running Then
+		      CapThread.Run
+		    End If
+		  End If
 		  Self.Show
 		End Sub
 	#tag EndMethod
@@ -834,20 +939,15 @@ End
 	#tag Event
 		Sub Action()
 		  If mCapture = Nil Then Return
-		  If mCapLock <> Nil Then
-		    If Not mCapLock.TrySignal Then Return
-		    If CapThread.State = Thread.Suspended Then
-		      CapThread.Resume
-		    ElseIf CapThread.State <> Thread.Running Then
-		      CapThread.Run
-		    End If
-		  End If
+		  If Not mCapLock.TrySignal Then Return
+		  
 		  Try
 		    If mCapture.IsLive Then
 		      If mCapture.Source <> Nil Then AdaptorPath.Text = mCapture.Source.Name
 		      DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
 		      PacketCount.Text = Format(mPacketCount + mCapture.PacketCount, "###,###,###,##0")
 		    End If
+		    PendingCount.Text = Format(UBound(mPackets) + 1, "###,###,###,##0")
 		    PacketList.Enabled = False
 		    Dim c As Integer = PacketList.ListCount
 		    Dim added As Boolean
@@ -961,6 +1061,25 @@ End
 		  mScrollLock = True
 		  PacketView.Offset = Me.Value * PacketView.BytesPerLine
 		  mScrollLock = False
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PushButton4
+	#tag Event
+		Sub Action()
+		  If Not mCapLock.TrySignal Then Return
+		  Try
+		    If Me.Caption = "Start" Then
+		      Timer1.Mode = Timer.ModeMultiple
+		      CapThread.Run
+		      Me.Caption = "Stop"
+		    Else
+		      CapThread.Kill
+		      Me.Caption = "Start"
+		    End If
+		  Finally
+		    mCapLock.Release
+		  End Try
 		End Sub
 	#tag EndEvent
 #tag EndEvents
