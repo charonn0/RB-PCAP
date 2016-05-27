@@ -2,7 +2,7 @@
 Experimental [WinPcap](https://www.winpcap.org/) bindings for Realbasic Win32 applications. *nix support using libpcap is possible, but not yet implemented.
 
 ##Example
-This example captures 64KB of filtered packets from a local network adaptor and saves them to a standard PCAP file on the user's desktop.
+This example [captures](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Capture) 64KB of [filtered](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Filter) [packets](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Packet) from a local network [adaptor](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor) and saves them to a standard [PCAP file](https://github.com/charonn0/RB-PCAP/wiki/PCAP.DumpFile) on the user's desktop.
 
 ```vbnet
   Dim iface As PCAP.Adaptor = PCAP.GetCaptureDevice(0) ' first device
