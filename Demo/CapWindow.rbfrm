@@ -7,7 +7,7 @@ Begin Window CapWindow
    Frame           =   3
    FullScreen      =   False
    HasBackColor    =   False
-   Height          =   2.97e+2
+   Height          =   5.04e+2
    ImplicitInstance=   False
    LiveResize      =   True
    MacProcID       =   0
@@ -19,11 +19,11 @@ Begin Window CapWindow
    MinHeight       =   64
    MinimizeButton  =   False
    MinWidth        =   64
-   Placement       =   0
-   Resizeable      =   False
+   Placement       =   1
+   Resizeable      =   True
    Title           =   "Capturing - Untitled.pcap"
    Visible         =   True
-   Width           =   5.51e+2
+   Width           =   5.82e+2
    Begin Label Label1
       AutoDeactivate  =   True
       Bold            =   ""
@@ -103,11 +103,11 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   429
+      Left            =   460
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       Multiline       =   ""
       Scope           =   0
@@ -141,7 +141,7 @@ Begin Window CapWindow
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   ""
+      LockRight       =   True
       LockTop         =   True
       Multiline       =   ""
       Scope           =   0
@@ -158,7 +158,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   452
+      Width           =   483
    End
    Begin Label PacketCount
       AutoDeactivate  =   True
@@ -205,11 +205,11 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   506
+      Left            =   537
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       Multiline       =   ""
       Scope           =   0
@@ -265,12 +265,12 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   231
-      LockBottom      =   ""
+      Left            =   246
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   ""
-      LockTop         =   True
+      LockTop         =   False
       Scope           =   0
       TabIndex        =   7
       TabPanelIndex   =   0
@@ -278,7 +278,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   271
+      Top             =   478
       Underline       =   ""
       Visible         =   True
       Width           =   80
@@ -301,7 +301,7 @@ Begin Window CapWindow
       GridLinesVertical=   0
       HasHeading      =   ""
       HeadingIndex    =   -1
-      Height          =   156
+      Height          =   363
       HelpTag         =   ""
       Hierarchical    =   ""
       Index           =   -2147483648
@@ -309,7 +309,7 @@ Begin Window CapWindow
       InitialValue    =   ""
       Italic          =   ""
       Left            =   7
-      LockBottom      =   ""
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   ""
@@ -348,7 +348,7 @@ Begin Window CapWindow
       EraseBackground =   True
       GutterColor     =   "&cFFFFFF00"
       GutterColorAlt  =   "&cC0C0C000"
-      Height          =   156
+      Height          =   363
       HelpTag         =   ""
       Hilight         =   ""
       Index           =   -2147483648
@@ -357,10 +357,10 @@ Begin Window CapWindow
       Left            =   237
       LineNumbersColor=   "&c80000000"
       LineNumbersLittleEndian=   False
-      LockBottom      =   ""
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   ""
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       ShowOffsets     =   ""
@@ -373,7 +373,7 @@ Begin Window CapWindow
       Top             =   103
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   294
+      Width           =   325
    End
    Begin Label ByteCount
       AutoDeactivate  =   True
@@ -456,11 +456,11 @@ Begin Window CapWindow
       InitialParent   =   ""
       Italic          =   ""
       Left            =   7
-      LockBottom      =   ""
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   ""
-      LockTop         =   True
+      LockTop         =   False
       Scope           =   0
       State           =   1
       TabIndex        =   12
@@ -469,7 +469,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   257
+      Top             =   464
       Underline       =   ""
       Value           =   True
       Visible         =   True
@@ -497,7 +497,7 @@ Begin Window CapWindow
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   ""
+      LockRight       =   True
       LockTop         =   True
       Mask            =   ""
       Password        =   ""
@@ -515,7 +515,7 @@ Begin Window CapWindow
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   420
+      Width           =   451
    End
    Begin Label Label5
       AutoDeactivate  =   True
@@ -564,11 +564,11 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   485
+      Left            =   516
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   15
@@ -654,11 +654,11 @@ Begin Window CapWindow
       AcceptFocus     =   true
       AutoDeactivate  =   True
       Enabled         =   True
-      Height          =   156
+      Height          =   363
       HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      Left            =   534
+      Left            =   565
       LineStep        =   1
       LiveScroll      =   True
       LockBottom      =   True
@@ -816,6 +816,10 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
+		Private mPacketCount As UInt64
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
 		Private mPackets() As PCAP.Packet
 	#tag EndProperty
 
@@ -842,7 +846,7 @@ End
 		    If mCapture.IsLive Then
 		      If mCapture.Source <> Nil Then AdaptorPath.Text = mCapture.Source.Name
 		      DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
-		      PacketCount.Text = Format(mCapture.PacketCount, "###,###,###,##0")
+		      PacketCount.Text = Format(mPacketCount + mCapture.PacketCount, "###,###,###,##0")
 		    End If
 		    PacketList.Enabled = False
 		    Dim c As Integer = PacketList.ListCount
@@ -935,7 +939,7 @@ End
 		    MsgBox("Invalid filter. " + PCAP.Filter.LastCompileError)
 		    Return
 		  End If
-		  
+		  Dim c As UInt64 = mCapture.PacketCount
 		  Do Until mCapLock.TrySignal
 		    App.YieldToNextThread
 		  Loop
@@ -943,6 +947,7 @@ End
 		    mCapture.CurrentFilter = f
 		    mFilter = f
 		    MsgBox("Filter changed")
+		    mPacketCount = mPacketCount + c
 		  Finally
 		    mCapLock.Release
 		  End Try

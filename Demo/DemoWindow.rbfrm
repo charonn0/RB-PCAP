@@ -78,6 +78,7 @@ Begin Window DemoWindow
       Selectable      =   False
       TabIndex        =   1
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Device:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -280,6 +281,7 @@ Begin Window DemoWindow
       Selectable      =   False
       TabIndex        =   7
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Initial filter:"
       TextAlign       =   2
       TextColor       =   &h000000
