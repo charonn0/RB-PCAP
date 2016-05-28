@@ -78,7 +78,6 @@ Begin Window DemoWindow
       Selectable      =   False
       TabIndex        =   1
       TabPanelIndex   =   0
-      TabStop         =   True
       Text            =   "Device:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -281,7 +280,6 @@ Begin Window DemoWindow
       Selectable      =   False
       TabIndex        =   7
       TabPanelIndex   =   0
-      TabStop         =   True
       Text            =   "Initial filter:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -418,7 +416,7 @@ End
 		    f = GetSaveFolderItem(FileTypes1.PacketCaptureFile, "Untitled.pcap")
 		    If f = Nil Then Return
 		  End If
-		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, 50)
+		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, 10)
 		  If capture <> Nil Then
 		    Dim filter As PCAP.Filter = PCAP.Filter.Compile(FilterString.Text, capture)
 		    If filter <> Nil Then capture.CurrentFilter = filter
@@ -448,8 +446,7 @@ End
 #tag Events PushButton3
 	#tag Event
 		Sub Action()
-		  Dim f As PCAP.Filter = PCAP.Filter.Compile(FilterString.Text)
-		  If f = Nil Then
+		  If Not PCAP.IsValidFilter(FilterString.Text) Then
 		    MsgBox("Invalid filter. " + PCAP.Filter.LastCompileError)
 		  Else
 		    MsgBox("Filter is OK")
@@ -466,7 +463,7 @@ End
 		  End If
 		  Dim a As PCAP.Adaptor = Adaptors.RowTag(Adaptors.ListIndex)
 		  Dim livewr As New LiveWire
-		  livewr.ShowAdaptor(a)
+		  livewr.ShowAdaptor(a, FilterString.Text)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
