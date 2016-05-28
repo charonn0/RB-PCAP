@@ -30,16 +30,17 @@ Begin Window LiveWire
       AutoDeactivate  =   True
       Backdrop        =   ""
       Bold            =   ""
-      Border          =   ""
+      Border          =   True
+      BorderColor     =   &h00C0C0C0
       ByteBackgroundColor=   "&cFFFFFF00"
-      ByteBackgroundColorAlt=   "&cC0C0C000"
+      ByteBackgroundColorAlt=   "&cFFFFFF00"
       ByteColor       =   "&c0000FF00"
       BytesLittleEndian=   True
       DoubleBuffer    =   True
       Enabled         =   True
       EraseBackground =   False
       GutterColor     =   "&cFFFFFF00"
-      GutterColorAlt  =   "&cC0C0C000"
+      GutterColorAlt  =   "&cFFFFFF00"
       Height          =   400
       HelpTag         =   ""
       Hilight         =   ""
@@ -60,7 +61,7 @@ Begin Window LiveWire
       TabPanelIndex   =   0
       TabStop         =   True
       TextBackGroundColor=   "&cFFFFFF00"
-      TextBackGroundColorAlt=   "&cC0C0C000"
+      TextBackGroundColorAlt=   "&cFFFFFF00"
       TextFont        =   "System"
       TextSize        =   0
       Top             =   0
@@ -133,10 +134,11 @@ End
 
 
 	#tag Method, Flags = &h0
-		Sub ShowAdaptor(Adaptor As PCAP.Adaptor)
+		Sub ShowAdaptor(Adaptor As PCAP.Adaptor, Expression As String)
 		  Self.Title = "Live wire - " + Adaptor.Name
 		  mCapLock = New Semaphore
-		  mCapture = PCAP.BeginCapture(Adaptor, True, PCAP.MAX_SNAP_LENGTH, 50)
+		  mCapture = PCAP.BeginCapture(Adaptor, True, PCAP.MAX_SNAP_LENGTH, 10)
+		  If Expression.Trim <> "" And PCAP.IsValidFilter(Expression) Then mCapture.CurrentFilter = PCAP.Filter.Compile(Expression, mCapture)
 		  Timer1.Mode = Timer.ModeMultiple
 		  Self.Show
 		End Sub
