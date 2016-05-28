@@ -109,7 +109,7 @@ Inherits Canvas
 		    TextGraphics = bg.Clip(BinWidth + GutterGraphics.Width, TopGutterGraphics.Height, TextWidth, Buffer.Height - TopGutterGraphics.Height)
 		    ' end Graphics' construct
 		    
-		    
+		    mVisibleByteCount = 0
 		    Dim TextHeight, row, column, bytewidth As Integer
 		    Dim data, txt, hx As String
 		    bytewidth = BinGraphics.StringWidth(".00")
@@ -122,8 +122,10 @@ Inherits Canvas
 		        Do Until BinGraphics.StringWidth(data) >= BinGraphics.Width - bytewidth
 		          If Stream.EOF Then
 		            data = data + " "
+		            mVisibleByteCount = mVisibleByteCount + 1
 		            Exit Do
 		          End If
+		          mVisibleByteCount = mVisibleByteCount + 1
 		          Dim bt As Byte = Stream.ReadByte
 		          hx = Hex(bt, 2, BytesLittleEndian)
 		          data = data + " " + hx' + " "
@@ -400,6 +402,13 @@ Inherits Canvas
 		  Buffer = Nil
 		  If AndInvalidate Then Invalidate(False)
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisibleByteCount() As Integer
+		  If mVisibleByteCount > 0 Then Break
+		  Return mVisibleByteCount
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -723,6 +732,10 @@ Inherits Canvas
 
 	#tag Property, Flags = &h21
 		Private munderline As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mVisibleByteCount As Integer
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
