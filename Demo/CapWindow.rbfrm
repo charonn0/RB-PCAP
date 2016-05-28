@@ -228,61 +228,6 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   45
    End
-   Begin Timer Timer1
-      Height          =   32
-      Index           =   -2147483648
-      Left            =   -44
-      LockedInPosition=   False
-      Mode            =   0
-      Period          =   100
-      Scope           =   0
-      TabPanelIndex   =   0
-      Top             =   -18
-      Width           =   32
-   End
-   Begin Thread CapThread
-      Height          =   32
-      Index           =   -2147483648
-      Left            =   -44
-      LockedInPosition=   False
-      Priority        =   5
-      Scope           =   0
-      StackSize       =   0
-      TabPanelIndex   =   0
-      Top             =   25
-      Width           =   32
-   End
-   Begin PushButton PushButton2
-      AutoDeactivate  =   True
-      Bold            =   ""
-      ButtonStyle     =   0
-      Cancel          =   ""
-      Caption         =   "Pause"
-      Default         =   ""
-      Enabled         =   True
-      Height          =   22
-      HelpTag         =   ""
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Italic          =   ""
-      Left            =   200
-      LockBottom      =   True
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
-      LockTop         =   False
-      Scope           =   0
-      TabIndex        =   7
-      TabPanelIndex   =   0
-      TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0
-      TextUnit        =   0
-      Top             =   478
-      Underline       =   ""
-      Visible         =   True
-      Width           =   80
-   End
    Begin Listbox PacketList
       AutoDeactivate  =   True
       AutoHideScrollbars=   True
@@ -778,6 +723,50 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   97
    End
+   Begin PCAP.PacketFilter PacketSrc
+      Height          =   32
+      Index           =   -2147483648
+      Left            =   5.37e+2
+      LockedInPosition=   False
+      Scope           =   0
+      TabPanelIndex   =   0
+      Top             =   4.72e+2
+      Width           =   32
+   End
+   Begin Label Label8
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   237
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   22
+      TabPanelIndex   =   0
+      Text            =   "Packet #:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   103
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   75
+   End
    Begin Label PacketNumber
       AutoDeactivate  =   True
       Bold            =   ""
@@ -1032,8 +1021,7 @@ End
 
 	#tag Event
 		Sub Close()
-		  Timer1.Mode = Timer.ModeOff
-		  If CapThread <> Nil And CapThread.State = Thread.Running Then CapThread.Kill
+		  If PacketSrc <> Nil Then PacketSrc.Stop
 		  If mCapture <> Nil Then mCapture.Close
 		  If mDump <> Nil Then mDump.Close
 		End Sub
@@ -1043,7 +1031,6 @@ End
 	#tag Method, Flags = &h0
 		Sub BeginCapture(ActiveCapture As PCAP.Capture, SaveTo As FolderItem, InitialFilter As PCAP.Filter)
 		  mCapture = ActiveCapture
-		  mCapLock = New Semaphore
 		  mFilter = InitialFilter
 		  If mFilter <> Nil Then FilterString.Text = mFilter.Expression
 		  If SaveTo <> Nil Then
@@ -1052,14 +1039,9 @@ End
 		  Else
 		    Self.Title = "Capturing on '" + ActiveCapture.Source.Name + "'"
 		  End If
-		  Timer1.Mode = Timer.ModeMultiple
-		  If mCapLock <> Nil Then
-		    If CapThread.State = Thread.Suspended Then
-		      CapThread.Resume
-		    ElseIf CapThread.State <> Thread.Running Then
-		      CapThread.Run
-		    End If
-		  End If
+		  PacketSrc.Source = ActiveCapture
+		  PacketSrc.Priority = 5
+		  PacketSrc.Start()
 		  Self.Show
 		End Sub
 	#tag EndMethod
@@ -1124,12 +1106,9 @@ End
 		  mFilter = InitialFilter
 		  If mFilter <> Nil Then FilterString.Text = mFilter.Expression
 		  Self.Title = "Reading capture file"
-		  Do Until mCapture.EOF
-		    Dim p As PCAP.Packet = mCapture.ReadNext
-		    If p = Nil Then Continue
-		    mPackets.Append(p)
-		  Loop
-		  Timer1.Mode = Timer.ModeMultiple
+		  PacketSrc.Source = mCapture
+		  PacketSrc.Priority = 10
+		  PacketSrc.Start
 		  Self.Show
 		End Sub
 	#tag EndMethod
@@ -1137,10 +1116,6 @@ End
 
 	#tag Property, Flags = &h21
 		Private mByteCount As UInt64
-	#tag EndProperty
-
-	#tag Property, Flags = &h21
-		Private mCapLock As Semaphore
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -1174,79 +1149,6 @@ End
 
 #tag EndWindowCode
 
-#tag Events Timer1
-	#tag Event
-		Sub Action()
-		  If mCapture = Nil Then Return
-		  If Not mCapLock.TrySignal Then Return
-		  
-		  Try
-		    If mCapture.IsLive Then
-		      If mCapture.Source <> Nil Then AdaptorPath.Text = mCapture.Source.Name
-		      DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
-		      PacketCount.Text = Format(mPacketCount + mCapture.PacketCount, "###,###,###,##0")
-		    End If
-		    PendingCount.Text = Format(UBound(mPackets) + 1, "###,###,###,##0")
-		    PacketList.Enabled = False
-		    Dim c As Integer = PacketList.ListCount
-		    Dim added As Boolean
-		    Do Until UBound(mPackets) = -1
-		      Dim p As PCAP.Packet = mPackets.Pop
-		      PacketList.AddRow("+" + Format(p.TimeStamp - mCapture.Epoch, "0.0###") + " (" + FormatBytes(p.SnapLength) + ")")
-		      mByteCount = mByteCount + p.Length
-		      mCount = mCount + 1
-		      PacketList.RowTag(c) = p
-		      c = c + 1
-		      added = True
-		    Loop
-		    PacketCount1.Text = Format(mCount, "###,###,###,##0")
-		    If Autoscroll.Value And added Then PacketList.ScrollPosition = c
-		    'PacketList.Visible = True
-		    PacketList.Enabled = True
-		    ByteCount.Text = FormatBytes(mByteCount)
-		  Finally
-		    If mCapLock <> Nil Then mCapLock.Release
-		  End Try
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events CapThread
-	#tag Event
-		Sub Run()
-		  Do
-		    If mCapLock = Nil Then Continue
-		    Do Until mCapLock.TrySignal
-		      App.YieldToNextThread
-		    Loop
-		    Try
-		      Dim p As PCAP.Packet = mCapture.ReadNext()
-		      If p <> Nil Then
-		        If mDump <> Nil Then mDump.WritePacket(p)
-		        mPackets.Append(p)
-		      End If
-		    Finally
-		      mCapLock.Release
-		    End Try
-		    App.YieldToNextThread
-		  Loop
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events PushButton2
-	#tag Event
-		Sub Action()
-		  If CapThread.State = Thread.Suspended Then
-		    Timer1.Mode = Timer.ModeMultiple
-		    CapThread.Resume
-		    Me.Caption = "Pause"
-		  Else
-		    CapThread.Suspend
-		    Timer1.Mode = Timer.ModeOff
-		    Me.Caption = "Resume"
-		  End If
-		End Sub
-	#tag EndEvent
-#tag EndEvents
 #tag Events PacketList
 	#tag Event
 		Sub Change()
@@ -1285,17 +1187,12 @@ End
 		    Return
 		  End If
 		  Dim c As UInt64 = mCapture.PacketCount
-		  Do Until mCapLock.TrySignal
-		    App.YieldToNextThread
-		  Loop
-		  Try
-		    mCapture.CurrentFilter = f
-		    mFilter = f
-		    MsgBox("Filter changed")
-		    mPacketCount = mPacketCount + c
-		  Finally
-		    mCapLock.Release
-		  End Try
+		  
+		  
+		  mCapture.CurrentFilter = f
+		  mFilter = f
+		  MsgBox("Filter changed")
+		  mPacketCount = mPacketCount + c
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -1312,19 +1209,41 @@ End
 #tag Events PushButton4
 	#tag Event
 		Sub Action()
-		  If Not mCapLock.TrySignal Then Return
-		  Try
-		    If Me.Caption = "Start" Then
-		      Timer1.Mode = Timer.ModeMultiple
-		      CapThread.Run
-		      Me.Caption = "Stop"
-		    Else
-		      CapThread.Kill
-		      Me.Caption = "Start"
-		    End If
-		  Finally
-		    mCapLock.Release
-		  End Try
+		  If Me.Caption = "Start" Then
+		    PacketSrc.Start()
+		    Me.Caption = "Stop"
+		  Else
+		    PacketSrc.Stop
+		    Me.Caption = "Start"
+		  End If
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PacketSrc
+	#tag Event
+		Sub PacketArrived(NewPacket As PCAP.Packet)
+		  If mDump <> Nil Then mDump.WritePacket(NewPacket)
+		  If mCapture.IsLive Then
+		    If mCapture.Source <> Nil Then AdaptorPath.Text = mCapture.Source.Name
+		    DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
+		    PacketCount.Text = Format(mPacketCount + mCapture.PacketCount, "###,###,###,##0")
+		  End If
+		  'PendingCount.Text = Format(UBound(mPackets) + 1, "###,###,###,##0")
+		  'PacketList.Enabled = False
+		  'Dim c As Integer = PacketList.ListCount
+		  'Dim t As Integer = c
+		  'Dim added As Boolean
+		  'Do Until UBound(mPackets) = -1
+		  'Dim p As PCAP.Packet = mPackets.Pop
+		  PacketList.AddRow(Format(NewPacket.TimeStamp - mCapture.Epoch, "+###,###,##0.00000000"), FormatBytes(NewPacket.SnapLength))
+		  mByteCount = mByteCount + NewPacket.Length
+		  mCount = mCount + 1
+		  PacketList.RowTag(PacketList.LastIndex) = NewPacket
+		  PacketCount1.Text = Format(mCount, "###,###,###,##0")
+		  If Autoscroll.Value Then PacketList.ScrollPosition = PacketList.LastIndex
+		  'PacketList.Visible = True
+		  'PacketList.Enabled = True
+		  ByteCount.Text = FormatBytes(mByteCount)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
