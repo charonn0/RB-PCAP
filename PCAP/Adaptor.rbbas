@@ -31,8 +31,10 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h0
 		 Shared Function GetAdaptor(Index As Integer) As PCAP.Adaptor
+		  ' Returns the Adaptor at Index. The last Adaptor is at Index=GetAdaptorCount-1
+		  
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  If ref = Nil And pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Return Nil
+		  If ref = Nil And pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Raise New PCAPException(errmsg)
 		  Dim ret As PCAP.Adaptor
 		  Dim count As Integer
 		  Dim lst As Ptr = ref
@@ -196,6 +198,11 @@ Protected Class Adaptor
 			Group="Position"
 			InitialValue="0"
 			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Loopback"
+			Group="Behavior"
+			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
