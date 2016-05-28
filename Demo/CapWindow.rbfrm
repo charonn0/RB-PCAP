@@ -1178,7 +1178,7 @@ End
 	#tag Event
 		Sub Action()
 		  If mCapture = Nil Then Return
-		  If Not mCapLock.TrySignal Then Return
+		  If mCapLock <> Nil And Not mCapLock.TrySignal Then Return
 		  
 		  Try
 		    If mCapture.IsLive Then
