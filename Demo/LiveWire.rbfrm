@@ -81,18 +81,6 @@ Begin Window LiveWire
       Top             =   142
       Width           =   32
    End
-   Begin Thread CapThread
-      Height          =   32
-      Index           =   -2147483648
-      Left            =   675
-      LockedInPosition=   False
-      Priority        =   1
-      Scope           =   0
-      StackSize       =   0
-      TabPanelIndex   =   0
-      Top             =   185
-      Width           =   32
-   End
    Begin ScrollBar ScrollBar1
       AcceptFocus     =   true
       AutoDeactivate  =   True
@@ -121,6 +109,16 @@ Begin Window LiveWire
       Visible         =   True
       Width           =   16
    End
+   Begin PCAP.PacketFilter PacketSource
+      Height          =   32
+      Index           =   -2147483648
+      Left            =   6.75e+2
+      LockedInPosition=   False
+      Scope           =   0
+      TabPanelIndex   =   0
+      Top             =   1.84e+2
+      Width           =   32
+   End
 End
 #tag EndWindow
 
@@ -136,21 +134,22 @@ End
 	#tag Method, Flags = &h0
 		Sub ShowAdaptor(Adaptor As PCAP.Adaptor, Expression As String)
 		  Self.Title = "Live wire - " + Adaptor.Name
-		  mCapLock = New Semaphore
 		  mCapture = PCAP.BeginCapture(Adaptor, True, PCAP.MAX_SNAP_LENGTH, 10)
 		  If Expression.Trim <> "" And PCAP.IsValidFilter(Expression) Then mCapture.CurrentFilter = PCAP.Filter.Compile(Expression, mCapture)
 		  Timer1.Mode = Timer.ModeMultiple
+		  PacketSource.Source = mCapture
+		  PacketSource.Start
 		  Self.Show
 		End Sub
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h21
-		Private mCapLock As Semaphore
+		Private mCapture As PCAP.Capture
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mCapture As PCAP.Capture
+		Private mCount As Integer
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -188,49 +187,23 @@ End
 		  End If
 		  
 		  If mCapture = Nil Then Return
-		  If Not mCapLock.TrySignal Then Return
-		  If CapThread.State = Thread.Suspended Then
-		    CapThread.Resume
-		  ElseIf CapThread.State <> Thread.Running Then
-		    CapThread.Run
-		  End If
 		  Dim offset As UInt64 = HexViewer1.Offset
 		  Dim added As Boolean
-		  Try
-		    mPacketStream.Position = mPacketStream.Length
-		    Do Until UBound(mPackets) = -1
-		      Dim p As PCAP.Packet = mPackets.Pop
-		      mPacketStream.Write(p.StringValue)
-		      offset = offset + p.SnapLength
-		      added = True
-		    Loop
-		  Finally
-		    mCapLock.Release
-		  End Try
+		  mPacketStream.Position = mPacketStream.Length
+		  Do Until UBound(mPackets) = -1
+		    Dim p As PCAP.Packet = mPackets.Pop
+		    mPacketStream.Write(p.StringValue)
+		    offset = offset + p.SnapLength
+		    mCount = mCount + 1
+		    added = True
+		  Loop
 		  If Added Then
-		    Dim lastline As Integer = HexViewer1.LineFromOffset(Max(offset - (HexViewer1.BytesPerLine * 1), 0))
-		    offset = HexViewer1.OffsetFromLine(lastline)
+		    offset = mPacketStream.Position - (HexViewer1.BytesPerLine * HexViewer1.VisibleLineCount) + HexViewer1.BytesPerLine
+		    If offset > mPacketStream.Length Then offset = mPacketStream.Length - (HexViewer1.BytesPerLine * HexViewer1.VisibleLineCount)
 		    System.DebugLog("Setting an offset of  " + str(offset) + " for a length of " + Str(mPacketStream.Length))
 		    HexViewer1.Offset = offset
 		  End If
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events CapThread
-	#tag Event
-		Sub Run()
-		  Do
-		    If mCapLock = Nil Then Continue
-		    Do Until mCapLock.TrySignal
-		      App.YieldToNextThread
-		    Loop
-		    Try
-		      Dim p As PCAP.Packet = mCapture.ReadNext()
-		      If p <> Nil Then mPackets.Append(p) Else App.YieldToNextThread
-		    Finally
-		      mCapLock.Release
-		    End Try
-		  Loop
+		  Self.Title = "Live wire - " + mCapture.Source.Name + "(" + Format(mCount, "###,###,###,##0") + ")"
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -238,6 +211,13 @@ End
 	#tag Event
 		Sub ValueChanged()
 		  HexViewer1.Offset = Me.Value * HexViewer1.BytesPerLine
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PacketSource
+	#tag Event
+		Sub PacketArrived(NewPacket As PCAP.Packet)
+		  mPackets.Insert(0, NewPacket)
 		End Sub
 	#tag EndEvent
 #tag EndEvents

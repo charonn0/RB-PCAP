@@ -4,6 +4,7 @@ MinIDEVersion=20070100
 Class=App;App.rbbas;&h2BA8EFFF;&h0;false
 BuildSteps=Build Automation;Build Automation.rbbas;&h1866BFFF;&h0;false
 Module=PCAP;PCAP/PCAP.rbbas;&hA44CFFF;&h0;false
+Class=PacketFilter;PCAP/PacketFilter.rbbas;&h1A6FC7FF;&hA44CFFF;false
 Class=PCAPException;PCAP/PCAPException.rbbas;&h15B437FF;&hA44CFFF;false
 Class=Filter;PCAP/Filter.rbbas;&h5CCC77FF;&hA44CFFF;false
 Class=DumpFile;PCAP/DumpFile.rbbas;&h3F32D7FF;&hA44CFFF;false
