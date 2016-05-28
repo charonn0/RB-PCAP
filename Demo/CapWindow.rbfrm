@@ -4,7 +4,7 @@ Begin Window CapWindow
    Backdrop        =   ""
    CloseButton     =   True
    Composite       =   False
-   Frame           =   3
+   Frame           =   0
    FullScreen      =   False
    HasBackColor    =   False
    Height          =   5.04e+2
@@ -288,7 +288,7 @@ Begin Window CapWindow
       AutoHideScrollbars=   True
       Bold            =   ""
       Border          =   True
-      ColumnCount     =   1
+      ColumnCount     =   2
       ColumnsResizable=   ""
       ColumnWidths    =   ""
       DataField       =   ""
@@ -299,14 +299,14 @@ Begin Window CapWindow
       EnableDragReorder=   ""
       GridLinesHorizontal=   0
       GridLinesVertical=   0
-      HasHeading      =   ""
+      HasHeading      =   True
       HeadingIndex    =   -1
       Height          =   363
       HelpTag         =   ""
       Hierarchical    =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      InitialValue    =   ""
+      InitialValue    =   "Time	Size"
       Italic          =   ""
       Left            =   7
       LockBottom      =   True
@@ -338,17 +338,18 @@ Begin Window CapWindow
       AutoDeactivate  =   True
       Backdrop        =   ""
       Bold            =   ""
-      Border          =   ""
+      Border          =   True
+      BorderColor     =   &h00C0C0C0
       ByteBackgroundColor=   "&cFFFFFF00"
-      ByteBackgroundColorAlt=   "&cC0C0C000"
+      ByteBackgroundColorAlt=   "&cFFFFFF00"
       ByteColor       =   "&c0000FF00"
       BytesLittleEndian=   True
       DoubleBuffer    =   True
       Enabled         =   True
-      GutterColor     =   "&cFFFFFF00"
-      GutterColorAlt  =   "&cC0C0C000"
       EraseBackground =   False
-      Height          =   363
+      GutterColor     =   "&cFFFFFF00"
+      GutterColorAlt  =   "&cFFFFFF00"
+      Height          =   318
       HelpTag         =   ""
       Hilight         =   ""
       Index           =   -2147483648
@@ -368,12 +369,12 @@ Begin Window CapWindow
       TabPanelIndex   =   0
       TabStop         =   True
       TextBackGroundColor=   "&cFFFFFF00"
-      TextBackGroundColorAlt=   "&cC0C0C000"
+      TextBackGroundColorAlt=   "&cFFFFFF00"
       TextSize        =   ""
-      Top             =   103
+      Top             =   148
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   325
+      Width           =   328
    End
    Begin Label ByteCount
       AutoDeactivate  =   True
@@ -469,7 +470,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   464
+      Top             =   472
       Underline       =   ""
       Value           =   True
       Visible         =   True
@@ -654,7 +655,7 @@ Begin Window CapWindow
       AcceptFocus     =   true
       AutoDeactivate  =   True
       Enabled         =   True
-      Height          =   363
+      Height          =   318
       HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
@@ -673,7 +674,7 @@ Begin Window CapWindow
       TabIndex        =   18
       TabPanelIndex   =   0
       TabStop         =   True
-      Top             =   103
+      Top             =   148
       Value           =   0
       Visible         =   True
       Width           =   16
@@ -691,7 +692,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   292
+      Left            =   251
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
@@ -776,6 +777,244 @@ Begin Window CapWindow
       Underline       =   ""
       Visible         =   True
       Width           =   97
+   End
+   Begin Label PacketNumber
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   318
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   23
+      TabPanelIndex   =   0
+      Text            =   ""
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   103
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   87
+   End
+   Begin Label Label9
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   237
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   24
+      TabPanelIndex   =   0
+      Text            =   "Timestamp:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   124
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   75
+   End
+   Begin Label Timestamp
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   318
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   25
+      TabPanelIndex   =   0
+      Text            =   ""
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   124
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   87
+   End
+   Begin Label Label10
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   414
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   26
+      TabPanelIndex   =   0
+      Text            =   "Length:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   103
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   75
+   End
+   Begin Label PacketLen
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   495
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   27
+      TabPanelIndex   =   0
+      Text            =   ""
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   103
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   87
+   End
+   Begin Label Label11
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   414
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   28
+      TabPanelIndex   =   0
+      Text            =   "Snaplen:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   124
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   75
+   End
+   Begin Label SnapLen
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   494
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   29
+      TabPanelIndex   =   0
+      Text            =   ""
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   124
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   87
    End
 End
 #tag EndWindow
@@ -1013,8 +1252,14 @@ End
 		Sub Change()
 		  If Me.ListIndex <> -1 Then
 		    Dim p As PCAP.Packet = Me.RowTag(Me.ListIndex)
+		    PacketNumber.Text = Format(Me.ListIndex, "###,###,###,##0")
+		    Timestamp.Text = Format(p.TimeStamp - mCapture.Epoch, "+###,###,##0.00000000")
+		    SnapLen.Text = FormatBytes(p.SnapLength)
+		    PacketLen.Text = FormatBytes(p.Length)
 		    PacketView.StreamLen = PacketView.StreamLen + p.SnapLength
-		    PacketView.ShowData(New BinaryStream(p), p.SnapLength)
+		    PacketView.ShowData(New BinaryStream(p.StringValue), p.SnapLength)
+		    ScrollBar1.Maximum = 100'PacketView.LineCount' - (PacketView.VisibleLineCount \ 2)
+		    ScrollBar1.Value = 0
 		  End If
 		End Sub
 	#tag EndEvent
