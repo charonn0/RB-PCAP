@@ -22,6 +22,17 @@ Protected Class Packet
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Operator_Compare(FilterProgram As PCAP.Filter) As Integer
+		  If FilterProgram Is Nil Then Return 1
+		  If pcap_offline_filter(FilterProgram.Handle, mHeader, mRaw) = 0 Then
+		    Return -1
+		  Else
+		    Return 0
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Operator_Convert() As Ptr
 		  ' converts to a Ptr to a memory block SnapLength bytes long containing raw packet data.
 		  Return mRaw
