@@ -5,8 +5,9 @@ Inherits RuntimeException
 		Sub Constructor(ActiveCapture As PCAP.Capture)
 		  If ActiveCapture <> Nil Then
 		    Me.Message = GetError(ActiveCapture)
+		    If Me.Message.Trim = "" Then Me.Message = "Unknown PCAP error"
 		  Else
-		    Me.Message = "Unknown PCAP error"
+		    Me.Message = "Unknown error"
 		  End If
 		End Sub
 	#tag EndMethod
