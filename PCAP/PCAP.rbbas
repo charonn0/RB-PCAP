@@ -2,6 +2,11 @@
 Protected Module PCAP
 	#tag Method, Flags = &h1
 		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000) As PCAP.Capture
+		  ' Begins a capture operation on the specified device and returns it as a Capture object.
+		  ' SnapLength is the maximum number of bytes to capture from each packet. Timeout is the interval to 
+		  ' wait for new packets when calling Capture.ReadNext. For GUI applications you should use a low 
+		  ' timeout (e.g. 50ms instead of the default 1000ms) to maintain responsiveness.
+		  
 		  Dim flags As Integer
 		  If PromiscuousMode Then flags = PCAP_OPENFLAG_PROMISCUOUS
 		  Return PCAP.Capture.Create(CaptureDevice, SnapLength, TimeOut, flags)
@@ -10,12 +15,16 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function CaptureDeviceCount() As Integer
+		  ' Returns the number of capture devices available.
+		  
 		  Return PCAP.Adaptor.GetAdaptorCount()
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
 		Protected Function GetCaptureDevice(Index As Integer) As PCAP.Adaptor
+		  ' Returns the capture device at Index. The last device is at Index=CaptureDeviceCount-1
+		  
 		  Return PCAP.Adaptor.GetAdaptor(Index)
 		End Function
 	#tag EndMethod
@@ -29,6 +38,8 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function IsAvailable() As Boolean
+		  ' Returns True if WinPcap is available at runtime.
+		  
 		  Static available As Boolean
 		  If Not available Then available = System.IsFunctionAvailable("pcap_open", "wpcap")
 		  Return available
@@ -37,6 +48,8 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h0
 		Function IsPCAPFile(Extends CaptureFile As FolderItem) As Boolean
+		  ' Returns True if the file is likely a PCAP file.
+		  
 		  If CaptureFile = Nil Or CaptureFile.Directory Then Return False
 		  Dim bs As BinaryStream = BinaryStream.Open(CaptureFile)
 		  Dim magic As Integer = bs.ReadInt32
@@ -56,15 +69,18 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function IsValidFilter(Expression As String) As Boolean
-		  If PCAP.IsAvailable And CaptureDeviceCount > 0 Then
-		    'Dim cap As Capture = Capture.Create(GetCaptureDevice(0))
-		    Return Filter.Validate(Expression) <> Nil
-		  End If
+		  ' Returns True is the Expression is a valid bpf program. If this method returns
+		  ' False then you may read the compiler error message in PCAP.Filter.LastCompileError
+		  
+		  If PCAP.IsAvailable Then Return Filter.Compile(Expression) <> Nil
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
 		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As UInt32 = 0) As PCAP.Capture
+		  ' Opens a capture file returns it as a Capture object. SnapLength is the maximum number of bytes 
+		  ' to read from each captured packet. Flags is a bitmask of capture flags.
+		  
 		  Return PCAP.Capture.Open(CaptureFile, SnapLength, Flags)
 		End Function
 	#tag EndMethod
