@@ -2,6 +2,7 @@
 Protected Class Capture
 	#tag Method, Flags = &h0
 		Sub Close()
+		  ' Discontinues the packet capture and frees all resources. 
 		  If mHandle <> Nil Then
 		    pcap_close(mHandle)
 		    mHandle = Nil
@@ -123,6 +124,8 @@ Protected Class Capture
 
 	#tag Method, Flags = &h0
 		Function ReadNext() As PCAP.Packet
+		  If mHandle = Nil Then Raise New PCAPException("No capture in progress")
+		  
 		  Dim h, d As Ptr
 		  Dim ret As PCAP.Packet
 		  
@@ -142,7 +145,7 @@ Protected Class Capture
 		    mEOF = True
 		    
 		  Else
-		    Raise New IOException
+		    Raise New PCAPException(Me)
 		    
 		  End Select
 		  
