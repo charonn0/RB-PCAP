@@ -109,12 +109,12 @@ Inherits Canvas
 		    TextGraphics = bg.Clip(BinWidth + GutterGraphics.Width, TopGutterGraphics.Height, TextWidth, Buffer.Height - TopGutterGraphics.Height)
 		    ' end Graphics' construct
 		    
-		    mVisibleByteCount = 0
+		    
 		    Dim TextHeight, row, column, bytewidth As Integer
 		    Dim data, txt, hx As String
 		    bytewidth = BinGraphics.StringWidth(".00")
 		    row = LineFromOffset(Offset)
-		    
+		    mVisibleByteCount = 0
 		    If Stream <> Nil Then
 		      Stream.Position = Offset
 		      Do Until TextHeight > BinGraphics.Height Or Stream.EOF
@@ -941,11 +941,13 @@ Inherits Canvas
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Border"
+			Visible=true
 			Group="Behavior"
 			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="BorderColor"
+			Visible=true
 			Group="Behavior"
 			InitialValue="&c000000"
 			Type="Color"
