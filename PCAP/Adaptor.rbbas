@@ -53,6 +53,8 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h0
 		 Shared Function GetAdaptorCount() As Integer
+		  ' Returns the number of Adaptors available.
+		  
 		  If ref = Nil Then
 		    Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		    If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Return 0
@@ -71,6 +73,8 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h0
 		Function SendPacket(RawPackets() As PCAP.Packet, Synchronize As Boolean = False) As Boolean
+		  ' Writes an array of packets to the adaptor. If Synchronize is True then the Packets' original timestamps are respected.
+		  
 		  Dim sz As UInt32
 		  For Each p As Packet In RawPackets
 		    sz = sz + p.SnapLength
@@ -94,6 +98,8 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h0
 		Function SendPacket(RawPacket As PCAP.Packet) As Boolean
+		  ' Writes a packet to the adaptor. 
+		  
 		  Dim data As MemoryBlock = RawPacket.StringValue
 		  Return pcap_sendpacket(iface, data, data.Size) = 0
 		End Function
@@ -103,6 +109,7 @@ Protected Class Adaptor
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  ' Returns a human-readable description of the device
 			  Dim p As MemoryBlock = iface.description
 			  Return p.CString(0)
 			End Get
@@ -113,6 +120,8 @@ Protected Class Adaptor
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  ' Returns the flags that were used when opening the device.
+			  
 			  Return iface.flags
 			End Get
 		#tag EndGetter
@@ -126,6 +135,8 @@ Protected Class Adaptor
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  ' The index of the device, i.e. the index parameter to GetCaptureDevice
+			  
 			  Return mIndex
 			End Get
 		#tag EndGetter
@@ -135,6 +146,8 @@ Protected Class Adaptor
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  ' Returns True if the device is a loopback interface
+			  
 			  Return BitAnd(iface.flags, PCAP_IF_LOOPBACK) = PCAP_IF_LOOPBACK
 			End Get
 		#tag EndGetter
@@ -152,6 +165,8 @@ Protected Class Adaptor
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  ' Returns the machine readable device name.
+			  
 			  return mName
 			End Get
 		#tag EndGetter
