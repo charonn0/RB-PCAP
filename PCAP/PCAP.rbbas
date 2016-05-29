@@ -3,8 +3,8 @@ Protected Module PCAP
 	#tag Method, Flags = &h1
 		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000) As PCAP.Capture
 		  ' Begins a capture operation on the specified device and returns it as a Capture object.
-		  ' SnapLength is the maximum number of bytes to capture from each packet. Timeout is the interval to 
-		  ' wait for new packets when calling Capture.ReadNext. For GUI applications you should use a low 
+		  ' SnapLength is the maximum number of bytes to capture from each packet. Timeout is the interval to
+		  ' wait for new packets when calling Capture.ReadNext. For GUI applications you should use a low
 		  ' timeout (e.g. 50ms instead of the default 1000ms) to maintain responsiveness.
 		  
 		  Dim flags As Integer
@@ -41,7 +41,7 @@ Protected Module PCAP
 		  ' Returns True if WinPcap is available at runtime.
 		  
 		  Static available As Boolean
-		  If Not available Then available = System.IsFunctionAvailable("pcap_open", "wpcap")
+		  If Not available Then available = System.IsFunctionAvailable("pcap_close", libpcap)
 		  Return available
 		End Function
 	#tag EndMethod
@@ -78,7 +78,7 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As UInt32 = 0) As PCAP.Capture
-		  ' Opens a capture file returns it as a Capture object. SnapLength is the maximum number of bytes 
+		  ' Opens a capture file returns it as a Capture object. SnapLength is the maximum number of bytes
 		  ' to read from each captured packet. Flags is a bitmask of capture flags.
 		  
 		  Return PCAP.Capture.Open(CaptureFile, SnapLength, Flags)
@@ -130,6 +130,10 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_findalldevs Lib libpcap (ByRef alldevs As Ptr, errbuff As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_findalldevs_ex Lib libpcap (source As CString, auth As Ptr, ByRef alldevs As Ptr, errbuff As Ptr) As Integer
 	#tag EndExternalMethod
 
@@ -167,6 +171,14 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_open_dead Lib libpcap (LinkType As PCAP . LinkType, SnapLength As Integer) As Ptr
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_open_live Lib libpcap (Device As CString, snaplen As Integer, Flags As Integer, ReadTimeout As Integer, errbuff As Ptr) As Ptr
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_open_offline Lib libpcap (CaptureFile As CString, errbuff As Ptr) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21

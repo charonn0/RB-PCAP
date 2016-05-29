@@ -34,7 +34,14 @@ Protected Class Adaptor
 		  ' Returns the Adaptor at Index. The last Adaptor is at Index=GetAdaptorCount-1
 		  
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  If ref = Nil And pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Raise New PCAPException(errmsg)
+		  If ref = Nil Then
+		    #If TargetWin32 Then
+		      If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Raise New PCAPException(errmsg)
+		    #Else
+		      If pcap_findalldevs(ref, errmsg) <> 0 Then Raise New PCAPException(errmsg)
+		    #endif
+		  End If
+		  
 		  Dim ret As PCAP.Adaptor
 		  Dim count As Integer
 		  Dim lst As Ptr = ref
@@ -59,7 +66,11 @@ Protected Class Adaptor
 		  
 		  If ref = Nil Then
 		    Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
-		    If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Return 0
+		    #If TargetWin32 Then
+		      If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Return 0
+		    #Else
+		      If pcap_findalldevs(ref, errmsg) <> 0 Then Return 0
+		    #endif
 		  End If
 		  Dim count As Integer
 		  Dim lst As Ptr = ref
@@ -113,7 +124,7 @@ Protected Class Adaptor
 			Get
 			  ' Returns a human-readable description of the device
 			  Dim p As MemoryBlock = iface.description
-			  Return p.CString(0)
+			  If p <> Nil Then Return p.CString(0)
 			End Get
 		#tag EndGetter
 		Description As String
