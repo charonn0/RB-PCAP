@@ -63,170 +63,178 @@ Inherits Canvas
 
 	#tag Event
 		Sub Open()
+		  #If TargetLinux Then
+		    Me.Enabled = False
+		  #endif
 		  Me.TextFont = FixedWidthFont
 		End Sub
 	#tag EndEvent
 
 	#tag Event
 		Sub Paint(g As Graphics)
-		  'g.ClearRect(0, 0, g.Width, g.Height)
-		  If Buffer = Nil Or Buffer.Width <> g.Width Or Buffer.Height <> g.Height Then
-		    g.AntiAlias = True
-		    #If TargetWin32 Then
+		  #If TargetWin32 Then
+		    If Buffer = Nil Or Buffer.Width <> g.Width Or Buffer.Height <> g.Height Then
 		      App.UseGDIPlus = False
-		    #endif
-		    Buffer = New Picture(g.Width, g.Height, 32)
-		    Dim bg As Graphics = Buffer.Graphics
-		    bg.TextFont = Me.TextFont
-		    
-		    Dim BinWidth As Integer
-		    Dim gw, rowoffset As Integer
-		    Dim alt As Boolean
-		    
-		    If ShowOffsets Then
-		      Dim tmp As String
-		      For i As Integer = 1 To 8
-		        tmp = tmp + "0"
-		      Next
-		      gw = bg.StringWidth(tmp) + 1
-		      'TopGutterGraphics = g.Clip(0, 0, g.Width, g.StringHeight("0x00000000", 99)) 'broken right now
-		      TopGutterGraphics = bg.Clip(0, 0, 0, 0)
-		    Else
-		      gw = 0
-		      TopGutterGraphics = bg.Clip(0, 0, 0, 0)
-		    End If
-		    
-		    ' Construct the subordinate Graphics objects
-		    TopGutterGraphics.TextSize = 0.75 * Me.TextSize
-		    GutterGraphics = bg.Clip(0, TopGutterGraphics.Height, gw, Buffer.Height - TopGutterGraphics.Height)
-		    If ShowOffsets Then
-		      BinWidth = (0.75 * Me.Width) - GutterGraphics.Width + bg.StringWidth(" ")
-		    Else
-		      BinWidth = (0.75 * Me.Width) - GutterGraphics.Width
-		    End If
-		    BinGraphics = bg.Clip(GutterGraphics.Width, TopGutterGraphics.Height, BinWidth, Buffer.Height - TopGutterGraphics.Height)
-		    Dim TextWidth As Integer = Me.Width - BinWidth - GutterGraphics.Width
-		    TextGraphics = bg.Clip(BinWidth + GutterGraphics.Width, TopGutterGraphics.Height, TextWidth, Buffer.Height - TopGutterGraphics.Height)
-		    ' end Graphics' construct
-		    
-		    
-		    Dim TextHeight, row, column, bytewidth As Integer
-		    Dim data, txt, hx As String
-		    bytewidth = BinGraphics.StringWidth(".00")
-		    row = LineFromOffset(Offset)
-		    mVisibleByteCount = 0
-		    If Stream <> Nil Then
-		      Stream.Position = Offset
-		      Do Until TextHeight > BinGraphics.Height Or Stream.EOF
-		        rowoffset = Stream.Position
-		        Do Until BinGraphics.StringWidth(data) >= BinGraphics.Width - bytewidth
-		          If Stream.EOF Then
-		            data = data + " "
-		            mVisibleByteCount = mVisibleByteCount + 1
-		            Exit Do
-		          End If
+		      Buffer = New Picture(g.Width, g.Height, 32)
+		      Dim bg As Graphics = Buffer.Graphics
+		  #else
+		    Dim bg As Graphics = g
+		  #endif
+		  
+		  g.AntiAlias = True
+		  
+		  bg.TextFont = Me.TextFont
+		  
+		  Dim BinWidth As Integer
+		  Dim gw, rowoffset As Integer
+		  Dim alt As Boolean
+		  
+		  If ShowOffsets Then
+		    Dim tmp As String
+		    For i As Integer = 1 To 8
+		      tmp = tmp + "0"
+		    Next
+		    gw = bg.StringWidth(tmp) + 1
+		    'TopGutterGraphics = g.Clip(0, 0, g.Width, g.StringHeight("0x00000000", 99)) 'broken right now
+		    TopGutterGraphics = bg.Clip(0, 0, 0, 0)
+		  Else
+		    gw = 0
+		    TopGutterGraphics = bg.Clip(0, 0, 0, 0)
+		  End If
+		  
+		  ' Construct the subordinate Graphics objects
+		  TopGutterGraphics.TextSize = 0.75 * Me.TextSize
+		  GutterGraphics = bg.Clip(0, TopGutterGraphics.Height, gw, bg.Height - TopGutterGraphics.Height)
+		  If ShowOffsets Then
+		    BinWidth = (0.75 * Me.Width) - GutterGraphics.Width + bg.StringWidth(" ")
+		  Else
+		    BinWidth = (0.75 * Me.Width) - GutterGraphics.Width
+		  End If
+		  BinGraphics = bg.Clip(GutterGraphics.Width, TopGutterGraphics.Height, BinWidth, bg.Height - TopGutterGraphics.Height)
+		  Dim TextWidth As Integer = Me.Width - BinWidth - GutterGraphics.Width
+		  TextGraphics = bg.Clip(BinWidth + GutterGraphics.Width, TopGutterGraphics.Height, TextWidth, bg.Height - TopGutterGraphics.Height)
+		  ' end Graphics' construct
+		  
+		  
+		  Dim TextHeight, row, column, bytewidth As Integer
+		  Dim data, txt, hx As String
+		  bytewidth = BinGraphics.StringWidth(".00")
+		  row = LineFromOffset(Offset)
+		  mVisibleByteCount = 0
+		  If Stream <> Nil Then
+		    Stream.Position = Offset
+		    Do Until TextHeight > BinGraphics.Height Or Stream.EOF
+		      rowoffset = Stream.Position
+		      Do Until BinGraphics.StringWidth(data) >= BinGraphics.Width - bytewidth
+		        If Stream.EOF Then
+		          data = data + " "
 		          mVisibleByteCount = mVisibleByteCount + 1
-		          Dim bt As Byte = Stream.ReadByte
-		          hx = Hex(bt, 2, BytesLittleEndian)
-		          data = data + " " + hx' + " "
-		          If bt < 33 Or bt > 127 Then
-		            txt = txt + "."
+		          Exit Do
+		        End If
+		        mVisibleByteCount = mVisibleByteCount + 1
+		        Dim bt As Byte = Stream.ReadByte
+		        hx = Hex(bt, 2, BytesLittleEndian)
+		        data = data + " " + hx' + " "
+		        If bt < 33 Or bt > 127 Then
+		          txt = txt + "."
+		        Else
+		          If Me.Encoding <> Nil Then
+		            txt = txt + Me.Encoding.Chr(bt).Trim
 		          Else
-		            If Me.Encoding <> Nil Then
-		              txt = txt + Me.Encoding.Chr(bt).Trim
-		            Else
-		              txt = txt + Chr(bt).Trim
-		            End If
+		            txt = txt + Chr(bt).Trim
 		          End If
-		          If row = 0 Then
-		            Dim header As String = Hex(column, 2, LineNumbersLittleEndian)
-		            Dim headerstart As Integer = GutterGraphics.Width + (bytewidth * column) + BinGraphics.StringWidth(" 00 ")
-		            TopGutterGraphics.DrawString(" " + header, headerstart, TopGutterGraphics.Height)
-		          End If
-		          column = column + 1
-		        Loop
-		        
-		        column = 1
-		        TextHeight = TextHeight + LineHeight
-		        If row Mod 2 = 0 Then
-		          BinGraphics.Forecolor = ByteBackgroundColorAlt
-		          TextGraphics.Forecolor = TextBackGroundColorAlt
-		          GutterGraphics.ForeColor = GutterColorAlt
-		        Else
-		          BinGraphics.Forecolor = ByteBackgroundColor
-		          TextGraphics.Forecolor = TextBackGroundColor
-		          GutterGraphics.ForeColor = GutterColor
 		        End If
-		        'alt = Not alt
-		        
-		        BinGraphics.FillRect(0, TextHeight - LineHeight, BinGraphics.Width, LineHeight)
-		        TextGraphics.FillRect(0, TextHeight - LineHeight, TextGraphics.Width, LineHeight)
-		        GutterGraphics.FillRect(0, TextHeight - LineHeight, GutterGraphics.Width, LineHeight)
-		        
-		        TextGraphics.ForeColor = TextColor
-		        BinGraphics.ForeColor = ByteColor
-		        BinGraphics.DrawString(data, 0, TextHeight - 2)
-		        TextGraphics.DrawString(txt, 0, TextHeight - 2)
-		        GutterGraphics.ForeColor = LineNumbersColor
-		        'Dim linenumber As String = Hex(rowoffset, 4, LineNumbersLittleEndian)
-		        GutterGraphics.DrawString(Right("00000000" + Hex(rowoffset), 8), 0, TextHeight - 2)
-		        
-		        data = ""
-		        txt = ""
-		        row = row + 1
-		      Loop
-		      If SelectionStart >= 0 And SelectionEnd > SelectionStart And SelectionEnd > Me.Offset Then
-		        Dim x As Int64 = Max(SelectionStart, Me.Offset)
-		        Dim l As Integer = LineFromOffset(x)
-		        Dim h As Integer = l * LineHeight
-		        Dim df As Integer = x - SelectionEnd
-		        If df > BytesPerLine Then
-		          BinGraphics.ForeColor = &c0080FF00
-		          BinGraphics.FillRect(0, h - LineHeight, BinGraphics.Width, h)
-		        Else
-		          df = df * BytesPerLine
-		          BinGraphics.ForeColor = &c0080FF00
-		          BinGraphics.FillRect(0, h - LineHeight, x + df, h)
-		        End If
-		      End If
-		    Else ' No stream
-		      Do Until TextHeight > BinGraphics.Height
 		        If row = 0 Then
 		          Dim header As String = Hex(column, 2, LineNumbersLittleEndian)
 		          Dim headerstart As Integer = GutterGraphics.Width + (bytewidth * column) + BinGraphics.StringWidth(" 00 ")
 		          TopGutterGraphics.DrawString(" " + header, headerstart, TopGutterGraphics.Height)
 		        End If
-		        TextHeight = TextHeight + LineHeight
-		        If alt Then
-		          BinGraphics.Forecolor = ByteBackgroundColorAlt
-		          TextGraphics.Forecolor = TextBackGroundColorAlt
-		          GutterGraphics.ForeColor = GutterColorAlt
-		        Else
-		          BinGraphics.Forecolor = ByteBackgroundColor
-		          TextGraphics.Forecolor = TextBackGroundColor
-		          GutterGraphics.ForeColor = GutterColor
-		        End If
-		        alt = Not alt
-		        
-		        BinGraphics.FillRect(0, TextHeight - LineHeight, BinGraphics.Width, LineHeight)
-		        TextGraphics.FillRect(0, TextHeight - LineHeight, TextGraphics.Width, LineHeight)
-		        GutterGraphics.FillRect(0, TextHeight - LineHeight, GutterGraphics.Width, LineHeight)
-		        GutterGraphics.ForeColor = LineNumbersColor
-		        Dim linenumber As String = Hex(rowoffset, 8, LineNumbersLittleEndian)
-		        GutterGraphics.DrawString(linenumber, 0, TextHeight - 1)
+		        column = column + 1
 		      Loop
+		      
+		      column = 1
+		      TextHeight = TextHeight + LineHeight
+		      If row Mod 2 = 0 Then
+		        BinGraphics.Forecolor = ByteBackgroundColorAlt
+		        TextGraphics.Forecolor = TextBackGroundColorAlt
+		        GutterGraphics.ForeColor = GutterColorAlt
+		      Else
+		        BinGraphics.Forecolor = ByteBackgroundColor
+		        TextGraphics.Forecolor = TextBackGroundColor
+		        GutterGraphics.ForeColor = GutterColor
+		      End If
+		      'alt = Not alt
+		      
+		      BinGraphics.FillRect(0, TextHeight - LineHeight, BinGraphics.Width, LineHeight)
+		      TextGraphics.FillRect(0, TextHeight - LineHeight, TextGraphics.Width, LineHeight)
+		      GutterGraphics.FillRect(0, TextHeight - LineHeight, GutterGraphics.Width, LineHeight)
+		      
+		      TextGraphics.ForeColor = TextColor
+		      BinGraphics.ForeColor = ByteColor
+		      BinGraphics.DrawString(data, 0, TextHeight - 2)
+		      TextGraphics.DrawString(txt, 0, TextHeight - 2)
+		      GutterGraphics.ForeColor = LineNumbersColor
+		      'Dim linenumber As String = Hex(rowoffset, 4, LineNumbersLittleEndian)
+		      GutterGraphics.DrawString(Right("00000000" + Hex(rowoffset), 8), 0, TextHeight - 2)
+		      
+		      data = ""
+		      txt = ""
+		      row = row + 1
+		    Loop
+		    If SelectionStart >= 0 And SelectionEnd > SelectionStart And SelectionEnd > Me.Offset Then
+		      Dim x As Int64 = Max(SelectionStart, Me.Offset)
+		      Dim l As Integer = LineFromOffset(x)
+		      Dim h As Integer = l * LineHeight
+		      Dim df As Integer = x - SelectionEnd
+		      If df > BytesPerLine Then
+		        BinGraphics.ForeColor = &c0080FF00
+		        BinGraphics.FillRect(0, h - LineHeight, BinGraphics.Width, h)
+		      Else
+		        df = df * BytesPerLine
+		        BinGraphics.ForeColor = &c0080FF00
+		        BinGraphics.FillRect(0, h - LineHeight, x + df, h)
+		      End If
 		    End If
-		    
-		    bg.ForeColor = GutterColor
-		    bg.FillRect(0, TextHeight, bg.Width, bg.Height - TextHeight)
-		    bg.ForeColor = Me.BorderColor
-		    bg.DrawLine(BinGraphics.Width + GutterGraphics.Width - 1, 0, BinGraphics.Width + GutterGraphics.Width - 1, BinGraphics.Height)
-		    bg.DrawLine(GutterGraphics.Width - 1, 0, GutterGraphics.Width - 1, BinGraphics.Height)
-		    If Me.Border Then
-		      bg.DrawRect(0, 0, bg.Width, bg.Height)
-		    End If
+		  Else ' No stream
+		    Do Until TextHeight > BinGraphics.Height
+		      If row = 0 Then
+		        Dim header As String = Hex(column, 2, LineNumbersLittleEndian)
+		        Dim headerstart As Integer = GutterGraphics.Width + (bytewidth * column) + BinGraphics.StringWidth(" 00 ")
+		        TopGutterGraphics.DrawString(" " + header, headerstart, TopGutterGraphics.Height)
+		      End If
+		      TextHeight = TextHeight + LineHeight
+		      If alt Then
+		        BinGraphics.Forecolor = ByteBackgroundColorAlt
+		        TextGraphics.Forecolor = TextBackGroundColorAlt
+		        GutterGraphics.ForeColor = GutterColorAlt
+		      Else
+		        BinGraphics.Forecolor = ByteBackgroundColor
+		        TextGraphics.Forecolor = TextBackGroundColor
+		        GutterGraphics.ForeColor = GutterColor
+		      End If
+		      alt = Not alt
+		      
+		      BinGraphics.FillRect(0, TextHeight - LineHeight, BinGraphics.Width, LineHeight)
+		      TextGraphics.FillRect(0, TextHeight - LineHeight, TextGraphics.Width, LineHeight)
+		      GutterGraphics.FillRect(0, TextHeight - LineHeight, GutterGraphics.Width, LineHeight)
+		      GutterGraphics.ForeColor = LineNumbersColor
+		      Dim linenumber As String = Hex(rowoffset, 8, LineNumbersLittleEndian)
+		      GutterGraphics.DrawString(linenumber, 0, TextHeight - 1)
+		    Loop
 		  End If
-		  g.DrawPicture(Buffer, 0, 0)
+		  
+		  bg.ForeColor = GutterColor
+		  bg.FillRect(0, TextHeight, bg.Width, bg.Height - TextHeight)
+		  bg.ForeColor = Me.BorderColor
+		  bg.DrawLine(BinGraphics.Width + GutterGraphics.Width - 1, 0, BinGraphics.Width + GutterGraphics.Width - 1, BinGraphics.Height)
+		  bg.DrawLine(GutterGraphics.Width - 1, 0, GutterGraphics.Width - 1, BinGraphics.Height)
+		  If Me.Border Then
+		    bg.DrawRect(0, 0, bg.Width, bg.Height)
+		  End If
+		  #If TargetWin32 Then
+		    End If
+		    g.DrawPicture(Buffer, 0, 0)
+		  #endif
 		End Sub
 	#tag EndEvent
 
@@ -254,7 +262,7 @@ Inherits Canvas
 		  
 		  Static mFont As String
 		  If mFont <> "" Then Return mFont
-		  Dim preferred() As String = Split("Consolas,Anonymous,Courier,Inconsolata,Lucida Console", ",")
+		  Dim preferred() As String = Split("Consolas,Anonymous,Courier,Inconsolata,Lucida Console,Monospace", ",")
 		  For i As Integer = FontCount - 1 DownTo 0
 		    Dim fontname As String = Font(i)
 		    If Left(fontname, 1) = "@" Then Continue
