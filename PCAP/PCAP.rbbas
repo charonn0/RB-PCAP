@@ -3,8 +3,8 @@ Protected Module PCAP
 	#tag Method, Flags = &h1
 		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000) As PCAP.Capture
 		  ' Begins a capture operation on the specified device and returns it as a Capture object.
-		  ' SnapLength is the maximum number of bytes to capture from each packet. Timeout is the interval to 
-		  ' wait for new packets when calling Capture.ReadNext. For GUI applications you should use a low 
+		  ' SnapLength is the maximum number of bytes to capture from each packet. Timeout is the interval to
+		  ' wait for new packets when calling Capture.ReadNext. For GUI applications you should use a low
 		  ' timeout (e.g. 50ms instead of the default 1000ms) to maintain responsiveness.
 		  
 		  Dim flags As Integer
@@ -41,7 +41,7 @@ Protected Module PCAP
 		  ' Returns True if WinPcap is available at runtime.
 		  
 		  Static available As Boolean
-		  If Not available Then available = System.IsFunctionAvailable("pcap_open", "wpcap")
+		  If Not available Then available = System.IsFunctionAvailable("pcap_close", libpcap)
 		  Return available
 		End Function
 	#tag EndMethod
@@ -78,7 +78,7 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As UInt32 = 0) As PCAP.Capture
-		  ' Opens a capture file returns it as a Capture object. SnapLength is the maximum number of bytes 
+		  ' Opens a capture file returns it as a Capture object. SnapLength is the maximum number of bytes
 		  ' to read from each captured packet. Flags is a bitmask of capture flags.
 		  
 		  Return PCAP.Capture.Open(CaptureFile, SnapLength, Flags)
@@ -86,129 +86,147 @@ Protected Module PCAP
 	#tag EndMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Sub pcap_breakloop Lib "wpcap" (pcap_t As Ptr)
+		Private Soft Declare Sub pcap_breakloop Lib libpcap (pcap_t As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Sub pcap_close Lib "wpcap" (pcap_t As Ptr)
+		Private Soft Declare Sub pcap_close Lib libpcap (pcap_t As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_compile Lib "wpcap" (pcap_t As Ptr, BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
+		Private Soft Declare Function pcap_compile Lib libpcap (pcap_t As Ptr, BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_compile_nopcap Lib "wpcap" (SnapLength As Integer, LinkType As Integer, BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
+		Private Soft Declare Function pcap_compile_nopcap Lib libpcap (SnapLength As Integer, LinkType As Integer, BPFProgram As Ptr, FilterString As CString, Optimize As Integer, NetMask As UInt32) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_datalink Lib "wpcap" (pcap_t As Ptr) As PCAP.LinkType
+		Private Soft Declare Function pcap_datalink Lib libpcap (pcap_t As Ptr) As PCAP.LinkType
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_dispatch Lib "wpcap" (pcap_t As Ptr, Count As Integer, pcap_handler As Ptr, u_char As Ptr) As Integer
+		Private Soft Declare Function pcap_dispatch Lib libpcap (pcap_t As Ptr, Count As Integer, pcap_handler As Ptr, u_char As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Sub pcap_dump Lib "wpcap" (pcap_dumper_t As Ptr, ByRef Header As pcap_pkthdr, RawData As Ptr)
+		Private Soft Declare Sub pcap_dump Lib libpcap (pcap_dumper_t As Ptr, ByRef Header As pcap_pkthdr, RawData As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Sub pcap_dump_close Lib "wpcap" (pcap_dumper_t As Ptr)
+		Private Soft Declare Sub pcap_dump_close Lib libpcap (pcap_dumper_t As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_dump_flush Lib "wpcap" (pcap_dumper_t As Ptr) As Integer
+		Private Soft Declare Function pcap_dump_flush Lib libpcap (pcap_dumper_t As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_dump_ftell Lib "wpcap" (pcap_dumper_t As Ptr) As Integer
+		Private Soft Declare Function pcap_dump_ftell Lib libpcap (pcap_dumper_t As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_dump_open Lib "wpcap" (pcap_t As Ptr, FileName As CString) As Ptr
+		Private Soft Declare Function pcap_dump_open Lib libpcap (pcap_t As Ptr, FileName As CString) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_findalldevs_ex Lib "wpcap" (source As CString, auth As Ptr, ByRef alldevs As Ptr, errbuff As Ptr) As Integer
+		Private Soft Declare Function pcap_findalldevs Lib libpcap (ByRef alldevs As Ptr, errbuff As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Sub pcap_freealldevs Lib "wpcap" (alldevs As Ptr)
+		Private Soft Declare Function pcap_findalldevs_ex Lib libpcap (source As CString, auth As Ptr, ByRef alldevs As Ptr, errbuff As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Sub pcap_freecode Lib "wpcap" (FilterProgram As Ptr)
+		Private Soft Declare Sub pcap_freealldevs Lib libpcap (alldevs As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_geterr Lib "wpcap" (pcap_t As Ptr) As Ptr
+		Private Soft Declare Sub pcap_freecode Lib libpcap (FilterProgram As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_loop Lib "wpcap" (pcap_t As Ptr, Count As Integer, pcap_handler As Ptr, u_char As Ptr) As Integer
+		Private Soft Declare Function pcap_geterr Lib libpcap (pcap_t As Ptr) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_next Lib "wpcap" (pcap_t As Ptr, pcap_handler As Ptr) As Ptr
+		Private Soft Declare Function pcap_loop Lib libpcap (pcap_t As Ptr, Count As Integer, pcap_handler As Ptr, u_char As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_next_ex Lib "wpcap" (pcap_t As Ptr, ByRef pckhdr As Ptr, ByRef pkt_data As Ptr) As Integer
+		Private Soft Declare Function pcap_next Lib libpcap (pcap_t As Ptr, pcap_handler As Ptr) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_offline_filter Lib "wpcap" (BPFProgram As Ptr, ByRef Header As pcap_pkthdr, Data As Ptr) As Integer
+		Private Soft Declare Function pcap_next_ex Lib libpcap (pcap_t As Ptr, ByRef pckhdr As Ptr, ByRef pkt_data As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_open Lib "wpcap" (source As CString, snaplen As Integer, Flags As Integer, ReadTimeout As Integer, auth As Ptr, errbuff As Ptr) As Ptr
+		Private Soft Declare Function pcap_offline_filter Lib libpcap (BPFProgram As Ptr, ByRef Header As pcap_pkthdr, Data As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_open_dead Lib "wpcap" (LinkType As PCAP . LinkType, SnapLength As Integer) As Ptr
+		Private Soft Declare Function pcap_open Lib libpcap (source As CString, snaplen As Integer, Flags As Integer, ReadTimeout As Integer, auth As Ptr, errbuff As Ptr) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_sendpacket Lib "wpcap" (Adaptor As pcap_if, PacketBuffer As Ptr, BufferSize As Integer) As Integer
+		Private Soft Declare Function pcap_open_dead Lib libpcap (LinkType As PCAP . LinkType, SnapLength As Integer) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_sendqueue_alloc Lib "wpcap" (MemSize As UInt32) As Ptr
+		Private Soft Declare Function pcap_open_live Lib libpcap (Device As CString, snaplen As Integer, Flags As Integer, ReadTimeout As Integer, errbuff As Ptr) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Sub pcap_sendqueue_destroy Lib "wpcap" (Queue As Ptr)
+		Private Soft Declare Function pcap_open_offline Lib libpcap (CaptureFile As CString, errbuff As Ptr) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_sendqueue_queue Lib "wpcap" (Queue As Ptr, Header As pcap_pkthdr, Data As Ptr) As Integer
+		Private Soft Declare Function pcap_sendpacket Lib libpcap (Adaptor As pcap_if, PacketBuffer As Ptr, BufferSize As Integer) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_sendqueue_transmit Lib "wpcap" (Adaptor As pcap_if, Queue As Ptr, Synchronize As Integer) As UInt32
+		Private Soft Declare Function pcap_sendqueue_alloc Lib libpcap (MemSize As UInt32) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_setfilter Lib "wpcap" (pcap_t As Ptr, FilterProgram As Ptr) As Integer
+		Private Soft Declare Sub pcap_sendqueue_destroy Lib libpcap (Queue As Ptr)
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_set_datalink Lib "wpcap" (pcap_t As Ptr, NewValue As PCAP . LinkType) As Integer
+		Private Soft Declare Function pcap_sendqueue_queue Lib libpcap (Queue As Ptr, Header As pcap_pkthdr, Data As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_snapshot Lib "wpcap" (pcap_t As Ptr) As Integer
+		Private Soft Declare Function pcap_sendqueue_transmit Lib libpcap (Adaptor As pcap_if, Queue As Ptr, Synchronize As Integer) As UInt32
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_stats Lib "wpcap" (pcap_t As Ptr, ByRef Stats As pcap_stat) As Integer
+		Private Soft Declare Function pcap_setfilter Lib libpcap (pcap_t As Ptr, FilterProgram As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_stats_ex Lib "wpcap" (pcap_t As Ptr, ByRef StatSize As Integer) As Ptr
+		Private Soft Declare Function pcap_set_datalink Lib libpcap (pcap_t As Ptr, NewValue As PCAP . LinkType) As Integer
 	#tag EndExternalMethod
 
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_snapshot Lib libpcap (pcap_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_stats Lib libpcap (pcap_t As Ptr, ByRef Stats As pcap_stat) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_stats_ex Lib libpcap (pcap_t As Ptr, ByRef StatSize As Integer) As Ptr
+	#tag EndExternalMethod
+
+
+	#tag Constant, Name = libpcap, Type = String, Dynamic = False, Default = \"libpcap", Scope = Private
+		#Tag Instance, Platform = Windows, Language = Default, Definition  = \"wpcap"
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"libpcap"
+		#Tag Instance, Platform = Linux, Language = Default, Definition  = \"libpcap"
+	#tag EndConstant
 
 	#tag Constant, Name = MAX_SNAP_LENGTH, Type = Double, Dynamic = False, Default = \"65536", Scope = Protected
 	#tag EndConstant

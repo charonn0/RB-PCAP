@@ -22,7 +22,11 @@ Protected Class Capture
 		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000, Flags As Integer = 0) As PCAP.Capture
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  p = pcap_open(CaptureDevice.Name, SnapLength, Flags, TimeOut, Nil, errmsg)
+		  #If TargetWin32 Then
+		    p = pcap_open(CaptureDevice.Name, SnapLength, Flags, TimeOut, Nil, errmsg)
+		  #else
+		    p = pcap_open_live(CaptureDevice.Name, SnapLength, Flags, TimeOut, errmsg)
+		  #endif
 		  If p <> Nil Then
 		    Dim ret As New PCAP.Capture(p)
 		    ret.mSource = CaptureDevice
@@ -85,17 +89,17 @@ Protected Class Capture
 
 	#tag Method, Flags = &h1
 		Protected Function GetStatistics() As pcap_stat
-		  'If mSource = Nil Then
-		  'Dim stat As pcap_stat
-		  'If pcap_stats(mHandle, stat) <> 0 Then Raise New PCAPException(Me)
-		  'Return stat
-		  'Else
-		  Dim stat As Ptr
-		  Dim count As Integer
-		  stat = pcap_stats_ex(mHandle, count)
-		  If count = 0 Then Raise New PCAPException(Me)
-		  Return stat.pcap_stat
-		  'End If
+		  #If TargetWin32 Then
+		    Dim stat As Ptr
+		    Dim count As Integer
+		    stat = pcap_stats_ex(mHandle, count)
+		    If count = 0 Then Raise New PCAPException(Me)
+		    Return stat.pcap_stat
+		  #Else
+		    Dim stat As pcap_stat
+		    If pcap_stats(mHandle, stat) <> 0 Then Raise New PCAPException(Me)
+		    Return stat
+		  #EndIf
 		End Function
 	#tag EndMethod
 
@@ -110,7 +114,11 @@ Protected Class Capture
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 0, Nil, errmsg)
+		  #if TargetWin32 Then
+		    p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 0, Nil, errmsg)
+		  #else
+		    p = pcap_open_offline(CaptureFile.AbsolutePath, errmsg)
+		  #endif
 		  If p <> Nil Then
 		    Dim ret As New PCAP.Capture(p)
 		    Return ret
