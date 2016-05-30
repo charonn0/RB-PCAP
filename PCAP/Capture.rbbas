@@ -256,19 +256,6 @@ Protected Class Capture
 		SnapLength As Integer
 	#tag EndComputedProperty
 
-	#tag ComputedProperty, Flags = &h0
-		#tag Getter
-			Get
-			  Try
-			    Return Me.GetStatistics.ps_recv
-			  Catch
-			    Return 0
-			  End Try
-			End Get
-		#tag EndGetter
-		TotalPacketCount As Integer
-	#tag EndComputedProperty
-
 
 	#tag ViewBehavior
 		#tag ViewProperty
