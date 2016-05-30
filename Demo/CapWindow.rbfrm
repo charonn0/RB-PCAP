@@ -1037,11 +1037,12 @@ End
 		    mDump = New PCAP.DumpFile(ActiveCapture, SaveTo)
 		    Self.Title = "Capturing to '" + SaveTo.Name + "'"
 		  Else
-		    Self.Title = "Capturing on '" + ActiveCapture.Source.Name + "'"
+		    Self.Title = "Capturing on '" + ActiveCapture.Source.Win32Name + "'"
 		  End If
 		  PacketSrc.Source = ActiveCapture
 		  PacketSrc.Priority = 5
 		  PacketSrc.Start()
+		  If ActiveCapture.Source <> Nil Then AdaptorPath.Text = ActiveCapture.Source.Name
 		  Self.Show
 		End Sub
 	#tag EndMethod
