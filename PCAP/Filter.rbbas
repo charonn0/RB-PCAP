@@ -2,6 +2,10 @@
 Protected Class Filter
 	#tag Method, Flags = &h0
 		 Shared Function Compile(Expression As String, Optional ActiveCapture As PCAP.Capture, Optimize As Boolean = False) As PCAP.Filter
+		  If Not PCAP.IsAvailable Then 
+		    mLastCompileError = libpcap + " is not installed."
+		    Return Nil
+		  End If
 		  If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead
 		  Dim opt As Integer
 		  If Optimize Then opt = 1
@@ -17,6 +21,10 @@ Protected Class Filter
 
 	#tag Method, Flags = &h1
 		Protected Shared Function Compile(Expression As String, ActiveCapture As PCAP.Capture, Program As MemoryBlock, Optimize As Integer, Netmask As UInt32 = &hffffff) As Boolean
+		  If Not PCAP.IsAvailable Then
+		    mLastCompileError = libpcap + " is not installed."
+		    Return False
+		  End If
 		  If ActiveCapture <> Nil Then
 		    Return pcap_compile(ActiveCapture.Handle, program, Expression, Optimize, Netmask) = 0
 		  Else
@@ -29,6 +37,8 @@ Protected Class Filter
 
 	#tag Method, Flags = &h1
 		Protected Sub Constructor(Expression As String, Program As Ptr, ActiveCapture As PCAP.Capture)
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
+		  
 		  mProgram = Program
 		  mExpression = Expression
 		  mCapture = ActiveCapture
@@ -62,6 +72,8 @@ Protected Class Filter
 
 	#tag Method, Flags = &h0
 		Sub Operator_Convert(Expression As String)
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
+		  
 		  mCapture = PCAP.Capture.CreateDead()
 		  mProgram = New MemoryBlock(8)
 		  mExpression = Expression

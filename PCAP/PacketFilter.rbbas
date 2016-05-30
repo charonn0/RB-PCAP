@@ -2,6 +2,8 @@
 Class PacketFilter
 	#tag Method, Flags = &h0
 		Sub Constructor()
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
+		  
 		  mWorker = New Thread
 		  mWorker.Priority = Thread.LowestPriority
 		  AddHandler mWorker.Run, WeakAddressOf ThreadRunHandler

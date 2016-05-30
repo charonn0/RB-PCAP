@@ -33,6 +33,8 @@ Protected Class Adaptor
 		 Shared Function GetAdaptor(Index As Integer) As PCAP.Adaptor
 		  ' Returns the Adaptor at Index. The last Adaptor is at Index=GetAdaptorCount-1
 		  
+		  If Not PCAP.IsAvailable Then Return Nil
+		  
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  If ref = Nil Then
 		    #If TargetWin32 Then
@@ -63,6 +65,8 @@ Protected Class Adaptor
 	#tag Method, Flags = &h0
 		 Shared Function GetAdaptorCount() As Integer
 		  ' Returns the number of Adaptors available.
+		  
+		  If Not PCAP.IsAvailable Then Return -1
 		  
 		  If ref = Nil Then
 		    Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)

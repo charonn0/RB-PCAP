@@ -9,6 +9,8 @@ Protected Class DumpFile
 
 	#tag Method, Flags = &h0
 		Sub Constructor(ActiveCapture As PCAP.Capture, DumpTo As FolderItem)
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
+		  
 		  mDump = pcap_dump_open(ActiveCapture.Handle, DumpTo.AbsolutePath)
 		  If mDump = Nil Then Raise New PCAPException(ActiveCapture)
 		  mDumpFile = DumpTo

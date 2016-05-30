@@ -13,6 +13,7 @@ Protected Class Capture
 
 	#tag Method, Flags = &h1
 		Protected Sub Constructor(pcap_t As Ptr)
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  mHandle = pcap_t
 		  
 		End Sub
@@ -20,6 +21,8 @@ Protected Class Capture
 
 	#tag Method, Flags = &h0
 		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000, Flags As Integer = 0) As PCAP.Capture
+		  If Not PCAP.IsAvailable Then Return Nil
+		  
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  #If TargetWin32 Then
@@ -41,6 +44,8 @@ Protected Class Capture
 
 	#tag Method, Flags = &h0
 		 Shared Function CreateDead(LinkType As PCAP.LinkType = PCAP.LinkType.NULL, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH) As PCAP.Capture
+		  If Not PCAP.IsAvailable Then Return Nil
+		  
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  p = pcap_open_dead(LinkType, SnapLength)
@@ -111,6 +116,8 @@ Protected Class Capture
 
 	#tag Method, Flags = &h0
 		 Shared Function Open(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As Integer = 0) As PCAP.Capture
+		  If Not PCAP.IsAvailable Then Return Nil
+		  
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
