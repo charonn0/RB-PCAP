@@ -11,7 +11,7 @@ Protected Class Filter
 		  If Optimize Then opt = 1
 		  Dim filt As New PCAP.Filter(Expression, Nil, ActiveCapture)
 		  filt.mProgram = New MemoryBlock(8)
-		  If Not Compile(Expression, ActiveCapture, filt.mProgram, opt, 0) Then 
+		  If Not Compile(Expression, ActiveCapture, filt.mProgram, opt, 0) Then
 		    mLastCompileError = GetError(ActiveCapture)
 		    Return Nil
 		  End If
@@ -68,17 +68,6 @@ Protected Class Filter
 		 Shared Function LastCompileError() As String
 		  Return mLastCompileError
 		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Operator_Convert(Expression As String)
-		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
-		  
-		  mCapture = PCAP.Capture.CreateDead()
-		  mProgram = New MemoryBlock(8)
-		  mExpression = Expression
-		  If Not Compile(Expression, mCapture, mProgram, 0) Then Raise New PCAPException(Me, mCapture)
-		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0

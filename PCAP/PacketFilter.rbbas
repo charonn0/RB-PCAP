@@ -14,6 +14,13 @@ Class PacketFilter
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function CreateFilter(Expression As String) As PCAP.Filter
+		  Return PCAP.Filter.Compile(Expression, mSource)
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Sub EventTimerHandler(Sender As Timer)
 		  If Not mCaptureLock.TrySignal Then Return
@@ -90,6 +97,7 @@ Class PacketFilter
 		  #pragma Unused Sender
 		  mKill = False
 		  Do
+		    If mSource = Nil Then Continue
 		    Do Until mCaptureLock.TrySignal
 		      App.YieldToNextThread
 		    Loop
