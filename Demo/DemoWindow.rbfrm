@@ -397,7 +397,7 @@ End
 		  Dim c As Integer = PCAP.CaptureDeviceCount
 		  For i As Integer = 0 To c - 1
 		    Dim a As PCAP.Adaptor = PCAP.GetCaptureDevice(i)
-		    Me.AddRow(a.Description + "(" + a.Name + ")")
+		    Me.AddRow(a.Win32Name + " (" + a.Description + ")")
 		    Me.RowTag(i) = a
 		  Next
 		End Sub

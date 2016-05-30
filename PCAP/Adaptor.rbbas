@@ -198,6 +198,31 @@ Protected Class Adaptor
 		Private Shared refcount As Integer
 	#tag EndProperty
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  ' Returns the user-configured device name (e.g. "Local Area Connection").
+			  #If Not TargetWin32 Then
+			    Return Me.Name
+			  #else
+			    Dim id As String = "{" + NthField(Me.Name, "{", 2)
+			    Dim r As RegistryItem
+			    Dim ret As String
+			    Try
+			      r = New RegistryItem("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Network\{4D36E972-E325-11CE-BFC1-08002BE10318}", False)
+			      r = r.Child(id)
+			      r = r.Child("Connection")
+			      ret = r.Value("Name")
+			    Catch
+			      ret = Me.Name
+			    End Try
+			    Return ret
+			  #endif
+			End Get
+		#tag EndGetter
+		Win32Name As String
+	#tag EndComputedProperty
+
 
 	#tag ViewBehavior
 		#tag ViewProperty
