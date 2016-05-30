@@ -389,6 +389,24 @@ End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Event
+		Sub Open()
+		  If Not PCAP.IsAvailable Then
+		    Call MsgBox("PCAP library is not installed! This application will now exit.", 48, "Missing dependency")
+		    Quit
+		  End If
+		  #If Not TargetWin32 Then
+		    Dim sh As New Shell
+		    sh.Mode = 0
+		    sh.Execute("whoami")
+		    If sh.ReadAll.Trim <> "root" Then
+		      Call MsgBox("Capturing from a network adaptor is unavailable unless running as root", 48, "root needed")
+		    End If
+		  #endif
+		End Sub
+	#tag EndEvent
+
+
 #tag EndWindowCode
 
 #tag Events Adaptors
