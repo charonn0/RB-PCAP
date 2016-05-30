@@ -97,7 +97,10 @@ Class PacketFilter
 		  #pragma Unused Sender
 		  mKill = False
 		  Do
-		    If mSource = Nil Then Continue
+		    If mSource = Nil Then 
+		      App.YieldToNextThread
+		      Continue
+		    End If
 		    Do Until mCaptureLock.TrySignal
 		      App.YieldToNextThread
 		    Loop
