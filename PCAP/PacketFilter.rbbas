@@ -97,7 +97,7 @@ Class PacketFilter
 		  #pragma Unused Sender
 		  mKill = False
 		  Do
-		    If mSource = Nil Then 
+		    If mSource = Nil Then
 		      App.YieldToNextThread
 		      Continue
 		    End If
@@ -106,6 +106,7 @@ Class PacketFilter
 		    Loop
 		    Dim p As PCAP.Packet
 		    Try
+		      #pragma BackgroundTasks Off
 		      Do Until mKill
 		        p = mSource.ReadNext()
 		        If p <> Nil Then mPackets.Insert(0, p)
@@ -113,6 +114,7 @@ Class PacketFilter
 		    Finally
 		      mCaptureLock.Release
 		    End Try
+		    #pragma BackgroundTasks On
 		    mEventTimer.Mode = Timer.ModeMultiple
 		    App.YieldToNextThread
 		  Loop
@@ -227,6 +229,11 @@ Class PacketFilter
 			Visible=true
 			Group="ID"
 			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Priority"
+			Group="Behavior"
+			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"

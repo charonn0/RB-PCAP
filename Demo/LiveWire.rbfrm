@@ -112,11 +112,12 @@ Begin Window LiveWire
    Begin PCAP.PacketFilter PacketSource
       Height          =   32
       Index           =   -2147483648
-      Left            =   6.75e+2
+      Left            =   675
       LockedInPosition=   False
+      Priority        =   ""
       Scope           =   0
       TabPanelIndex   =   0
-      Top             =   1.84e+2
+      Top             =   184
       Width           =   32
    End
 End

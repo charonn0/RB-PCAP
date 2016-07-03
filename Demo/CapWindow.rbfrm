@@ -726,11 +726,12 @@ Begin Window CapWindow
    Begin PCAP.PacketFilter PacketSrc
       Height          =   32
       Index           =   -2147483648
-      Left            =   5.37e+2
+      Left            =   537
       LockedInPosition=   False
+      Priority        =   ""
       Scope           =   0
       TabPanelIndex   =   0
-      Top             =   4.72e+2
+      Top             =   472
       Width           =   32
    End
    Begin Label Label8
@@ -1005,6 +1006,18 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   87
    End
+   Begin Timer ScrollTimer
+      Height          =   32
+      Index           =   -2147483648
+      Left            =   571
+      LockedInPosition=   False
+      Mode            =   0
+      Period          =   100
+      Scope           =   0
+      TabPanelIndex   =   0
+      Top             =   148
+      Width           =   32
+   End
 End
 #tag EndWindow
 
@@ -1161,7 +1174,7 @@ End
 		    PacketLen.Text = FormatBytes(p.Length)
 		    PacketView.StreamLen = PacketView.StreamLen + p.SnapLength
 		    PacketView.ShowData(New BinaryStream(p.StringValue), p.SnapLength)
-		    ScrollBar1.Maximum = 100'PacketView.LineCount' - (PacketView.VisibleLineCount \ 2)
+		    ScrollTimer.Mode = Timer.ModeSingle
 		    ScrollBar1.Value = 0
 		  End If
 		End Sub
@@ -1245,6 +1258,14 @@ End
 		  'PacketList.Visible = True
 		  'PacketList.Enabled = True
 		  ByteCount.Text = FormatBytes(mByteCount)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events ScrollTimer
+	#tag Event
+		Sub Action()
+		  ScrollBar1.Maximum = PacketView.LineCount - (PacketView.VisibleLineCount \ 2)
+		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents
