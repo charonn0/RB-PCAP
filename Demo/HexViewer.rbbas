@@ -91,7 +91,7 @@ Inherits Canvas
 		  
 		  If ShowOffsets Then
 		    Dim tmp As String
-		    For i As Integer = 1 To 8
+		    For i As Integer = 1 To 5
 		      tmp = tmp + "0"
 		    Next
 		    gw = bg.StringWidth(tmp) + 1
@@ -175,7 +175,7 @@ Inherits Canvas
 		      TextGraphics.DrawString(txt, 0, TextHeight - 2)
 		      GutterGraphics.ForeColor = LineNumbersColor
 		      'Dim linenumber As String = Hex(rowoffset, 4, LineNumbersLittleEndian)
-		      GutterGraphics.DrawString(Right("00000000" + Hex(rowoffset), 8), 0, TextHeight - 2)
+		      GutterGraphics.DrawString(Right("00000" + Hex(rowoffset), 5), 0, TextHeight - 2)
 		      
 		      data = ""
 		      txt = ""
@@ -390,8 +390,8 @@ Inherits Canvas
 		Sub ShowData(DataStream As BinaryStream, DataLength As Integer = - 1)
 		  Me.Stream = DataStream
 		  Me.Stream.Position = 0
-		  Offset = 0
 		  mStreamLen = DataLength
+		  Offset = 0
 		End Sub
 	#tag EndMethod
 
