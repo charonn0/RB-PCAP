@@ -146,8 +146,7 @@ Protected Class Capture
 		  
 		  Select Case pcap_next_ex(mHandle, h, d)
 		  Case 1 ' ok
-		    Dim pk As pcap_pkthdr = h.pcap_pkthdr
-		    ret = New PCAP.Packet(pk, d)
+		    ret = New PCAP.Packet(h, d)
 		    If mEpoch < 1.0 Then mEpoch = ret.TimeStamp
 		    
 		  Case 0 ' timeout

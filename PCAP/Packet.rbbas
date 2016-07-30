@@ -1,10 +1,11 @@
 #tag Class
 Protected Class Packet
 	#tag Method, Flags = &h0
-		Sub Constructor(pHeader As pcap_pkthdr, RawPacket As Ptr)
-		  mHeader = pHeader
-		  mRaw = RawPacket
-		  mRaw = mRaw.StringValue(0, pHeader.caplen)
+		Sub Constructor(pHeader As Ptr, RawPacket As MemoryBlock)
+		  ' copy the header struct and data block, since they might be freed by libpcap
+		  mHeader = pHeader.pcap_pkthdr(0)
+		  mRaw = New MemoryBlock(mHeader.caplen)
+		  mRaw.StringValue(0, mHeader.caplen) = RawPacket.StringValue(0, mHeader.caplen)
 		End Sub
 	#tag EndMethod
 
