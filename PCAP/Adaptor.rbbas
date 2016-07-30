@@ -91,23 +91,37 @@ Protected Class Adaptor
 	#tag Method, Flags = &h0
 		Function SendPacket(RawPackets() As PCAP.Packet, Synchronize As Boolean = False) As Boolean
 		  ' Writes an array of packets to the adaptor. If Synchronize is True then the Packets' original timestamps are respected.
+		  ' The pcap_sendqueue_* functions are only available in WinPcap; on *nix, we simulate the queue by sending the packets
+		  ' ourselves in a loop. As such, the Synchronize argument is not supported on *nix.
 		  
-		  Dim sz As UInt32
-		  For Each p As Packet In RawPackets
-		    sz = sz + p.SnapLength
-		  Next
-		  Dim queue As Ptr = pcap_sendqueue_alloc(sz)
-		  If queue = Nil Then Raise New OutOfMemoryException
+		  #If TargetWin32 Then
+		    Dim sz As UInt32
+		    For Each p As Packet In RawPackets
+		      sz = sz + p.SnapLength
+		    Next
+		    Dim queue As Ptr = pcap_sendqueue_alloc(sz)
+		    If queue = Nil Then Raise New OutOfMemoryException ' the queue is too large to fit in available memory!
+		  #else
+		    If Synchronize Then Return False ' not supported on *nix
+		  #endif
 		  Dim ret As Boolean
 		  Try
 		    For i As Integer = 0 To UBound(RawPackets)
-		      If pcap_sendqueue_queue(queue, RawPackets(i).Header, RawPackets(i)) <> 0 Then Raise New PCAPException("Unable to queue the packet!")
+		      #If TargetWin32 Then
+		        If pcap_sendqueue_queue(queue, RawPackets(i).Header, RawPackets(i)) <> 0 Then Raise New PCAPException("Unable to queue the packet!")
+		      #Else
+		        If Not Me.SendPacket(RawPackets(i)) Then Return False
+		      #endif
 		    Next
-		    Dim sync As Integer
-		    If Synchronize Then sync = 1
-		    ret = (sz = pcap_sendqueue_transmit(iface, queue, sync))
-		  Finally
-		    pcap_sendqueue_destroy(queue)
+		    #If TargetWin32 Then
+		      Dim sync As Integer
+		      If Synchronize Then sync = 1
+		      ret = (sz = pcap_sendqueue_transmit(iface, queue, sync))
+		    #EndIf
+		  Finally 
+		    #If TargetWin32 Then
+		      pcap_sendqueue_destroy(queue)
+		    #EndIf
 		  End Try
 		  Return ret
 		End Function
@@ -115,7 +129,7 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h0
 		Function SendPacket(RawPacket As PCAP.Packet) As Boolean
-		  ' Writes a packet to the adaptor. 
+		  ' Writes a packet to the adaptor.
 		  
 		  Dim data As MemoryBlock = RawPacket.StringValue
 		  Return pcap_sendpacket(iface, data, data.Size) = 0
