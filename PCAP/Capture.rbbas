@@ -2,7 +2,7 @@
 Protected Class Capture
 	#tag Method, Flags = &h0
 		Sub Close()
-		  ' Discontinues the packet capture and frees all resources. 
+		  ' Discontinues the packet capture and frees all resources.
 		  If mHandle <> Nil Then
 		    pcap_close(mHandle)
 		    mHandle = Nil
@@ -20,7 +20,7 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000, Flags As Integer = 0) As PCAP.Capture
+		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer, TimeOut As Integer, Flags As Integer) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
 		  Dim p As Ptr
@@ -43,7 +43,7 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function CreateDead(LinkType As PCAP.LinkType = PCAP.LinkType.NULL, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH) As PCAP.Capture
+		 Shared Function CreateDead(LinkType As PCAP.LinkType, SnapLength As Integer) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
 		  Dim p As Ptr
@@ -115,7 +115,7 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function Open(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As Integer = 0) As PCAP.Capture
+		 Shared Function Open(CaptureFile As FolderItem, SnapLength As Integer, Flags As Integer) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
