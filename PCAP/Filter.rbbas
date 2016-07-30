@@ -6,7 +6,7 @@ Protected Class Filter
 		    mLastCompileError = libpcap + " is not installed."
 		    Return Nil
 		  End If
-		  If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead(PCAP.LinkType.NULL, 0)
+		  If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead(PCAP.LinkType.NULL, MAX_SNAP_LENGTH)
 		  Dim opt As Integer
 		  If Optimize Then opt = 1
 		  Dim filt As New PCAP.Filter(Expression, Nil, ActiveCapture)
