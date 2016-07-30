@@ -14,7 +14,7 @@ Protected Class Filter
 		    mLastCompileError = GetError(ActiveCapture)
 		    Return Nil
 		  End If
-		  Return New PCAP.Filter(Expression, program, ActiveCapture)
+		  Return New PCAP.Filter(Expression, program, ActiveCapture, Optimize)
 		End Function
 	#tag EndMethod
 
@@ -35,12 +35,13 @@ Protected Class Filter
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Sub Constructor(Expression As String, Program As MemoryBlock, ActiveCapture As PCAP.Capture)
+		Protected Sub Constructor(Expression As String, Program As MemoryBlock, ActiveCapture As PCAP.Capture, WasOptimized As Boolean)
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  
 		  mProgram = Program
 		  mExpression = Expression
 		  mCapture = ActiveCapture
+		  mIsOptimized = WasOptimized
 		End Sub
 	#tag EndMethod
 
@@ -64,6 +65,12 @@ Protected Class Filter
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function IsOptimized() As Boolean
+		  Return mIsOptimized
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		 Shared Function LastCompileError() As String
 		  Return mLastCompileError
 		End Function
@@ -82,6 +89,10 @@ Protected Class Filter
 
 	#tag Property, Flags = &h1
 		Protected mExpression As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected mIsOptimized As Boolean
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
