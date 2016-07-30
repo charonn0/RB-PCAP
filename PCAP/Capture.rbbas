@@ -102,6 +102,7 @@ Protected Class Capture
 
 	#tag Method, Flags = &h1
 		Protected Function GetStatistics() As pcap_stat
+		  If mHandle = Nil Then Raise New PCAPException("No capture in progress")
 		  #If TargetWin32 Then
 		    Dim stat As Ptr
 		    Dim count As Integer
