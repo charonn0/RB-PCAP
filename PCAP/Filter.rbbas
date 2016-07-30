@@ -9,13 +9,12 @@ Protected Class Filter
 		  If ActiveCapture = Nil Then ActiveCapture = Capture.CreateDead(PCAP.LinkType.NULL, MAX_SNAP_LENGTH)
 		  Dim opt As Integer
 		  If Optimize Then opt = 1
-		  Dim filt As New PCAP.Filter(Expression, Nil, ActiveCapture)
-		  filt.mProgram = New MemoryBlock(8)
-		  If Not Compile(Expression, ActiveCapture, filt.mProgram, opt, 0) Then
+		  Dim program As New MemoryBlock(8)
+		  If Not Compile(Expression, ActiveCapture, program, opt, 0) Then
 		    mLastCompileError = GetError(ActiveCapture)
 		    Return Nil
 		  End If
-		  Return filt
+		  Return New PCAP.Filter(Expression, program, ActiveCapture)
 		End Function
 	#tag EndMethod
 
@@ -36,7 +35,7 @@ Protected Class Filter
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Sub Constructor(Expression As String, Program As Ptr, ActiveCapture As PCAP.Capture)
+		Protected Sub Constructor(Expression As String, Program As MemoryBlock, ActiveCapture As PCAP.Capture)
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  
 		  mProgram = Program
