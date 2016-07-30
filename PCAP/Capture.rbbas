@@ -3,10 +3,13 @@ Protected Class Capture
 	#tag Method, Flags = &h0
 		Sub Close()
 		  ' Discontinues the packet capture and frees all resources.
-		  If mHandle <> Nil Then
-		    pcap_close(mHandle)
-		    mHandle = Nil
-		  End If
+		  
+		  mCurrentFilter = Nil
+		  mSource = Nil
+		  mEOF = True
+		  If mHandle <> Nil Then pcap_close(mHandle)
+		  mHandle = Nil
+		  
 		  
 		End Sub
 	#tag EndMethod
