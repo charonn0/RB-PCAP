@@ -157,6 +157,7 @@ Protected Class Capture
 		  Case 1 ' ok
 		    ret = New PCAP.Packet(h, d)
 		    If mEpoch < 1.0 Then mEpoch = ret.TimeStamp
+		    mEOF = False
 		    
 		  Case 0 ' timeout
 		    Return Nil
