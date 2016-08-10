@@ -51,18 +51,16 @@ Protected Module PCAP
 		  ' Returns True if the file is likely a PCAP file.
 		  
 		  If CaptureFile = Nil Or CaptureFile.Directory Then Return False
-		  Dim bs As BinaryStream = BinaryStream.Open(CaptureFile)
-		  Dim magic As Integer = bs.ReadInt32
-		  Dim iscap As Boolean
-		  If magic = &ha1b2c3d4 Then
-		    ' PCAP file with correct byte order
-		    iscap = True
-		  ElseIf magic = &hd4c3b2a1 Then
-		    ' PCAP file with swapped byte order
-		    iscap = True
-		  End If
+		  Dim bs As BinaryStream
+		  Dim magic As Integer
+		  Try
+		    bs = BinaryStream.Open(CaptureFile)
+		    magic = bs.ReadInt32
+		  Catch
+		    Return False
+		  End Try
 		  bs.Close
-		  Return iscap
+		  Return (magic = &ha1b2c3d4 Or magic = &hd4c3b2a1)
 		  
 		End Function
 	#tag EndMethod
