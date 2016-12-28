@@ -195,6 +195,10 @@ Protected Class Adaptor
 		Private mName As String
 	#tag EndProperty
 
+	#tag Property, Flags = &h21
+		Private mNetMask As UInt32
+	#tag EndProperty
+
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
@@ -206,6 +210,20 @@ Protected Class Adaptor
 		Name As String
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Dim netp, maskp As UInt32
+			  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
+			  If pcap_lookupnet(Me.Name, netp, maskp, errmsg) = -1 Then
+			    Raise New PCAPException(errmsg.WString(0))
+			  End If
+			  Return netp
+			End Get
+		#tag EndGetter
+		NetMask As UInt32
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h21
 		Private Shared ref As Ptr
 	#tag EndProperty
@@ -213,6 +231,20 @@ Protected Class Adaptor
 	#tag Property, Flags = &h21
 		Private Shared refcount As Integer
 	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Dim netp, maskp As UInt32
+			  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
+			  If pcap_lookupnet(Me.Name, netp, maskp, errmsg) = -1 Then
+			    Raise New PCAPException(errmsg.WString(0))
+			  End If
+			  Return maskp
+			End Get
+		#tag EndGetter
+		Subnet As UInt32
+	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
