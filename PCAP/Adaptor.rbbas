@@ -107,10 +107,12 @@ Protected Class Adaptor
 		  Dim ret As Boolean
 		  Try
 		    For i As Integer = 0 To UBound(RawPackets)
+		      Dim pkt As PCAP.Packet = RawPackets(i)
 		      #If TargetWin32 Then
-		        If pcap_sendqueue_queue(queue, RawPackets(i).Header, RawPackets(i)) <> 0 Then Raise New PCAPException("Unable to queue the packet!")
+		        If pcap_sendqueue_queue(queue, pkt.Header, pkt) <> 0 Then Raise New PCAPException("Unable to queue the packet!")
 		      #Else
-		        If Not Me.SendPacket(RawPackets(i)) Then Return False
+		        ret = Me.SendPacket(pkt)
+		        If Not ret Then Exit For
 		      #endif
 		    Next
 		    #If TargetWin32 Then
