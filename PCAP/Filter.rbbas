@@ -11,7 +11,7 @@ Protected Class Filter
 		  If Optimize Then opt = 1
 		  Dim program As New MemoryBlock(8)
 		  If Not Compile(Expression, ActiveCapture, program, opt, 0) Then
-		    mLastCompileError = GetError(ActiveCapture)
+		    mLastCompileError = ActiveCapture.LastError
 		    Return Nil
 		  End If
 		  Return New PCAP.Filter(Expression, program, ActiveCapture, Optimize)

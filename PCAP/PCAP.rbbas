@@ -29,13 +29,6 @@ Protected Module PCAP
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Function GetError(ActiveCapture As PCAP.Capture) As String
-		  Dim mb As MemoryBlock = pcap_geterr(ActiveCapture.Handle)
-		  If mb <> Nil Then Return mb.CString(0)
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h1
 		Protected Function IsAvailable() As Boolean
 		  ' Returns True if WinPcap is available at runtime.

@@ -133,6 +133,13 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function LastError() As String
+		  Dim mb As MemoryBlock = pcap_geterr(mHandle)
+		  If mb <> Nil Then Return mb.CString(0)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		 Shared Function Open(CaptureFile As FolderItem, SnapLength As Integer, Flags As Integer) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  

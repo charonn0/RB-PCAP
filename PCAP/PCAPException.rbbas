@@ -4,7 +4,7 @@ Inherits RuntimeException
 	#tag Method, Flags = &h0
 		Sub Constructor(ActiveCapture As PCAP.Capture)
 		  If ActiveCapture <> Nil Then
-		    Me.Message = GetError(ActiveCapture)
+		    Me.Message = ActiveCapture.LastError
 		    If Me.Message.Trim = "" Then Me.Message = "Unknown PCAP error"
 		  Else
 		    Me.Message = "Unknown error"
