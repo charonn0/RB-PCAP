@@ -69,7 +69,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   0
+      Left            =   391
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -103,18 +103,18 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   460
+      Left            =   193
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   False
-      LockRight       =   True
+      LockLeft        =   True
+      LockRight       =   False
       LockTop         =   True
       Multiline       =   ""
       Scope           =   0
       Selectable      =   False
       TabIndex        =   2
       TabPanelIndex   =   0
-      Text            =   "Dropped:"
+      Text            =   "Packets dropped:"
       TextAlign       =   2
       TextColor       =   &h000000
       TextFont        =   "System"
@@ -124,7 +124,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   65
+      Width           =   91
    End
    Begin Label AdaptorPath
       AutoDeactivate  =   True
@@ -171,11 +171,11 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   99
+      Left            =   490
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   ""
+      LockRight       =   True
       LockTop         =   True
       Multiline       =   ""
       Scope           =   0
@@ -205,11 +205,11 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   537
+      Left            =   296
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   False
-      LockRight       =   True
+      LockLeft        =   True
+      LockRight       =   False
       LockTop         =   True
       Multiline       =   ""
       Scope           =   0
@@ -226,7 +226,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   45
+      Width           =   109
    End
    Begin Listbox PacketList
       AutoDeactivate  =   True
@@ -263,7 +263,7 @@ Begin Window CapWindow
       Scope           =   0
       ScrollbarHorizontal=   ""
       ScrollBarVertical=   True
-      SelectionType   =   0
+      SelectionType   =   1
       TabIndex        =   8
       TabPanelIndex   =   0
       TabStop         =   True
@@ -332,7 +332,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   99
+      Left            =   116
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -353,7 +353,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   91
+      Width           =   72
    End
    Begin Label Label4
       AutoDeactivate  =   True
@@ -366,7 +366,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   0
+      Left            =   11
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -539,7 +539,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   296
+      Left            =   116
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -560,7 +560,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   91
+      Width           =   72
    End
    Begin Label Label6
       AutoDeactivate  =   True
@@ -573,7 +573,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   187
+      Left            =   2
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -711,7 +711,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   21
       TabPanelIndex   =   0
-      Text            =   "Packets Pending:"
+      Text            =   "Packets pending:"
       TextAlign       =   2
       TextColor       =   &h000000
       TextFont        =   "System"
