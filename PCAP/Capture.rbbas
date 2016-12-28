@@ -23,7 +23,7 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer, TimeOut As Integer, Flags As Integer) As PCAP.Capture
+		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer, TimeOut As Integer, Flags As Integer, BufferSize As Integer = -1) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
 		  Dim p As Ptr
@@ -36,6 +36,15 @@ Protected Class Capture
 		  If p <> Nil Then
 		    Dim ret As New PCAP.Capture(p)
 		    ret.mSource = CaptureDevice
+		    If BufferSize > 0 Then
+		      #If TargetWin32 Then
+		        Dim err As Integer = pcap_setbuff(ret.mHandle, BufferSize)
+		      #Else
+		        ' untested
+		        Dim err As Integer = pcap_set_buffer_size(ret.mHandle, BufferSize)
+		      #endif
+		      If err <> 0 Then Raise New PCAPException("Unable to set buffer size!")
+		    End If
 		    Return ret
 		  Else
 		    Dim err As New IOException
@@ -187,6 +196,28 @@ Protected Class Capture
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  Dim errbuf As New MemoryBlock(PCAP_ERRBUF_SIZE)
+			  Dim blocked As Integer = pcap_getnonblock(mHandle, errbuf)
+			  If blocked = -1 Then Raise New PCAPException(errbuf.WString(0))
+			  Return blocked = 0
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  Dim errbuf As New MemoryBlock(PCAP_ERRBUF_SIZE)
+			  Dim block As Integer
+			  If Not value Then block = 1
+			  If pcap_setnonblock(mHandle, block, errbuf) <> 0 Then
+			    Raise New PCAPException(errbuf.WString(0))
+			  End If
+			End Set
+		#tag EndSetter
+		Blocking As Boolean
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
 			  If mHandle <> Nil Then Return pcap_datalink(mHandle)
 			End Get
 		#tag EndGetter
@@ -236,6 +267,28 @@ Protected Class Capture
 
 	#tag Property, Flags = &h1
 		Protected mHandle As Ptr
+	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return mMinMemoryToCopy
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  If pcap_setmintocopy(mHandle, value) = 0 Then
+			    mMinMemoryToCopy = value
+			  Else
+			    Raise New PCAPException(Me)
+			  End If
+			End Set
+		#tag EndSetter
+		MinMemoryToCopy As Integer
+	#tag EndComputedProperty
+
+	#tag Property, Flags = &h21
+		Private mMinMemoryToCopy As Integer = 16000
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -299,6 +352,11 @@ Protected Class Capture
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="PacketCount"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="SnapLength"
 			Group="Behavior"
 			Type="Integer"
 		#tag EndViewProperty

@@ -1,7 +1,7 @@
 #tag Module
 Protected Module PCAP
 	#tag Method, Flags = &h1
-		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000) As PCAP.Capture
+		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000, BufferSize As Integer = -1) As PCAP.Capture
 		  ' Begins a capture operation on the specified device and returns it as a Capture object.
 		  ' SnapLength is the maximum number of bytes to capture from each packet. Timeout is the interval to
 		  ' wait for new packets when calling Capture.ReadNext. For GUI applications you should use a low
@@ -9,7 +9,7 @@ Protected Module PCAP
 		  
 		  Dim flags As Integer
 		  If PromiscuousMode Then flags = PCAP_OPENFLAG_PROMISCUOUS
-		  Return PCAP.Capture.Create(CaptureDevice, SnapLength, TimeOut, flags)
+		  Return PCAP.Capture.Create(CaptureDevice, SnapLength, TimeOut, flags, BufferSize)
 		End Function
 	#tag EndMethod
 
@@ -148,6 +148,14 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_getnonblock Lib libpcap (pcap_t As Ptr, ErrorBuffer As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_lookupnet Lib libpcap (Source As CString, ByRef Subnet As UInt32, ByRef NetMask As UInt32, ErrorBuffer As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_loop Lib libpcap (pcap_t As Ptr, Count As Integer, pcap_handler As Ptr, u_char As Ptr) As Integer
 	#tag EndExternalMethod
 
@@ -200,7 +208,23 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_setbuff Lib libpcap (pcap_t As Ptr, BufferSize As Integer) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_setfilter Lib libpcap (pcap_t As Ptr, FilterProgram As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_setmintocopy Lib libpcap (pcap_t As Ptr, Size As Integer) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_setnonblock Lib libpcap (pcap_t As Ptr, Nonblock As Integer, ErrorBuffer As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_set_buffer_size Lib libpcap (pcap_t As Ptr, BufferSize As Integer) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
