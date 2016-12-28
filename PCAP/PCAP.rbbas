@@ -116,6 +116,10 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_dump_file Lib libpcap (pcap_dumper_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_dump_flush Lib libpcap (pcap_dumper_t As Ptr) As Integer
 	#tag EndExternalMethod
 

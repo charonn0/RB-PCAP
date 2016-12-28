@@ -30,6 +30,21 @@ Protected Class DumpFile
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Operator_Convert() As BinaryStream
+		  Dim fhandle As Integer = pcap_dump_file(mDump)
+		  #If TargetWin32 Then
+		    'Soft Declare Function _fileno Lib "msvcrt" (FileStream As Integer) As Integer
+		    'Soft Declare Function _get_osfhandle Lib "msvcrt" (FileDescriptor As Integer) As Integer
+		    'If fhandle > 0 Then fhandle = _fileno(fhandle)
+		    'If fhandle > 0 Then fhandle = _get_osfhandle(fhandle)
+		    If fhandle > 0 Then Return New BinaryStream(fhandle, BinaryStream.HandleTypeWin32Handle)
+		  #Else
+		    Return New BinaryStream(fhandle, BinaryStream.HandleTypeFileNumber)
+		  #endif
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub WritePacket(Packet As PCAP.Packet)
 		  Dim h As pcap_pkthdr = Packet.Header
 		  If mDump <> Nil Then pcap_dump(mDump, h, Packet)
