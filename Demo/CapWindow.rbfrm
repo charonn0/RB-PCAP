@@ -1061,6 +1061,27 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Sub DumpPackets()
+		  If PacketList.SelCount <= 0 Then Return
+		  Dim f As FolderItem = GetSaveFolderItem("", "packet_dump.raw")
+		  If f = Nil Then Return
+		  Dim pks() As PCAP.Packet
+		  For i As Integer = 0 To PacketList.ListCount - 1
+		    If PacketList.Selected(i) Then
+		      Dim p As PCAP.Packet = PacketList.RowTag(i)
+		      pks.Append(p)
+		    End If
+		  Next
+		  
+		  Dim bs As BinaryStream = BinaryStream.Create(f, True)
+		  For i As Integer = 0 To UBound(pks)
+		    bs.Write(pks(i).StringValue)
+		  Next
+		  bs.Close
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Function FormatBytes(bytes As UInt64, precision As Integer = 2) As String
 		  'Converts raw byte counts into SI formatted strings. 1KB = 1024 bytes.
 		  'Optionally pass an integer representing the number of decimal places to return. The default is two decimal places. You may specify
@@ -1178,6 +1199,24 @@ End
 		    ScrollBar1.Value = 0
 		  End If
 		End Sub
+	#tag EndEvent
+	#tag Event
+		Function ConstructContextualMenu(base as MenuItem, x as Integer, y as Integer) As Boolean
+		  #pragma Unused X
+		  #pragma Unused Y
+		  If Me.SelCount <= 0 Then Return False
+		  base.Append(New MenuItem("Dump to file..."))
+		  Return True
+		End Function
+	#tag EndEvent
+	#tag Event
+		Function ContextualMenuAction(hitItem as MenuItem) As Boolean
+		  Select Case hitItem.Text
+		  Case "Dump to file..."
+		    DumpPackets()
+		    Return True
+		  End Select
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag Events PacketView
