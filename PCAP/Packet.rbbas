@@ -10,19 +10,6 @@ Protected Class Packet
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Header() As pcap_pkthdr
-		  Return mHeader
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Length() As UInt32
-		  ' the length of the original packet (not necessarily the length of the captured data; see SnapLength)
-		  Return mHeader.len
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Operator_Compare(FilterProgram As PCAP.Filter) As Integer
 		  If FilterProgram Is Nil Then Return 1
 		  If pcap_offline_filter(FilterProgram.Handle, mHeader, mRaw) = 0 Then
@@ -41,13 +28,6 @@ Protected Class Packet
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function SnapLength() As UInt32
-		  ' the length of the captured data, which may be less or equal to than the length of the original packet
-		  Return mHeader.caplen
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function StringValue() As String
 		  If mRaw = Nil Then Return ""
 		  Dim tmp As MemoryBlock = mRaw
@@ -56,12 +36,25 @@ Protected Class Packet
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function TimeStamp() As Double
-		  Return CDbl(Str(mHeader.ts.tv_sec) + "." + Str(mHeader.ts.tv_usec))
-		End Function
-	#tag EndMethod
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return mHeader
+			End Get
+		#tag EndGetter
+		Header As pcap_pkthdr
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  ' the length of the original packet (not necessarily the length of the captured data; see SnapLength)
+			  Return mHeader.len
+			End Get
+		#tag EndGetter
+		Length As UInt32
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h1
 		Protected mHeader As pcap_pkthdr
@@ -70,6 +63,25 @@ Protected Class Packet
 	#tag Property, Flags = &h1
 		Protected mRaw As MemoryBlock
 	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  ' the length of the captured data, which may be less than or equal to the length of the original packet
+			  Return mHeader.caplen
+			End Get
+		#tag EndGetter
+		SnapLength As UInt32
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return CDbl(Str(mHeader.ts.tv_sec) + "." + Str(mHeader.ts.tv_usec))
+			End Get
+		#tag EndGetter
+		TimeStamp As Double
+	#tag EndComputedProperty
 
 
 	#tag ViewBehavior
