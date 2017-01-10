@@ -167,22 +167,20 @@ Protected Class Capture
 		  If mHandle = Nil Then Raise New PCAPException("No capture in progress")
 		  
 		  Dim h, d As Ptr
-		  Dim ret As PCAP.Packet
 		  
 		  Select Case pcap_next_ex(mHandle, h, d)
-		  Case 1 ' ok
-		    ret = New PCAP.Packet(h, d)
-		    If mEpoch < 1.0 Then mEpoch = ret.TimeStamp
-		    mEOF = False
-		    
 		  Case 0 ' timeout
 		    Return Nil
 		    
-		  Case -1 ' error
-		    Raise New PCAPException(Me)
+		  Case 1 ' ok
+		    Dim ret As New PCAP.Packet(h, d)
+		    If mEpoch < 1.0 Then mEpoch = ret.TimeStamp
+		    mEOF = False
+		    Return ret
 		    
 		  Case -2 ' eof
 		    mEOF = True
+		    Return Nil
 		    
 		  Else
 		    Raise New PCAPException(Me)
