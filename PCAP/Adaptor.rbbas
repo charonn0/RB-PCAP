@@ -7,8 +7,8 @@ Protected Class Adaptor
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub Constructor(iface As pcap_if, IfaceIndex As Integer)
+	#tag Method, Flags = &h1
+		Protected Sub Constructor(iface As pcap_if, IfaceIndex As Integer)
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  Me.iface = iface
 		  mIndex = IfaceIndex
