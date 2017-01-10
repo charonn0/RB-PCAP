@@ -23,7 +23,7 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function GetCaptureDevice(Index As Integer) As PCAP.Adaptor
-		  ' Returns the capture device at Index. The last device is at Index=CaptureDeviceCount-1
+		  ' Returns the capture device at Index. The last device is at CaptureDeviceCount-1
 		  
 		  Return PCAP.Adaptor.GetAdaptor(Index)
 		End Function
@@ -59,17 +59,17 @@ Protected Module PCAP
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function IsValidFilter(Expression As String) As Boolean
+		Protected Function IsValidFilter(Expression As String, Optional ActiveCapture As PCAP.Capture) As Boolean
 		  ' Returns True is the Expression is a valid bpf program. If this method returns
 		  ' False then you may read the compiler error message in PCAP.Filter.LastCompileError
 		  
-		  If PCAP.IsAvailable Then Return Filter.Compile(Expression) <> Nil
+		  If PCAP.IsAvailable Then Return Filter.Compile(Expression, ActiveCapture) <> Nil
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
 		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As UInt32 = 0) As PCAP.Capture
-		  ' Opens a capture file returns it as a Capture object. SnapLength is the maximum number of bytes
+		  ' Opens a capture file and returns it as a Capture object. SnapLength is the maximum number of bytes
 		  ' to read from each captured packet. Flags is a bitmask of capture flags.
 		  
 		  Return PCAP.Capture.Open(CaptureFile, SnapLength, Flags)
