@@ -186,8 +186,6 @@ Protected Class Capture
 		    Raise New PCAPException(Me)
 		    
 		  End Select
-		  
-		  Return ret
 		End Function
 	#tag EndMethod
 
