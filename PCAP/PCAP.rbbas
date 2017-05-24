@@ -39,7 +39,7 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function IsAvailable() As Boolean
-		  ' Returns True if WinPcap is available at runtime.
+		  ' Returns True if libpcap/WinPcap is available at runtime.
 		  
 		  Static available As Boolean
 		  If Not available Then available = System.IsFunctionAvailable("pcap_close", libpcap)
@@ -58,9 +58,10 @@ Protected Module PCAP
 		    bs = BinaryStream.Open(CaptureFile)
 		    magic = bs.ReadInt32
 		  Catch
-		    Return False
+		    magic = 0
+		  Finally
+		    bs.Close
 		  End Try
-		  bs.Close
 		  Return (magic = &ha1b2c3d4 Or magic = &hd4c3b2a1)
 		  
 		End Function
