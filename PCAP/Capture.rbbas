@@ -26,31 +26,30 @@ Protected Class Capture
 		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer, TimeOut As Integer, Flags As Integer, BufferSize As Integer = -1) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
-		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  #If TargetWin32 Then
-		    p = pcap_open(CaptureDevice.Name, SnapLength, Flags, TimeOut, Nil, errmsg)
+		    Dim p As Ptr = pcap_open(CaptureDevice.Name, SnapLength, Flags, TimeOut, Nil, errmsg)
 		  #else
-		    p = pcap_open_live(CaptureDevice.Name, SnapLength, Flags, TimeOut, errmsg)
+		    Dim p As Ptr = pcap_open_live(CaptureDevice.Name, SnapLength, Flags, TimeOut, errmsg)
 		  #endif
-		  If p <> Nil Then
-		    Dim ret As New PCAP.Capture(p)
-		    ret.mSource = CaptureDevice
-		    If BufferSize > 0 Then
-		      #If TargetWin32 Then
-		        Dim err As Integer = pcap_setbuff(ret.mHandle, BufferSize)
-		      #Else
-		        ' untested
-		        Dim err As Integer = pcap_set_buffer_size(ret.mHandle, BufferSize)
-		      #endif
-		      If err <> 0 Then Raise New PCAPException("Unable to set buffer size!")
-		    End If
-		    Return ret
-		  Else
+		  If p = Nil Then
 		    Dim err As New IOException
 		    err.Message = errmsg
 		    Raise err
 		  End If
+		  
+		  Dim ret As New PCAP.Capture(p)
+		  ret.mSource = CaptureDevice
+		  If BufferSize > 0 Then
+		    #If TargetWin32 Then
+		      Dim err As Integer = pcap_setbuff(ret.mHandle, BufferSize)
+		    #Else
+		      ' untested
+		      Dim err As Integer = pcap_set_buffer_size(ret.mHandle, BufferSize)
+		    #endif
+		    If err <> 0 Then Raise New PCAPException("Unable to set buffer size!")
+		  End If
+		  Return ret
 		End Function
 	#tag EndMethod
 
@@ -147,21 +146,19 @@ Protected Class Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
-		  Dim p As Ptr
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  #if TargetWin32 Then
-		    p = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 0, Nil, errmsg)
+		    Dim p As Ptr = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 0, Nil, errmsg)
 		  #else
-		    p = pcap_open_offline(CaptureFile.AbsolutePath, errmsg)
+		    Dim p As Ptr = pcap_open_offline(CaptureFile.AbsolutePath, errmsg)
 		  #endif
-		  If p <> Nil Then
-		    Dim ret As New PCAP.Capture(p)
-		    Return ret
-		  Else
+		  If p = Nil Then
 		    Dim err As New IOException
 		    err.Message = errmsg
 		    Raise err
 		  End If
+		  
+		  Return New PCAP.Capture(p)
 		End Function
 	#tag EndMethod
 
