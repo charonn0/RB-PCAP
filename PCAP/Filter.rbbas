@@ -40,7 +40,7 @@ Protected Class Filter
 		  
 		  mProgram = Program
 		  mExpression = Expression
-		  mCapture = ActiveCapture
+		  mCapture = New WeakRef(ActiveCapture)
 		  mIsOptimized = WasOptimized
 		End Sub
 	#tag EndMethod
@@ -78,13 +78,13 @@ Protected Class Filter
 
 	#tag Method, Flags = &h0
 		Function Source() As PCAP.Capture
-		  Return mCapture
+		  If mCapture <> Nil And mCapture.Value IsA Capture Then Return Capture(mCapture.Value)
 		End Function
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h1
-		Protected mCapture As PCAP.Capture
+		Protected mCapture As WeakRef
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
