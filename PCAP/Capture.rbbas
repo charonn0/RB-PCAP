@@ -71,25 +71,6 @@ Protected Class Capture
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function CurrentFilter() As PCAP.Filter
-		  Return mCurrentFilter
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub CurrentFilter(Assigns NewFilterProgram As PCAP.Filter)
-		  If mHandle = Nil Then Raise New PCAPException("No capture in progress")
-		  If Not (NewFilterProgram.Source Is Me) Then ' Filters may not be shared among capture instances
-		    ' recompile the expression for the current instance
-		    NewFilterProgram = PCAP.Filter.Compile(NewFilterProgram.Expression, Me, NewFilterProgram.IsOptimized)
-		    If NewFilterProgram = Nil Then Raise New PCAPException(PCAP.Filter.LastCompileError)
-		  End If
-		  If pcap_setfilter(mHandle, NewFilterProgram.Handle) <> 0 Then Raise New PCAPException(Me)
-		  mCurrentFilter = NewFilterProgram
-		End Sub
-	#tag EndMethod
-
 	#tag Method, Flags = &h21
 		Private Sub Destructor()
 		  Me.Close
@@ -216,6 +197,27 @@ Protected Class Capture
 			End Set
 		#tag EndSetter
 		Blocking As Boolean
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return mCurrentFilter
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  If mHandle = Nil Then Raise New PCAPException("No capture in progress")
+			  If Not (value.Source Is Me) Then ' Filters may not be shared among capture instances
+			    ' recompile the expression for the current instance
+			    value = PCAP.Filter.Compile(value.Expression, Me, value.IsOptimized)
+			    If value = Nil Then Raise New PCAPException(PCAP.Filter.LastCompileError)
+			  End If
+			  If pcap_setfilter(mHandle, value.Handle) <> 0 Then Raise New PCAPException(Me)
+			  mCurrentFilter = value
+			End Set
+		#tag EndSetter
+		CurrentFilter As PCAP.Filter
 	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0
