@@ -5,11 +5,19 @@ Protected Module PCAP
 		  ' Begins a capture operation on the specified device and returns it as a Capture object.
 		  ' SnapLength is the maximum number of bytes to capture from each packet. Timeout is the interval to
 		  ' wait for new packets when calling Capture.ReadNext. For GUI applications you should use a low
-		  ' timeout (e.g. 50ms instead of the default 1000ms) to maintain responsiveness.
+		  ' timeout (e.g. 50ms instead of the default 1000ms) to maintain responsiveness. You may also
+		  ' specify a timeout of -1 for non-blocking operation.
 		  
 		  Dim flags As Integer
 		  If PromiscuousMode Then flags = PCAP_OPENFLAG_PROMISCUOUS
-		  Return PCAP.Capture.Create(CaptureDevice, SnapLength, TimeOut, flags, BufferSize)
+		  Dim ret As Capture
+		  If TimeOut = -1 Then
+		    ret = PCAP.Capture.Create(CaptureDevice, SnapLength, 1000, flags, BufferSize)
+		    ret.Blocking = False
+		  Else
+		    ret = PCAP.Capture.Create(CaptureDevice, SnapLength, TimeOut, flags, BufferSize)
+		  End If
+		  Return ret
 		End Function
 	#tag EndMethod
 
