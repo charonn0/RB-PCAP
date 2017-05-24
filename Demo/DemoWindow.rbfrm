@@ -434,7 +434,7 @@ End
 		    f = GetSaveFolderItem(FileTypes1.PacketCaptureFile, "Untitled.pcap")
 		    If f = Nil Then Return
 		  End If
-		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, 10)
+		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, -1)
 		  If capture <> Nil Then
 		    Dim filter As PCAP.Filter = PCAP.Filter.Compile(FilterString.Text, capture)
 		    If filter <> Nil Then capture.CurrentFilter = filter
