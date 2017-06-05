@@ -1,7 +1,7 @@
 # Introduction
 [libpcap](http://www.tcpdump.org/)/[WinPcap](https://www.winpcap.org/) is the usermode interface to a kernel-mode network packet capture driver for Linux, OS X and Windows operating systems. 
 
-RB-PCAP is a libpcap/winpcap [binding](http://en.wikipedia.org/wiki/Language_binding) for Realbasic and Xojo ("classic" framework) projects. 
+**RB-PCAP** is a libpcap/winpcap [binding](http://en.wikipedia.org/wiki/Language_binding) for Realbasic and Xojo ("classic" framework) projects. 
 
 ## Example
 This example [captures](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Capture) 64KB of [filtered](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Filter) [packets](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Packet) from a local network [adaptor](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor) and saves them to a standard [PCAP file](https://github.com/charonn0/RB-PCAP/wiki/PCAP.DumpFile) on the user's desktop.
