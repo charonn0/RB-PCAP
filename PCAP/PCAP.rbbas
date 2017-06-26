@@ -252,7 +252,7 @@ Protected Module PCAP
 
 	#tag Constant, Name = libpcap, Type = String, Dynamic = False, Default = \"libpcap", Scope = Private
 		#Tag Instance, Platform = Windows, Language = Default, Definition  = \"wpcap"
-		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"libpcap"
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"libpcap.A.dylib"
 		#Tag Instance, Platform = Linux, Language = Default, Definition  = \"libpcap"
 	#tag EndConstant
 
