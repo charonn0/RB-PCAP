@@ -1218,6 +1218,11 @@ End
 		  End Select
 		End Function
 	#tag EndEvent
+	#tag Event
+		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
+		  If IsContextualClick Then Return True
+		End Function
+	#tag EndEvent
 #tag EndEvents
 #tag Events PacketView
 	#tag Event
