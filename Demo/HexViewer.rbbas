@@ -32,7 +32,11 @@ Inherits Canvas
 		  Dim data As String
 		  Stream.Position = Offset
 		  Do Until Buffer.Graphics.StringWidth(data) >= Buffer.Graphics.Width - Buffer.Graphics.StringWidth(" 00")
-		    Dim bt As Byte = Stream.ReadByte
+		    #If RBVersion < 2015 Then
+		      Dim bt As Byte = Stream.ReadInt8
+		    #Else
+		      Dim bt As Byte = Stream.ReadByte
+		    #endif
 		    data = data + " " + Hex(bt, 2, LineNumbersLittleEndian) + " "
 		  Loop
 		  
@@ -132,7 +136,11 @@ Inherits Canvas
 		          Exit Do
 		        End If
 		        mVisibleByteCount = mVisibleByteCount + 1
-		        Dim bt As Byte = Stream.ReadByte
+		        #If RBVersion < 2015 Then
+		          Dim bt As Byte = Stream.ReadInt8
+		        #Else
+		          Dim bt As Byte = Stream.ReadByte
+		        #endif
 		        hx = Hex(bt, 2, BytesLittleEndian)
 		        data = data + " " + hx' + " "
 		        If bt < 33 Or bt > 127 Then
