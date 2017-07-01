@@ -185,6 +185,12 @@ End
 		    mPacketMB = New MemoryBlock(0)
 		    mPacketStream = New BinaryStream(mPacketMB)
 		    HexViewer1.ShowData(mPacketStream)
+		  ElseIf mPacketStream.Length > 1024 * 64 Then
+		    mPacketStream.Close
+		    mPacketMB = RightB(mPacketMB, 1024 * 32)
+		    mPacketStream = New BinaryStream(mPacketMB)
+		    HexViewer1.ShowData(mPacketStream)
+		    
 		  End If
 		  
 		  If mCapture = Nil Then Return
