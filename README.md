@@ -1,10 +1,23 @@
 # Introduction
-[libpcap](http://www.tcpdump.org/)/[WinPcap](https://www.winpcap.org/) is the usermode interface to a kernel-mode network packet capture driver for Linux, OS X and Windows operating systems. 
+[libpcap](http://www.tcpdump.org/)/[WinPcap](https://www.winpcap.org/) is the user-mode interface to a kernel-mode network packet capture driver for Linux, OS X and Windows operating systems. 
 
 **RB-PCAP** is a libpcap/winpcap [binding](http://en.wikipedia.org/wiki/Language_binding) for Realbasic and Xojo ("classic" framework) projects. 
 
+## Synopsis
+This project supplies several object classes for dealing with different aspects of the libpcap/WinPcap api.
+
+|Object Class|Comment|
+|------------|-------|
+|[`Adaptor`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor)|A local network adaptor that can opened for packet capture.| 
+|[`Capture`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Capture)|A packet capture job. Either "live" (from a network interface) or "dead" (from a PCAP file.)|
+|[`DumpFile`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.DumpFile)|A standard PCAP file to write packets to.|
+|[`Filter`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Filter)|A Berkley Packet Filter (BPF) program that is compiled from a high-level filtering expression.|
+|[`Packet`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Packet)|A single Internet packet, as captured from an `Adaptor` or PCAP file.|
+
+Use [PCAP.GetCaptureDevice](https://github.com/charonn0/RB-PCAP/wiki/PCAP.GetCaptureDevice) to get an instance of `Adaptor` for the local interface you want to capture from. Then, pass the `Adaptor` to [PCAP.BeginCapture](https://github.com/charonn0/RB-PCAP/wiki/PCAP.BeginCapture) to start capturing packets. You may also read from a standard PCAP file by passing the file as a FolderItem to [PCAP.OpenCapture](https://github.com/charonn0/RB-PCAP/wiki/PCAP.OpenCapture).
+
 ## Example
-This example [captures](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Capture) 64KB of [filtered](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Filter) [packets](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Packet) from a local network [adaptor](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor) and saves them to a standard [PCAP file](https://github.com/charonn0/RB-PCAP/wiki/PCAP.DumpFile) on the user's desktop.
+This example captures 64KB of filtered packets from a local network adaptor and saves them to a standard PCAP file on the user's desktop.
 
 ```vbnet
   ' get the first available device
