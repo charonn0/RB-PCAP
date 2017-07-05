@@ -93,6 +93,9 @@ Protected Class Adaptor
 		  ' Writes an array of packets to the adaptor. If Synchronize is True then the Packets' original timestamps are respected.
 		  ' The pcap_sendqueue_* functions are only available in WinPcap; on *nix, we simulate the queue by sending the packets
 		  ' ourselves in a loop. As such, the Synchronize argument is not supported on *nix.
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor.SendPacket
 		  
 		  #If TargetWin32 Then
 		    Dim sz As UInt32
@@ -132,6 +135,9 @@ Protected Class Adaptor
 	#tag Method, Flags = &h0
 		Function SendPacket(RawPacket As PCAP.Packet) As Boolean
 		  ' Writes a packet to the adaptor.
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor.SendPacket
 		  
 		  Dim data As MemoryBlock = RawPacket.StringValue
 		  Return pcap_sendpacket(iface, data, data.Size) = 0
@@ -143,6 +149,10 @@ Protected Class Adaptor
 		#tag Getter
 			Get
 			  ' Returns a human-readable description of the device
+			  '
+			  ' See:
+			  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor.Description
+			  
 			  Dim p As MemoryBlock = iface.description
 			  If p <> Nil Then Return p.CString(0)
 			End Get
@@ -154,6 +164,9 @@ Protected Class Adaptor
 		#tag Getter
 			Get
 			  ' Returns the flags that were used when opening the device.
+			  '
+			  ' See:
+			  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor.Flags
 			  
 			  Return iface.flags
 			End Get
@@ -169,6 +182,9 @@ Protected Class Adaptor
 		#tag Getter
 			Get
 			  ' The index of the device, i.e. the index parameter to GetCaptureDevice
+			  '
+			  ' See:
+			  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor.Index
 			  
 			  Return mIndex
 			End Get
@@ -180,6 +196,9 @@ Protected Class Adaptor
 		#tag Getter
 			Get
 			  ' Returns True if the device is a loopback interface
+			  '
+			  ' See:
+			  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor.Loopback
 			  
 			  Return BitAnd(iface.flags, PCAP_IF_LOOPBACK) = PCAP_IF_LOOPBACK
 			End Get
@@ -203,6 +222,9 @@ Protected Class Adaptor
 		#tag Getter
 			Get
 			  ' Returns the machine readable device name.
+			  '
+			  ' See:
+			  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor.Name
 			  
 			  return mName
 			End Get
@@ -250,6 +272,10 @@ Protected Class Adaptor
 		#tag Getter
 			Get
 			  ' Returns the user-configured device name (e.g. "Local Area Connection").
+			  '
+			  ' See:
+			  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor.Win32Name
+			  
 			  #If Not TargetWin32 Then
 			    Return Me.Name
 			  #else
