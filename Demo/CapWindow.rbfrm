@@ -1220,6 +1220,11 @@ End
 	#tag EndEvent
 	#tag Event
 		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
+		  #pragma Unused row
+		  #pragma Unused column
+		  #pragma Unused x
+		  #pragma Unused y
+		  
 		  If IsContextualClick Then Return True
 		End Function
 	#tag EndEvent
