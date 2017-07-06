@@ -3,6 +3,10 @@
 
 **RB-PCAP** is a libpcap/winpcap [binding](http://en.wikipedia.org/wiki/Language_binding) for Realbasic and Xojo ("classic" framework) projects. 
 
+![RB-PCAP demo on Windows](http://i.imgur.com/gNBFQxO.png)
+
+_This screen shot depicts the RB-PCAP demo running under Windows 7._
+
 ## Synopsis
 This project supplies several object classes for dealing with different aspects of the libpcap/WinPcap api.
 
@@ -67,3 +71,5 @@ PCAP is not installed by default on most systems, and will need to be installed 
 * [libpcap download](http://www.tcpdump.org/#latest-releases)
 
 RB-PCAP will raise a PlatformNotSupportedException when used if all required DLLs/SOs/DyLibs are not available at runtime. 
+
+Additionally, on most Unix-like systems you must run the app with root privileges in order to capture packets from a local adaptor.
