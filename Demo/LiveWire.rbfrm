@@ -56,7 +56,7 @@ Begin Window LiveWire
       LockRight       =   True
       LockTop         =   True
       Scope           =   0
-      ShowOffsets     =   True
+      ShowOffsets     =   False
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
