@@ -136,8 +136,8 @@ Inherits Canvas
 		          Exit Do
 		        End If
 		        mVisibleByteCount = mVisibleByteCount + 1
-		        #If RBVersion < 2015 Then
-		          Dim bt As Byte = Stream.ReadInt8
+		        #If RBVersion > 2015 Then
+		          Dim bt As Byte = Stream.ReadUInt8
 		        #Else
 		          Dim bt As Byte = Stream.ReadByte
 		        #endif
