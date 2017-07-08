@@ -179,6 +179,10 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_lib_version Lib libpcap () As Ptr
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_lookupnet Lib libpcap (Source As CString, ByRef Subnet As UInt32, ByRef NetMask As UInt32, ErrorBuffer As Ptr) As Integer
 	#tag EndExternalMethod
 
@@ -269,6 +273,14 @@ Protected Module PCAP
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_stats_ex Lib libpcap (pcap_t As Ptr, ByRef StatSize As Integer) As Ptr
 	#tag EndExternalMethod
+
+	#tag Method, Flags = &h1
+		Protected Function Version() As String
+		  If Not PCAP.IsAvailable Then Return ""
+		  Dim mb As MemoryBlock = pcap_lib_version()
+		  If mb <> Nil Then Return mb.CString(0)
+		End Function
+	#tag EndMethod
 
 
 	#tag Constant, Name = libpcap, Type = String, Dynamic = False, Default = \"libpcap", Scope = Private
