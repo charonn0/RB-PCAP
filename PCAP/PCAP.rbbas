@@ -158,6 +158,10 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_is_swapped Lib libpcap (pcap_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_lookupnet Lib libpcap (Source As CString, ByRef Subnet As UInt32, ByRef NetMask As UInt32, ErrorBuffer As Ptr) As Integer
 	#tag EndExternalMethod
 

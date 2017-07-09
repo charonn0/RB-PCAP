@@ -258,6 +258,18 @@ Protected Class Capture
 		IsLive As Boolean
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  ' Returns True if the capture refers to a PCAP file that uses a different byte order than the current system. 
+			  ' For a live capture, it always returns false
+			  
+			  Return pcap_is_swapped(mHandle) = 1
+			End Get
+		#tag EndGetter
+		IsSwapped As Boolean
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h1
 		Protected mCurrentFilter As PCAP.Filter
 	#tag EndProperty
