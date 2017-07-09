@@ -280,7 +280,17 @@ Inherits Canvas
 		        Return mFont
 		      End If
 		    Next
+		    Dim tmp As New Picture(64, 64, 24)
+		    tmp.Graphics.TextFont = fontname
+		    Dim a, b As Double
+		    a = tmp.Graphics.StringWidth("i")
+		    b = tmp.Graphics.StringWidth("A")
+		    If a = b Then
+		      mFont = fontname
+		      Exit For
+		    End If
 		  Next
+		  Return mFont
 		End Function
 	#tag EndMethod
 
