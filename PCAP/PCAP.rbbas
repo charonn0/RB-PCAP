@@ -7,6 +7,9 @@ Protected Module PCAP
 		  ' wait for new packets when calling Capture.ReadNext. For GUI applications you should use a low
 		  ' timeout (e.g. 50ms instead of the default 1000ms) to maintain responsiveness. You may also
 		  ' specify a timeout of -1 for non-blocking operation.
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.BeginCapture
 		  
 		  Dim flags As Integer
 		  If PromiscuousMode Then flags = PCAP_OPENFLAG_PROMISCUOUS
@@ -23,7 +26,10 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function CaptureDeviceCount() As Integer
-		  ' Returns the number of capture devices available.
+		  ' Returns the number of local devices that are available for packet capture.
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.CaptureDeviceCount
 		  
 		  Return PCAP.Adaptor.GetAdaptorCount()
 		End Function
@@ -32,6 +38,9 @@ Protected Module PCAP
 	#tag Method, Flags = &h1
 		Protected Function GetCaptureDevice(Index As Integer) As PCAP.Adaptor
 		  ' Returns the capture device at Index. The last device is at CaptureDeviceCount-1
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.GetCaptureDevice
 		  
 		  Return PCAP.Adaptor.GetAdaptor(Index)
 		End Function
@@ -40,6 +49,9 @@ Protected Module PCAP
 	#tag Method, Flags = &h1
 		Protected Function IsAvailable() As Boolean
 		  ' Returns True if libpcap/WinPcap is available at runtime.
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.IsAvailable
 		  
 		  Static available As Boolean
 		  If Not available Then available = System.IsFunctionAvailable("pcap_close", libpcap)
@@ -50,6 +62,9 @@ Protected Module PCAP
 	#tag Method, Flags = &h0
 		Function IsPCAPFile(Extends CaptureFile As FolderItem) As Boolean
 		  ' Returns True if the file is likely a PCAP file.
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.IsPCAPFile
 		  
 		  If CaptureFile = Nil Or CaptureFile.Directory Then Return False
 		  Dim bs As BinaryStream
@@ -71,6 +86,9 @@ Protected Module PCAP
 		Protected Function IsValidFilter(Expression As String, Optional ActiveCapture As PCAP.Capture) As Boolean
 		  ' Returns True is the Expression is a valid bpf program. If this method returns
 		  ' False then you may read the compiler error message in PCAP.Filter.LastCompileError
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.IsValidFilter
 		  
 		  If PCAP.IsAvailable Then Return Filter.Compile(Expression, ActiveCapture) <> Nil
 		End Function
@@ -80,6 +98,9 @@ Protected Module PCAP
 		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As UInt32 = 0) As PCAP.Capture
 		  ' Opens a capture file and returns it as a Capture object. SnapLength is the maximum number of bytes
 		  ' to read from each captured packet. Flags is a bitmask of capture flags.
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.OpenCapture
 		  
 		  Return PCAP.Capture.Open(CaptureFile, SnapLength, Flags)
 		End Function
@@ -159,6 +180,10 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_is_swapped Lib libpcap (pcap_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_lib_version Lib libpcap () As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
@@ -252,6 +277,14 @@ Protected Module PCAP
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_stats_ex Lib libpcap (pcap_t As Ptr, ByRef StatSize As Integer) As Ptr
 	#tag EndExternalMethod
+
+	#tag Method, Flags = &h1
+		Protected Function Version() As String
+		  If Not PCAP.IsAvailable Then Return ""
+		  Dim mb As MemoryBlock = pcap_lib_version()
+		  If mb <> Nil Then Return mb.CString(0)
+		End Function
+	#tag EndMethod
 
 
 	#tag Constant, Name = libpcap, Type = String, Dynamic = False, Default = \"libpcap", Scope = Private
