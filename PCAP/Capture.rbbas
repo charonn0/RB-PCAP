@@ -185,6 +185,7 @@ Protected Class Capture
 		#tag EndNote
 		#tag Getter
 			Get
+			  If mHandle = Nil Then Return False
 			  Dim errbuf As New MemoryBlock(PCAP_ERRBUF_SIZE)
 			  Dim blocked As Integer = pcap_getnonblock(mHandle, errbuf)
 			  If blocked = -1 Then Raise New PCAPException(errbuf.WString(0))
@@ -193,6 +194,7 @@ Protected Class Capture
 		#tag EndGetter
 		#tag Setter
 			Set
+			  If mHandle = Nil Then Raise New NilObjectException
 			  Dim errbuf As New MemoryBlock(PCAP_ERRBUF_SIZE)
 			  Dim block As Integer
 			  If Not value Then block = 1
