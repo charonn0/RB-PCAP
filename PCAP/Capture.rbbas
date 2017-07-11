@@ -178,6 +178,11 @@ Protected Class Capture
 
 
 	#tag ComputedProperty, Flags = &h0
+		#tag Note
+			Determines whether ReadNext is a blocking call. The default is True, meaning that ReadNext will block execution
+			until a packet is received or the timeout period elapses. If False then ReadNext returns immediately if no packet
+			is ready.
+		#tag EndNote
 		#tag Getter
 			Get
 			  Dim errbuf As New MemoryBlock(PCAP_ERRBUF_SIZE)
