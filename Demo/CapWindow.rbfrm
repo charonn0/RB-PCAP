@@ -1254,6 +1254,12 @@ End
 		  
 		  mCapture.CurrentFilter = f
 		  mFilter = f
+		  If PacketList.ListCount > 0 And MsgBox("Would you like to apply this filter to the packets which have already been captured?", 4 + 32, "Update UI?") = 6 Then
+		    For i As Integer = PacketList.ListCount - 1 DownTo 0
+		      Dim p As PCAP.Packet = PacketList.RowTag(i)
+		      If p <> f Then PacketList.RemoveRow(i)
+		    Next
+		  End If
 		  MsgBox("Filter changed")
 		  mPacketCount = mPacketCount + c
 		End Sub
