@@ -15,10 +15,10 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Sub Constructor(pcap_t As Ptr)
+		Protected Sub Constructor(pcap_t As Ptr, Device As PCAP.Adaptor)
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  mHandle = pcap_t
-		  
+		  mSource = Device
 		End Sub
 	#tag EndMethod
 
@@ -38,8 +38,7 @@ Protected Class Capture
 		    Raise err
 		  End If
 		  
-		  Dim ret As New PCAP.Capture(p)
-		  ret.mSource = CaptureDevice
+		  Dim ret As New PCAP.Capture(p, CaptureDevice)
 		  If BufferSize > 0 Then
 		    #If TargetWin32 Then
 		      Dim err As Integer = pcap_setbuff(ret.mHandle, BufferSize)
@@ -61,7 +60,7 @@ Protected Class Capture
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  p = pcap_open_dead(LinkType, SnapLength)
 		  If p <> Nil Then
-		    Dim ret As New PCAP.Capture(p)
+		    Dim ret As New PCAP.Capture(p, Nil)
 		    Return ret
 		  Else
 		    Dim err As New IOException
@@ -139,7 +138,7 @@ Protected Class Capture
 		    Raise err
 		  End If
 		  
-		  Return New PCAP.Capture(p)
+		  Return New PCAP.Capture(p, Nil)
 		End Function
 	#tag EndMethod
 
