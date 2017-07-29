@@ -3,7 +3,7 @@
 
 **RB-PCAP** is a libpcap/winpcap [binding](http://en.wikipedia.org/wiki/Language_binding) for Realbasic and Xojo ("classic" framework) projects. 
 
-![RB-PCAP demo on Windows](http://i.imgur.com/gNBFQxO.png)
+![RB-PCAP demo on Windows](http://i.imgur.com/pdbKqtK.png)
 
 _This screen shot depicts the RB-PCAP demo running under Windows 7._
 
