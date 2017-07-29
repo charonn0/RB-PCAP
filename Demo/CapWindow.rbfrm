@@ -1047,7 +1047,7 @@ End
 		  mFilter = InitialFilter
 		  If mFilter <> Nil Then FilterString.Text = mFilter.Expression
 		  If SaveTo <> Nil Then
-		    mDump = New PCAP.DumpFile(ActiveCapture, SaveTo)
+		    mDump = PCAP.DumpFile.Create(ActiveCapture, SaveTo)
 		    Self.Title = "Capturing to '" + SaveTo.Name + "'"
 		  Else
 		    Self.Title = "Capturing on '" + ActiveCapture.Source.Win32Name + "'"

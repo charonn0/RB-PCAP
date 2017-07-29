@@ -7,14 +7,26 @@ Protected Class DumpFile
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub Constructor(ActiveCapture As PCAP.Capture, DumpTo As FolderItem)
+	#tag Method, Flags = &h1
+		Protected Sub Constructor(DumpTo As FolderItem, ActiveCapture As PCAP.Capture)
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  
 		  mDump = pcap_dump_open(ActiveCapture.Handle, DumpTo.AbsolutePath)
 		  If mDump = Nil Then Raise New PCAPException(ActiveCapture)
 		  mDumpFile = DumpTo
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Attributes( deprecated = "PCAP.DumpFile.Create" )  Sub Constructor(ActiveCapture As PCAP.Capture, DumpTo As FolderItem)
+		  Me.Constructor(DumpTo, ActiveCapture)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		 Shared Function Create(ActiveCapture As PCAP.Capture, DumpTo As FolderItem) As PCAP.DumpFile
+		  Return New DumpFile(DumpTo, ActiveCapture)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
@@ -27,21 +39,6 @@ Protected Class DumpFile
 		Sub Flush()
 		  If mDump <> Nil And pcap_dump_flush(mDump) <> 0 Then Raise New IOException
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Operator_Convert() As BinaryStream
-		  Dim fhandle As Integer = pcap_dump_file(mDump)
-		  #If TargetWin32 Then
-		    'Soft Declare Function _fileno Lib "msvcrt" (FileStream As Integer) As Integer
-		    'Soft Declare Function _get_osfhandle Lib "msvcrt" (FileDescriptor As Integer) As Integer
-		    'If fhandle > 0 Then fhandle = _fileno(fhandle)
-		    'If fhandle > 0 Then fhandle = _get_osfhandle(fhandle)
-		    If fhandle > 0 Then Return New BinaryStream(fhandle, BinaryStream.HandleTypeWin32Handle)
-		  #Else
-		    Return New BinaryStream(fhandle, BinaryStream.HandleTypeFileNumber)
-		  #endif
-		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
