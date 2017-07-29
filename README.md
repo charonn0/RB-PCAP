@@ -29,10 +29,10 @@ This example captures 64KB of filtered packets from a local network adaptor and 
   ' open the device
   Dim capture As PCAP.Capture = PCAP.BeginCapture(iface)
   ' create a file to write packets to
-  Dim dumpfile As New PCAP.DumpFile(capture, SpecialFolder.Desktop.Child("test.pcap"))
+  Dim dumpfile As PCAP.DumpFile = PCAP.DumpFile.Create(capture, SpecialFolder.Desktop.Child("test.pcap"))
   
   ' create a filter program
-  Dim expression As String = "host boredomsoft.org and port 80 and tcp"
+  Dim expression As String = "host example.com and port 80 and tcp"
   Dim filter As PCAP.Filter = PCAP.Filter.Compile(expression, capture)
   
   If filter <> Nil Then
