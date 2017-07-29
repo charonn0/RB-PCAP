@@ -107,10 +107,6 @@ Protected Module PCAP
 	#tag EndMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Sub pcap_breakloop Lib libpcap (pcap_t As Ptr)
-	#tag EndExternalMethod
-
-	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Sub pcap_close Lib libpcap (pcap_t As Ptr)
 	#tag EndExternalMethod
 
@@ -124,10 +120,6 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_datalink Lib libpcap (pcap_t As Ptr) As PCAP.LinkType
-	#tag EndExternalMethod
-
-	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_dispatch Lib libpcap (pcap_t As Ptr, Count As Integer, pcap_handler As Ptr, u_char As Ptr) As Integer
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
@@ -188,14 +180,6 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_lookupnet Lib libpcap (Source As CString, ByRef Subnet As UInt32, ByRef NetMask As UInt32, ErrorBuffer As Ptr) As Integer
-	#tag EndExternalMethod
-
-	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_loop Lib libpcap (pcap_t As Ptr, Count As Integer, pcap_handler As Ptr, u_char As Ptr) As Integer
-	#tag EndExternalMethod
-
-	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function pcap_next Lib libpcap (pcap_t As Ptr, pcap_handler As Ptr) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
