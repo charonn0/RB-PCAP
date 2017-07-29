@@ -1,4 +1,5 @@
-Copyright (c) 2016, Andrew Lambert
+RB-PCAP
+Copyright (c) 2016-17, Andrew Lambert
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
