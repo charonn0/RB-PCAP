@@ -32,7 +32,7 @@ Inherits Canvas
 		  Dim data As String
 		  Stream.Position = Offset
 		  Do Until Buffer.Graphics.StringWidth(data) >= Buffer.Graphics.Width - Buffer.Graphics.StringWidth(" 00")
-		    #If RBVersion < 2015 Then
+		    #If RBVersion > 2015 Then
 		      Dim bt As Byte = Stream.ReadInt8
 		    #Else
 		      Dim bt As Byte = Stream.ReadByte
