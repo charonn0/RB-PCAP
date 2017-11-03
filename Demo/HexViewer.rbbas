@@ -380,7 +380,7 @@ Inherits Canvas
 		      Stream.Position = Offset
 		      Exit For
 		    End If
-		    Call Stream.ReadByte
+		    Call Stream.ReadUInt8
 		    If X > w And X < w + bytewidth Then
 		      pos = Stream.Position
 		      Stream.Position = Offset
