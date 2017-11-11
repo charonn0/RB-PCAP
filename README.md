@@ -12,7 +12,7 @@ This project supplies several object classes for dealing with different aspects 
 
 |Object Class|Comment|
 |------------|-------|
-|[`Adaptor`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor)|A local network adaptor that can opened for packet capture.| 
+|[`Adaptor`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Adaptor)|A local network adaptor that can be opened for packet capture.| 
 |[`Capture`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Capture)|A packet capture operation. Either "online" (from a network adaptor) or "offline" (from a PCAP file.)|
 |[`DumpFile`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.DumpFile)|A standard PCAP file to write packets to.|
 |[`Filter`](https://github.com/charonn0/RB-PCAP/wiki/PCAP.Filter)|A Berkley Packet Filter (BPF) program that is compiled from a high-level filtering expression.|
