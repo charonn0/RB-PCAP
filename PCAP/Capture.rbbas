@@ -99,7 +99,7 @@ Protected Class Capture
 		    Dim count As Integer
 		    stat = pcap_stats_ex(mHandle, count)
 		    If count = 0 Then Raise New PCAPException(Me)
-		    Return stat.pcap_stat(0)
+		    If stat <> Nil Then Return stat.pcap_stat(0) Else Raise New NilObjectException
 		  #Else
 		    Dim stat As pcap_stat
 		    If pcap_stats(mHandle, stat) <> 0 Then Raise New PCAPException(Me)
