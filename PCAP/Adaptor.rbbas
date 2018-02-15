@@ -35,30 +35,8 @@ Protected Class Adaptor
 		  
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
-		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  If ref = Nil Then
-		    #If TargetWin32 Then
-		      If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Raise New PCAPException(errmsg)
-		    #Else
-		      If pcap_findalldevs(ref, errmsg) <> 0 Then Raise New PCAPException(errmsg)
-		    #endif
-		  End If
-		  
-		  Dim ret As PCAP.Adaptor
-		  Dim count As Integer
-		  Dim lst As Ptr = ref
-		  Do Until ret <> Nil
-		    If lst = Nil Then Raise New OutOfBoundsException
-		    Dim iface As pcap_if = lst.pcap_if
-		    If count = Index Then 
-		      ret = New PCAP.Adaptor(iface, count)
-		      Exit Do
-		    End If
-		    lst = iface.next_if
-		    count = count + 1
-		  Loop Until count > Index
-		  Return ret
-		  
+		  Dim lst() As pcap_if = GetAdaptors()
+		  Return New PCAP.Adaptor(lst(Index), Index)
 		End Function
 	#tag EndMethod
 
@@ -68,22 +46,33 @@ Protected Class Adaptor
 		  
 		  If Not PCAP.IsAvailable Then Return -1
 		  
+		  Dim lst() As pcap_if = GetAdaptors()
+		  Return lst.Ubound + 1
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Shared Function GetAdaptors() As pcap_if()
+		  ' Returns the Adaptor at Index. The last Adaptor is at Index=GetAdaptorCount-1
+		  
+		  Dim ret() As pcap_if
+		  If Not PCAP.IsAvailable Then Return ret
+		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  If ref = Nil Then
-		    Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		    #If TargetWin32 Then
-		      If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Return 0
+		      If pcap_findalldevs_ex(PCAP_SRC_IF_STRING, Nil, ref, errmsg) <> 0 Then Raise New PCAPException(errmsg)
 		    #Else
-		      If pcap_findalldevs(ref, errmsg) <> 0 Then Return 0
+		      If pcap_findalldevs(ref, errmsg) <> 0 Then Raise New PCAPException(errmsg)
 		    #endif
 		  End If
-		  Dim count As Integer
+		  
 		  Dim lst As Ptr = ref
-		  Do
-		    If lst = Nil Then Exit Do
-		    lst = lst.Ptr(0)
-		    count = count + 1
+		  Do Until lst = Nil
+		    Dim iface As pcap_if = lst.pcap_if
+		    ret.Append(iface)
+		    lst = iface.next_if
 		  Loop
-		  Return Count
+		  Return ret
 		  
 		End Function
 	#tag EndMethod
