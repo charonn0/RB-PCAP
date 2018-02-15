@@ -407,6 +407,49 @@ End
 	#tag EndEvent
 
 
+	#tag Method, Flags = &h21
+		Private Shared Function GUnZip(CaptureFile As FolderItem) As FolderItem
+		  #If TargetWin32 Then
+		    Const zlib1 = "zlib1.dll"
+		  #ElseIf TargetLinux Then
+		    Const zlib1 = "libz.so.1"
+		  #Else
+		    Const zlib1 = "/usr/lib/libz.dylib"
+		  #endif
+		  
+		  If Not System.IsFunctionAvailable("gzopen", zlib1) Then
+		    Return CaptureFile
+		  Else
+		    Dim bs As BinaryStream = BinaryStream.Open(CaptureFile)
+		    Dim isgz As Boolean = (bs.ReadUInt8 = &h1F And bs.ReadUInt8 = &h8B)
+		    bs.Close
+		    If Not isgz Then Return CaptureFile
+		  End If
+		  
+		  Soft Declare Function gzopen Lib zlib1 (Path As CString, Mode As CString) As Ptr
+		  Soft Declare Function gzclose Lib zlib1 (gzFile As Ptr) As Integer
+		  Soft Declare Function gzread Lib zlib1 (gzFile As Ptr, Buffer As Ptr, Length As UInt32) As Integer
+		  Soft Declare Function gzeof Lib zlib1 (gzFile As Ptr) As Boolean
+		  
+		  Dim strm As Ptr = gzOpen(CaptureFile.AbsolutePath, "rb")
+		  If strm = Nil Then Return Nil
+		  Dim tmp As FolderItem = GetTemporaryFolderItem()
+		  Dim bs As BinaryStream = BinaryStream.Open(tmp, True)
+		  Do Until gzeof(strm)
+		    Dim mb As New MemoryBlock(16384)
+		    Dim red As Integer = gzread(strm, mb, mb.Size)
+		    If red > 0 Then
+		      mb.Size = red
+		      bs.Write(mb)
+		    End If
+		  Loop
+		  bs.Close
+		  Call gzclose(strm)
+		  Return tmp
+		End Function
+	#tag EndMethod
+
+
 #tag EndWindowCode
 
 #tag Events Adaptors
@@ -450,7 +493,21 @@ End
 #tag Events PushButton2
 	#tag Event
 		Sub Action()
-		  Dim f As FolderItem = GetOpenFolderItem(FileTypes1.PacketCaptureFile)
+		  Dim f As FolderItem
+		  #If TargetWin32 Then
+		    Const zlib1 = "zlib1.dll"
+		  #ElseIf TargetLinux Then
+		    Const zlib1 = "libz.so.1"
+		  #Else
+		    Const zlib1 = "/usr/lib/libz.dylib"
+		  #endif
+		  If System.IsFunctionAvailable("gzopen", zlib1) Then
+		    f = GetOpenFolderItem(FileTypes1.PacketCaptureFileAll)
+		    If f <> Nil Then f = GUnZip(f)
+		  Else
+		    f = GetOpenFolderItem(FileTypes1.PacketCaptureFile)
+		  End If
+		  
 		  If f <> Nil And f.Exists Then
 		    Dim cap As PCAP.Capture = PCAP.OpenCapture(f)
 		    If cap <> Nil Then
