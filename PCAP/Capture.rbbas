@@ -35,11 +35,7 @@ Protected Class Capture
 		  #else
 		    Dim p As Ptr = pcap_open_live(CaptureDevice.Name, SnapLength, Flags, TimeOut, errmsg)
 		  #endif
-		  If p = Nil Then
-		    Dim err As New IOException
-		    err.Message = errmsg
-		    Raise err
-		  End If
+		  If p = Nil Then Raise New PCAPException(errmsg)
 		  
 		  Dim ret As New PCAP.Capture(p, CaptureDevice)
 		  If BufferSize > 0 Then
