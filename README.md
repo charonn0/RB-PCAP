@@ -60,15 +60,15 @@ This example captures 64KB of filtered packets from a local network adaptor and 
 
 ## How to incorporate RB-PCAP into your Realbasic/Xojo project
 ### Import the PCAP module
-1. Download the RB-PCAP project either in [ZIP archive format](https://github.com/charonn0/RB-PCAP/archive/master.zip) or by cloning the repository with your Git client.
+1. Download the RB-PCAP project either in [ZIP archive format](https://github.com/charonn0/RB-PCAP/archive/master.zip) or by cloning the repository with your git client.
 2. Open the RB-PCAP project in REALstudio or Xojo. Open your project in a separate window.
 3. Copy the PCAP module into your project and save.
 
 ### Ensure the PCAP driver is installed
 PCAP is not installed by default on most systems, and will need to be installed separately. 
 
-* [WinPCAP download](https://www.winpcap.org/install/default.htm)
-* [libpcap download](http://www.tcpdump.org/#latest-releases)
+* [WinPCAP download](https://www.winpcap.org/install/default.htm) (Windows)
+* [libpcap download](http://www.tcpdump.org/#latest-releases) (Linux/OS X)
 
 RB-PCAP will raise a PlatformNotSupportedException when used if all required DLLs/SOs/DyLibs are not available at runtime. 
 
