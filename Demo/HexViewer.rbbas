@@ -271,6 +271,7 @@ Inherits Canvas
 		  Static mFont As String
 		  If mFont <> "" Then Return mFont
 		  Dim preferred() As String = Split("Consolas,Anonymous,Courier,Inconsolata,Lucida Console,Monospace", ",")
+		  Dim fonts() As String
 		  For i As Integer = FontCount - 1 DownTo 0
 		    Dim fontname As String = Font(i)
 		    If Left(fontname, 1) = "@" Then Continue
@@ -280,13 +281,17 @@ Inherits Canvas
 		        Return mFont
 		      End If
 		    Next
+		    fonts.Append(fontname)
+		  Next
+		  
+		  For i As Integer = 0 To UBound(fonts)
 		    Dim tmp As New Picture(64, 64, 24)
-		    tmp.Graphics.TextFont = fontname
+		    tmp.Graphics.TextFont = fonts(i)
 		    Dim a, b As Double
 		    a = tmp.Graphics.StringWidth("i")
 		    b = tmp.Graphics.StringWidth("A")
 		    If a = b Then
-		      mFont = fontname
+		      mFont = fonts(i)
 		      Exit For
 		    End If
 		  Next
