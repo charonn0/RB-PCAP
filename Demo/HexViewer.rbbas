@@ -95,7 +95,7 @@ Inherits Canvas
 		  
 		  If ShowOffsets Then
 		    Dim tmp As String
-		    For i As Integer = 1 To 5
+		    For i As Integer = 1 To 4
 		      tmp = tmp + "0"
 		    Next
 		    gw = bg.StringWidth(tmp) + 1
