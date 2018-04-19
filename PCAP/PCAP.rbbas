@@ -218,6 +218,14 @@ Protected Module PCAP
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_major_version Lib libpcap (pcap_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_minor_version Lib libpcap (pcap_t As Ptr) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_next_ex Lib libpcap (pcap_t As Ptr, ByRef pckhdr As Ptr, ByRef pkt_data As Ptr) As Integer
 	#tag EndExternalMethod
 

@@ -271,6 +271,19 @@ Protected Class Capture
 		IsSwapped As Boolean
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Note
+			Returns the major version number of the PCAP library 
+			
+		#tag EndNote
+		#tag Getter
+			Get
+			  Return pcap_major_version(mHandle)
+			End Get
+		#tag EndGetter
+		MajorVersion As Integer
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h1
 		Protected mCurrentFilter As PCAP.Filter
 	#tag EndProperty
@@ -303,6 +316,15 @@ Protected Class Capture
 			End Set
 		#tag EndSetter
 		MinMemoryToCopy As Integer
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return pcap_minor_version(mHandle)
+			End Get
+		#tag EndGetter
+		MinorVersion As Integer
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
