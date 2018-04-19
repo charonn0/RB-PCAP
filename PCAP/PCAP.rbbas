@@ -47,6 +47,13 @@ Protected Module PCAP
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function GetLinkType(Type As String) As PCAP.LinkType
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
+		  Return LinkType(pcap_datalink_name_to_val(Type))
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function IsAvailable() As Boolean
 		  ' Returns True if libpcap/WinPcap is available at runtime.
 		  '
@@ -95,6 +102,22 @@ Protected Module PCAP
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function LinkTypeDescription(Type As PCAP.LinkType) As String
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
+		  Dim mb As MemoryBlock = pcap_datalink_val_to_description(Type)
+		  If mb <> Nil Then Return mb.CString(0)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function LinkTypeName(Type As PCAP.LinkType) As String
+		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
+		  Dim mb As MemoryBlock = pcap_datalink_val_to_name(Type)
+		  If mb <> Nil Then Return mb.CString(0)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function OpenCapture(CaptureFile As FolderItem, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, Flags As UInt32 = 0) As PCAP.Capture
 		  ' Opens a capture file and returns it as a Capture object. SnapLength is the maximum number of bytes
 		  ' to read from each captured packet. Flags is a bitmask of capture flags.
@@ -120,6 +143,18 @@ Protected Module PCAP
 
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function pcap_datalink Lib libpcap (pcap_t As Ptr) As PCAP.LinkType
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_datalink_name_to_val Lib libpcap (LinkName As CString) As Integer
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_datalink_val_to_description Lib libpcap (Type As LinkType) As Ptr
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function pcap_datalink_val_to_name Lib libpcap (Type As LinkType) As Ptr
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
