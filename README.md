@@ -64,6 +64,8 @@ This example captures 64KB of filtered packets from a local network adaptor and 
 2. Open the RB-PCAP project in REALstudio or Xojo. Open your project in a separate window.
 3. Copy the PCAP module into your project and save.
 
+**Caution**: When running PCAP code in the Xojo debugger you must take care to allow the application to terminate normally, even if an exception is raised. Termination from the debugger prevents Destructor methods from running which can leave the PCAP driver in an inconsistent state!
+
 ### Ensure the PCAP driver is installed
 PCAP is not installed by default on most systems, and will need to be installed separately. 
 
