@@ -83,8 +83,7 @@ Protected Class Capture
 
 	#tag Method, Flags = &h0
 		Function Epoch() As Double
-		  ' Returns the time stamp of the first packet in the capture. All subsequent packet time stamps
-		  ' are relative to this time stamp.
+		  ' Returns the time stamp of the first packet in the capture. 
 		  
 		  Return mEpoch
 		End Function
