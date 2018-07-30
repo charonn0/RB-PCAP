@@ -82,7 +82,7 @@ Protected Module PCAP
 		  Catch
 		    magic = 0
 		  Finally
-		    bs.Close
+		    If bs <> Nil Then bs.Close
 		  End Try
 		  Return (magic = &ha1b2c3d4 Or magic = &hd4c3b2a1)
 		  
