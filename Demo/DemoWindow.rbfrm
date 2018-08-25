@@ -400,7 +400,7 @@ End
 		    sh.Mode = 0
 		    sh.Execute("whoami")
 		    If sh.ReadAll.Trim <> "root" Then
-		      Call MsgBox("Capturing from a network adaptor is unavailable unless running as root", 48, "root needed")
+		      Call MsgBox("Capturing from a network adaptor might be unavailable unless running as root", 48, "root needed")
 		    End If
 		  #endif
 		End Sub
@@ -470,7 +470,7 @@ End
 	#tag Event
 		Sub Action()
 		  If Adaptors.ListIndex = -1 Then
-		    MsgBox("Please choose an adaptor to capture from")
+		    MsgBox("Please select a capture device.")
 		    Return
 		  End If
 		  Dim a As PCAP.Adaptor = Adaptors.RowTag(Adaptors.ListIndex)
@@ -535,7 +535,7 @@ End
 	#tag Event
 		Sub Action()
 		  If Adaptors.ListIndex = -1 Then
-		    MsgBox("Please choose an adaptor to capture from")
+		    MsgBox("Please select a capture device.")
 		    Return
 		  End If
 		  Dim a As PCAP.Adaptor = Adaptors.RowTag(Adaptors.ListIndex)
@@ -548,7 +548,7 @@ End
 	#tag Event
 		Sub Action()
 		  If Adaptors.ListIndex = -1 Then
-		    MsgBox("Please choose an adaptor to capture from")
+		    MsgBox("Please select a capture device.")
 		    Return
 		  End If
 		  Dim a As PCAP.Adaptor = Adaptors.RowTag(Adaptors.ListIndex)

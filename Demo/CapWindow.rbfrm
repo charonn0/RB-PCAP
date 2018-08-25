@@ -56,7 +56,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   87
+      Width           =   107
    End
    Begin Label Label2
       AutoDeactivate  =   True
@@ -69,7 +69,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   391
+      Left            =   386
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -90,7 +90,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   87
+      Width           =   92
    End
    Begin Label Label3
       AutoDeactivate  =   True
@@ -103,7 +103,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   193
+      Left            =   180
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -124,7 +124,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   91
+      Width           =   104
    End
    Begin Label AdaptorPath
       AutoDeactivate  =   True
@@ -137,7 +137,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   99
+      Left            =   116
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -158,7 +158,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   483
+      Width           =   466
    End
    Begin Label PacketCount
       AutoDeactivate  =   True
@@ -353,7 +353,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   72
+      Width           =   59
    End
    Begin Label Label4
       AutoDeactivate  =   True
@@ -366,7 +366,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   11
+      Left            =   0
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -387,7 +387,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   87
+      Width           =   107
    End
    Begin CheckBox Autoscroll
       AutoDeactivate  =   True
@@ -560,7 +560,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   72
+      Width           =   59
    End
    Begin Label Label6
       AutoDeactivate  =   True
@@ -573,7 +573,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   2
+      Left            =   0
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -594,7 +594,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   97
+      Width           =   107
    End
    Begin ScrollBar ScrollBar1
       AcceptFocus     =   true
@@ -700,7 +700,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   187
+      Left            =   174
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -721,7 +721,7 @@ Begin Window CapWindow
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   97
+      Width           =   110
    End
    Begin PCAP.PacketFilter PacketSrc
       Height          =   32
