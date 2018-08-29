@@ -53,7 +53,7 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h1
 		Protected Shared Function GetAdaptors() As pcap_if()
-		  ' Returns the Adaptor at Index. The last Adaptor is at Index=GetAdaptorCount-1
+		  ' Returns an array of pcap_if structures
 		  
 		  Dim ret() As pcap_if
 		  If Not PCAP.IsAvailable Then Return ret
