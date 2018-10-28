@@ -1188,6 +1188,8 @@ End
 	#tag Event
 		Sub Change()
 		  If Me.ListIndex <> -1 Then
+		    ScrollBar1.Value = 0
+		    ScrollTimer.Mode = Timer.ModeSingle
 		    Dim p As PCAP.Packet = Me.RowTag(Me.ListIndex)
 		    PacketNumber.Text = Format(Me.ListIndex, "###,###,###,##0")
 		    Timestamp.Text = Format(p.TimeStamp - mCapture.Epoch, "+###,###,##0.00000000")
@@ -1195,8 +1197,6 @@ End
 		    PacketLen.Text = FormatBytes(p.Length)
 		    PacketView.StreamLen = PacketView.StreamLen + p.SnapLength
 		    PacketView.ShowData(New BinaryStream(p.StringValue), p.SnapLength)
-		    ScrollTimer.Mode = Timer.ModeSingle
-		    ScrollBar1.Value = 0
 		  End If
 		End Sub
 	#tag EndEvent
