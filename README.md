@@ -67,9 +67,10 @@ This example captures 64KB of filtered packets from a local network adaptor and 
 **Caution**: When running PCAP code in the Xojo debugger you must take care to allow the application to terminate normally, even if an exception is raised. Termination from the debugger prevents Destructor methods from running which can leave the PCAP driver in an inconsistent state!
 
 ### Ensure the PCAP driver is installed
-PCAP is not installed by default on most systems, and will need to be installed separately. 
+PCAP is not installed by default on most systems, and will need to be installed separately. On Windows you can use either WinPcap (older, unmaintained) or Npcap (newer, actively maintained.) Npcap will be used if it is available and if the `PCAP.USE_NPCAP` constant is set to `True`.
 
 * [WinPCAP download](https://www.winpcap.org/install/default.htm) (Windows)
+* [Npcap download](https://nmap.org/npcap/) (Windows Vista and newer)
 * [libpcap download](http://www.tcpdump.org/#latest-releases) (Linux/OS X)
 
 RB-PCAP will raise a PlatformNotSupportedException when used if all required DLLs/SOs/DyLibs are not available at runtime. 
