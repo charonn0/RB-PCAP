@@ -55,13 +55,25 @@ Protected Module PCAP
 
 	#tag Method, Flags = &h1
 		Protected Function IsAvailable() As Boolean
-		  ' Returns True if libpcap/WinPcap is available at runtime.
+		  ' Returns True if libpcap/WinPcap(or NPcap) is available at runtime.
 		  '
 		  ' See:
 		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.IsAvailable
 		  
 		  Static available As Boolean
-		  If Not available Then available = System.IsFunctionAvailable("pcap_close", libpcap)
+		  If Not available Then
+		    #If TargetWin32 And USE_NPCAP Then
+		      Soft Declare Function SetDllDirectoryW Lib "Kernel32" (PathName As WString) As Boolean
+		      Try
+		        If SpecialFolder.Applications.Child("Npcap").Child("NPFInstall.exe").Exists Then
+		          Call SetDllDirectoryW(SpecialFolder.System.Child("Npcap").AbsolutePath)
+		        End If
+		      Catch
+		      End Try
+		    #endif
+		    
+		    available = System.IsFunctionAvailable("pcap_close", libpcap)
+		  End If
 		  Return available
 		End Function
 	#tag EndMethod
@@ -354,6 +366,9 @@ Protected Module PCAP
 	#tag EndConstant
 
 	#tag Constant, Name = PCAP_SRC_IF_STRING, Type = String, Dynamic = False, Default = \"rpcap://", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = USE_NPCAP, Type = Boolean, Dynamic = False, Default = \"True", Scope = Private
 	#tag EndConstant
 
 
