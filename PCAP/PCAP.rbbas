@@ -63,7 +63,7 @@ Protected Module PCAP
 		  Static available As Boolean
 		  If Not available Then
 		    #If TargetWin32 And USE_NPCAP Then
-		      Soft Declare Function SetDllDirectoryW Lib "Kernel32" (PathName As WString) As Boolean
+		      Declare Function SetDllDirectoryW Lib "Kernel32" (PathName As WString) As Boolean
 		      Try
 		        If SpecialFolder.System.Child("Npcap").Exists Then
 		          Call SetDllDirectoryW(SpecialFolder.System.Child("Npcap").AbsolutePath)
