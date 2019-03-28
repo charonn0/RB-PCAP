@@ -395,6 +395,11 @@ End
 		    Call MsgBox("PCAP library is not installed! This application will now exit.", 48, "Missing dependency")
 		    Quit
 		  End If
+		  If PCAP.IsNpcap Then
+		    Self.Title = "RB-PCAP (" + PCAP.Version + " Npcap)"
+		  Else
+		    Self.Title = "RB-PCAP (" + PCAP.Version + ")"
+		  End If
 		  #If Not TargetWin32 Then
 		    Dim sh As New Shell
 		    sh.Mode = 0
