@@ -78,6 +78,30 @@ Protected Module PCAP
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Function IsNpcap() As Boolean
+		  ' Windows only, returns True if we're using Npcap instead of Wpcap.
+		  
+		  #If TargetWin32 And USE_NPCAP Then
+		    If Not PCAP.IsAvailable Then Return False
+		    Static npcap As Boolean
+		    If Not npcap Then
+		      Declare Function GetModuleHandleW Lib "Kernel32" (LibName As WString) As Integer
+		      Declare Function GetModuleFileNameW Lib "Kernel32" (hModule As Integer, Filename As Ptr, Size As Integer) As Integer
+		      
+		      Dim hModule As Integer = GetModuleHandleW("wpcap")
+		      Dim path As New MemoryBlock(1024)
+		      Dim sz As Integer = GetModuleFileNameW(hModule, path, path.Size)
+		      If sz > 0 Then
+		        Dim f As FolderItem = GetFolderItem(path.WString(0), FolderItem.PathTypeAbsolute)
+		        npcap = (f.Parent.Name = "Npcap")
+		      End If
+		    End If
+		    Return npcap
+		  #endif
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function IsPCAPFile(Extends CaptureFile As FolderItem) As Boolean
 		  ' Returns True if the file is likely a PCAP file.
