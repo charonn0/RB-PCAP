@@ -53,7 +53,12 @@ Protected Class Adaptor
 
 	#tag Method, Flags = &h1
 		Protected Shared Function GetAdaptors() As pcap_if()
-		  ' Returns an array of pcap_if structures
+		  ' This method returns an array of pcap_if structures corresponding to the
+		  ' locally available network devices. These structures must remain in memory
+		  ' for the entire lifetime of all instances of Adaptor, so the actual list is
+		  ' stored as a shared property and a reference count is maintained by the
+		  ' constructor/destructor methods. List is freed by the destructor when the
+		  ' reference count reaches zero.
 		  
 		  Dim ret() As pcap_if
 		  If Not PCAP.IsAvailable Then Return ret
@@ -272,6 +277,7 @@ Protected Class Adaptor
 			    Dim r As RegistryItem
 			    Dim ret As String
 			    Try
+			      #pragma BreakOnExceptions Off
 			      r = New RegistryItem("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Network\{4D36E972-E325-11CE-BFC1-08002BE10318}", False)
 			      r = r.Child(id)
 			      r = r.Child("Connection")
