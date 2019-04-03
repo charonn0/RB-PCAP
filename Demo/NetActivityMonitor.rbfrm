@@ -79,6 +79,15 @@ End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Event
+		Sub Open()
+		  #If TargetWin32 Then
+		    App.UseGDIPlus = True
+		  #endif
+		End Sub
+	#tag EndEvent
+
+
 	#tag Method, Flags = &h21
 		Private Sub DrawGradientOval(g As Graphics, X As Integer, Y As Integer, Width As Integer, Height As Integer, StartColor As Color, EndColor As Color)
 		  Dim ratio, endratio as Double
@@ -151,6 +160,7 @@ End
 		    gradstart = &c00600000
 		    gradend = &c00200000
 		  End If
+		  g.AntiAlias = True
 		  DrawGradientOval(g, 0, 0, g.Width, g.Height, gradstart, gradend)
 		  
 		  A = False
