@@ -29,9 +29,9 @@ Begin Window NetActivityMonitor
       AcceptTabs      =   ""
       AutoDeactivate  =   True
       Backdrop        =   ""
-      DoubleBuffer    =   False
+      DoubleBuffer    =   True
       Enabled         =   True
-      EraseBackground =   True
+      EraseBackground =   False
       Height          =   64
       HelpTag         =   ""
       Index           =   -2147483648
@@ -79,6 +79,33 @@ End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Method, Flags = &h21
+		Private Sub DrawGradientOval(g As Graphics, X As Integer, Y As Integer, Width As Integer, Height As Integer, StartColor As Color, EndColor As Color)
+		  Dim ratio, endratio as Double
+		  
+		  Dim buffer, mask As Picture
+		  buffer = New Picture(Width, Height)
+		  mask = New Picture(Width, Height)
+		  mask.Graphics.ForeColor = &cFFFFFF00
+		  mask.Graphics.FillRect(0, 0, Width, Height)
+		  mask.Graphics.ForeColor = &c00000000
+		  mask.Graphics.FillOval(0, 0, Width, Height)
+		  
+		  Dim area As Graphics = buffer.Graphics
+		  For i As Integer = 0 To area.Height + 1
+		    ratio = ((area.Height - i) / area.Height)
+		    endratio = (i / area.Height)
+		    area.ForeColor = RGB(EndColor.Red * endratio + StartColor.Red * ratio, EndColor.Green * endratio + StartColor.Green * ratio, _
+		    EndColor.Blue * endratio + StartColor.Blue * ratio)
+		    area.DrawLine(0, i, Width, i)
+		  next
+		  
+		  buffer.ApplyMask(mask)
+		  g.DrawPicture(buffer, 0, 0)
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub ShowAdaptor(Adaptor As PCAP.Adaptor)
 		  Self.Title = "Activity - " + Adaptor.Name
@@ -116,12 +143,15 @@ End
 #tag Events Canvas1
 	#tag Event
 		Sub Paint(g As Graphics)
+		  Dim gradstart, gradend As Color
 		  If A Then
-		    g.ForeColor = &c00FF0000
+		    gradstart = &c00FF0000
+		    gradend = &c00600000
 		  Else
-		    g.ForeColor = &c00800000
+		    gradstart = &c00600000
+		    gradend = &c00200000
 		  End If
-		  g.FillOval(0, 0, g.Width, g.Height)
+		  DrawGradientOval(g, 0, 0, g.Width, g.Height, gradstart, gradend)
 		  
 		  A = False
 		  B = False
@@ -145,7 +175,7 @@ End
 	#tag Event
 		Sub Run()
 		  Do
-		    If mCapture.ReadNext() <> Nil Then 
+		    If mCapture.ReadNext() <> Nil Then
 		      If B Then A = False Else A = True
 		      If A Then B = True Else B = False
 		    Else
