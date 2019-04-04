@@ -7,7 +7,7 @@ Begin Window DemoWindow
    Frame           =   0
    FullScreen      =   False
    HasBackColor    =   False
-   Height          =   1.26e+2
+   Height          =   1.02e+2
    ImplicitInstance=   True
    LiveResize      =   True
    MacProcID       =   0
@@ -20,7 +20,7 @@ Begin Window DemoWindow
    MinimizeButton  =   True
    MinWidth        =   64
    Placement       =   2
-   Resizeable      =   True
+   Resizeable      =   False
    Title           =   "PCAP"
    Visible         =   True
    Width           =   6.0e+2
@@ -90,12 +90,12 @@ Begin Window DemoWindow
       Visible         =   True
       Width           =   77
    End
-   Begin PushButton PushButton1
+   Begin PushButton BeginCaptureBtn
       AutoDeactivate  =   True
       Bold            =   ""
       ButtonStyle     =   0
       Cancel          =   ""
-      Caption         =   "Begin Capture"
+      Caption         =   "Begin capture"
       Default         =   ""
       Enabled         =   True
       Height          =   22
@@ -103,12 +103,12 @@ Begin Window DemoWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   260
-      LockBottom      =   ""
+      Left            =   342
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   ""
-      LockTop         =   True
+      LockTop         =   False
       Scope           =   0
       TabIndex        =   2
       TabPanelIndex   =   0
@@ -116,42 +116,10 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   57
+      Top             =   74
       Underline       =   ""
       Visible         =   True
       Width           =   110
-   End
-   Begin CheckBox DumpCap
-      AutoDeactivate  =   True
-      Bold            =   ""
-      Caption         =   "Dump to File"
-      DataField       =   ""
-      DataSource      =   ""
-      Enabled         =   True
-      Height          =   20
-      HelpTag         =   ""
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Italic          =   ""
-      Left            =   479
-      LockBottom      =   ""
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
-      LockTop         =   True
-      Scope           =   0
-      State           =   0
-      TabIndex        =   3
-      TabPanelIndex   =   0
-      TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0
-      TextUnit        =   0
-      Top             =   59
-      Underline       =   ""
-      Value           =   False
-      Visible         =   True
-      Width           =   100
    End
    Begin CheckBox Promiscuous
       AutoDeactivate  =   True
@@ -165,12 +133,12 @@ Begin Window DemoWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   375
-      LockBottom      =   ""
+      Left            =   480
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   ""
-      LockTop         =   True
+      LockTop         =   False
       Scope           =   0
       State           =   0
       TabIndex        =   4
@@ -179,18 +147,18 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   59
+      Top             =   75
       Underline       =   ""
       Value           =   False
       Visible         =   True
       Width           =   100
    End
-   Begin PushButton PushButton2
+   Begin PushButton OpenFileBtn
       AutoDeactivate  =   True
       Bold            =   ""
       ButtonStyle     =   0
       Cancel          =   ""
-      Caption         =   "Open CaptureFile"
+      Caption         =   "Open file"
       Default         =   ""
       Enabled         =   True
       Height          =   22
@@ -198,12 +166,12 @@ Begin Window DemoWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   4
-      LockBottom      =   ""
+      Left            =   230
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   ""
-      LockTop         =   True
+      LockTop         =   False
       Scope           =   0
       TabIndex        =   5
       TabPanelIndex   =   0
@@ -211,10 +179,10 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   57
+      Top             =   74
       Underline       =   ""
       Visible         =   True
-      Width           =   124
+      Width           =   110
    End
    Begin TextField FilterString
       AcceptTabs      =   ""
@@ -233,7 +201,7 @@ Begin Window DemoWindow
       HelpTag         =   ""
       Index           =   -2147483648
       Italic          =   ""
-      Left            =   74
+      Left            =   82
       LimitText       =   0
       LockBottom      =   ""
       LockedInPosition=   False
@@ -252,11 +220,11 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   91
+      Top             =   39
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   176
+      Width           =   458
    End
    Begin Label Label2
       AutoDeactivate  =   True
@@ -269,7 +237,7 @@ Begin Window DemoWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   0
+      Left            =   7
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -286,26 +254,26 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   92
+      Top             =   40
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
       Width           =   70
    End
-   Begin PushButton PushButton3
+   Begin PushButton CheckFilterBtn
       AutoDeactivate  =   True
       Bold            =   ""
       ButtonStyle     =   0
       Cancel          =   ""
       Caption         =   "Check"
       Default         =   ""
-      Enabled         =   True
+      Enabled         =   False
       Height          =   22
       HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   260
+      Left            =   542
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -318,17 +286,17 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   91
+      Top             =   39
       Underline       =   ""
       Visible         =   True
-      Width           =   81
+      Width           =   51
    End
-   Begin PushButton PushButton4
+   Begin PushButton LiveWireBtn
       AutoDeactivate  =   True
       Bold            =   ""
       ButtonStyle     =   0
       Cancel          =   ""
-      Caption         =   "Live Wire!"
+      Caption         =   "Live wire!"
       Default         =   ""
       Enabled         =   True
       Height          =   22
@@ -336,12 +304,12 @@ Begin Window DemoWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   140
-      LockBottom      =   ""
+      Left            =   118
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   ""
-      LockTop         =   True
+      LockTop         =   False
       Scope           =   0
       TabIndex        =   9
       TabPanelIndex   =   0
@@ -349,12 +317,12 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   57
+      Top             =   74
       Underline       =   ""
       Visible         =   True
       Width           =   110
    End
-   Begin PushButton PushButton5
+   Begin PushButton ActivityMonitoryBtn
       AutoDeactivate  =   True
       Bold            =   ""
       ButtonStyle     =   0
@@ -367,12 +335,12 @@ Begin Window DemoWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   469
-      LockBottom      =   ""
+      Left            =   6
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   ""
-      LockTop         =   True
+      LockTop         =   False
       Scope           =   0
       TabIndex        =   10
       TabPanelIndex   =   0
@@ -380,7 +348,7 @@ Begin Window DemoWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   92
+      Top             =   74
       Underline       =   ""
       Visible         =   True
       Width           =   110
@@ -471,7 +439,7 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events PushButton1
+#tag Events BeginCaptureBtn
 	#tag Event
 		Sub Action()
 		  If Adaptors.ListIndex = -1 Then
@@ -479,11 +447,16 @@ End
 		    Return
 		  End If
 		  Dim a As PCAP.Adaptor = Adaptors.RowTag(Adaptors.ListIndex)
+		  
 		  Dim f As FolderItem
-		  If DumpCap.Value Then
+		  Select Case MsgBox("Dump packets to a file?", 3 + 32, "File creation")
+		  Case 6 ' yes
 		    f = GetSaveFolderItem(FileTypes1.PacketCaptureFile, "Untitled.pcap")
 		    If f = Nil Then Return
-		  End If
+		  Case 2 ' cancel
+		    Return
+		  End Select
+		  
 		  Dim capture As PCAP.Capture = PCAP.BeginCapture(a, Promiscuous.Value, 65536, -1)
 		  If capture <> Nil Then
 		    Dim filter As PCAP.Filter = PCAP.Filter.Compile(FilterString.Text, capture)
@@ -495,7 +468,7 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events PushButton2
+#tag Events OpenFileBtn
 	#tag Event
 		Sub Action()
 		  Dim f As FolderItem
@@ -525,7 +498,14 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events PushButton3
+#tag Events FilterString
+	#tag Event
+		Sub TextChange()
+		  CheckFilterBtn.Enabled = (Me.Text.Trim <> "")
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events CheckFilterBtn
 	#tag Event
 		Sub Action()
 		  If Not PCAP.IsValidFilter(FilterString.Text) Then
@@ -536,7 +516,7 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events PushButton4
+#tag Events LiveWireBtn
 	#tag Event
 		Sub Action()
 		  If Adaptors.ListIndex = -1 Then
@@ -549,7 +529,7 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events PushButton5
+#tag Events ActivityMonitoryBtn
 	#tag Event
 		Sub Action()
 		  If Adaptors.ListIndex = -1 Then

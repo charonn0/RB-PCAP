@@ -110,7 +110,7 @@ End
 		  next
 		  
 		  buffer.ApplyMask(mask)
-		  g.DrawPicture(buffer, 0, 0)
+		  g.DrawPicture(buffer, X, Y)
 		  
 		End Sub
 	#tag EndMethod
