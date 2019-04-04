@@ -148,6 +148,19 @@ Class PacketFilter
 		CurrentFilter As PCAP.Filter
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Select Case mWorker.State
+			  Case Thread.Running, Thread.Waiting, Thread.Sleeping
+			    Return True
+			  End Select
+			  
+			End Get
+		#tag EndGetter
+		IsRunning As Boolean
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h21
 		Private mCaptureLock As Semaphore
 	#tag EndProperty

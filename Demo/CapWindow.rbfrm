@@ -726,6 +726,7 @@ Begin Window CapWindow
    Begin PCAP.PacketFilter PacketSrc
       Height          =   32
       Index           =   -2147483648
+      IsRunning       =   ""
       Left            =   537
       LockedInPosition=   False
       Priority        =   ""
@@ -1025,9 +1026,7 @@ End
 	#tag Event
 		Function CancelClose(appQuitting as Boolean) As Boolean
 		  #pragma Unused appQuitting
-		  If mCapture <> Nil Then
-		    Return MsgBox("Confirm close?", 4 + 48, "Capture in progress") <> 6
-		  End If
+		  If PacketSrc.IsRunning Then Return MsgBox("Confirm close?", 4 + 48, "Capture in progress") <> 6
 		  
 		End Function
 	#tag EndEvent
