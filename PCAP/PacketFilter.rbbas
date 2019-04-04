@@ -31,6 +31,10 @@ Class PacketFilter
 		  Finally
 		    mCaptureLock.Release
 		  End Try
+		  If mSource.EOF Then
+		    Me.Stop()
+		    RaiseEvent EOF()
+		  End If
 		  Sender.Mode = Timer.ModeOff
 		End Sub
 	#tag EndMethod
@@ -96,7 +100,7 @@ Class PacketFilter
 		Private Sub ThreadRunHandler(Sender As Thread)
 		  #pragma Unused Sender
 		  mKill = False
-		  Do
+		  Do Until mKill
 		    If mSource = Nil Then
 		      App.YieldToNextThread
 		      Continue
@@ -107,7 +111,7 @@ Class PacketFilter
 		    Dim p As PCAP.Packet
 		    Try
 		      #pragma BackgroundTasks Off
-		      Do Until mKill
+		      Do Until mKill Or mSource.EOF
 		        p = mSource.ReadNext()
 		        If p <> Nil Then mPackets.Insert(0, p)
 		      Loop Until p = Nil
@@ -121,6 +125,10 @@ Class PacketFilter
 		End Sub
 	#tag EndMethod
 
+
+	#tag Hook, Flags = &h0
+		Event EOF()
+	#tag EndHook
 
 	#tag Hook, Flags = &h0
 		Event PacketArrived(NewPacket As PCAP.Packet)
