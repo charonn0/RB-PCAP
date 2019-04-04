@@ -69,7 +69,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   386
+      Left            =   15
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -86,7 +86,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   21
+      Top             =   37
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
@@ -160,7 +160,7 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   466
    End
-   Begin Label PacketCount
+   Begin Label SeenCount
       AutoDeactivate  =   True
       Bold            =   ""
       DataField       =   ""
@@ -171,11 +171,11 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   490
+      Left            =   116
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   True
+      LockRight       =   False
       LockTop         =   True
       Multiline       =   ""
       Scope           =   0
@@ -188,11 +188,11 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   21
+      Top             =   37
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
-      Width           =   91
+      Width           =   66
    End
    Begin Label DropCount
       AutoDeactivate  =   True
@@ -332,7 +332,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   116
+      Left            =   490
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -349,7 +349,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   37
+      Top             =   21
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
@@ -366,7 +366,7 @@ Begin Window CapWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   0
+      Left            =   371
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -383,7 +383,7 @@ Begin Window CapWindow
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   37
+      Top             =   21
       Transparent     =   False
       Underline       =   ""
       Visible         =   True
@@ -528,7 +528,7 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   58
    End
-   Begin Label PacketCount1
+   Begin Label CapCount
       AutoDeactivate  =   True
       Bold            =   ""
       DataField       =   ""
@@ -1019,6 +1019,86 @@ Begin Window CapWindow
       Top             =   148
       Width           =   32
    End
+   Begin Timer PPSTimer
+      Height          =   32
+      Index           =   -2147483648
+      Left            =   631
+      LockedInPosition=   False
+      Mode            =   2
+      Period          =   1000
+      Scope           =   0
+      TabPanelIndex   =   0
+      Top             =   -9
+      Width           =   32
+   End
+   Begin Label PacketRate
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   490
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   30
+      TabPanelIndex   =   0
+      Text            =   0
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   37
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   91
+   End
+   Begin Label Label12
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   386
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   31
+      TabPanelIndex   =   0
+      Text            =   "Packets/sec:"
+      TextAlign       =   2
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   37
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   92
+   End
 End
 #tag EndWindow
 
@@ -1157,10 +1237,6 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mCount As Integer
-	#tag EndProperty
-
-	#tag Property, Flags = &h21
 		Private mDump As PCAP.DumpFile
 	#tag EndProperty
 
@@ -1169,11 +1245,15 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mPacketCount As UInt64
+		Private mLastCount As Integer
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mPackets() As PCAP.Packet
+		Private mLastTime As Double
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mPacketCount As UInt64
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -1281,7 +1361,7 @@ End
 		    PacketSrc.Start()
 		    Me.Caption = "Stop"
 		  Else
-		    PacketSrc.Stop
+		    PacketSrc.Stop()
 		    Me.Caption = "Start"
 		  End If
 		End Sub
@@ -1294,23 +1374,14 @@ End
 		  If mCapture.IsLive Then
 		    If mCapture.Source <> Nil Then AdaptorPath.Text = mCapture.Source.Name
 		    DropCount.Text = Format(mCapture.DropCount, "###,###,###,##0")
-		    PacketCount.Text = Format(mPacketCount + mCapture.PacketCount, "###,###,###,##0")
+		    SeenCount.Text = Format(mCapture.PacketCount, "###,###,###,##0")
 		  End If
-		  'PendingCount.Text = Format(UBound(mPackets) + 1, "###,###,###,##0")
-		  'PacketList.Enabled = False
-		  'Dim c As Integer = PacketList.ListCount
-		  'Dim t As Integer = c
-		  'Dim added As Boolean
-		  'Do Until UBound(mPackets) = -1
-		  'Dim p As PCAP.Packet = mPackets.Pop
 		  PacketList.AddRow(Format(NewPacket.TimeStamp - mCapture.Epoch, "+###,###,##0.00000000"), FormatBytes(NewPacket.SnapLength))
 		  mByteCount = mByteCount + NewPacket.Length
-		  mCount = mCount + 1
+		  mPacketCount = mPacketCount + 1
 		  PacketList.RowTag(PacketList.LastIndex) = NewPacket
-		  PacketCount1.Text = Format(mCount, "###,###,###,##0")
+		  CapCount.Text = Format(mPacketCount, "###,###,###,##0")
 		  If Autoscroll.Value Then PacketList.ScrollPosition = PacketList.LastIndex
-		  'PacketList.Visible = True
-		  'PacketList.Enabled = True
 		  ByteCount.Text = FormatBytes(mByteCount)
 		End Sub
 	#tag EndEvent
@@ -1319,6 +1390,23 @@ End
 	#tag Event
 		Sub Action()
 		  ScrollBar1.Maximum = PacketView.LineCount - (PacketView.VisibleLineCount \ 2)
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PPSTimer
+	#tag Event
+		Sub Action()
+		  Dim now As Double = Microseconds
+		  Dim time As Double = (now - mLastTime) / 1000000 ' duration in seconds
+		  Dim pps As Integer = mPacketCount - mLastCount \ time
+		  If pps > 0 Then
+		    PacketRate.Text = Format(pps, "###,###,##0")
+		  Else
+		    PacketRate.Text = "< 1"
+		  End If
+		  mLastTime = now
+		  mLastCount = mPacketCount
 		  
 		End Sub
 	#tag EndEvent
