@@ -624,7 +624,7 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   16
    End
-   Begin PushButton PushButton4
+   Begin PushButton StopStartBtn
       AutoDeactivate  =   True
       Bold            =   ""
       ButtonStyle     =   0
@@ -1025,7 +1025,7 @@ Begin Window CapWindow
       Left            =   631
       LockedInPosition=   False
       Mode            =   2
-      Period          =   1000
+      Period          =   1250
       Scope           =   0
       TabPanelIndex   =   0
       Top             =   -9
@@ -1354,7 +1354,7 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events PushButton4
+#tag Events StopStartBtn
 	#tag Event
 		Sub Action()
 		  If Me.Caption = "Start" Then
@@ -1383,6 +1383,14 @@ End
 		  CapCount.Text = Format(mPacketCount, "###,###,###,##0")
 		  If Autoscroll.Value Then PacketList.ScrollPosition = PacketList.LastIndex
 		  ByteCount.Text = FormatBytes(mByteCount)
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub EOF()
+		  StopStartBtn.Caption = "Start"
+		  StopStartBtn.Enabled = False
+		  PPSTimer.Mode = Timer.ModeOff
+		  PacketRate.Text = "∞"
 		End Sub
 	#tag EndEvent
 #tag EndEvents
