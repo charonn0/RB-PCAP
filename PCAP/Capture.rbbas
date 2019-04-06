@@ -123,7 +123,6 @@ Protected Class Capture
 		 Shared Function Open(CaptureFile As FolderItem, SnapLength As Integer, Flags As Integer) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
-		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  #if TargetWin32 Then
 		    Dim p As Ptr = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 0, Nil, errmsg)
