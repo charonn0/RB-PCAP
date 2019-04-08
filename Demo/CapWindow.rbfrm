@@ -1099,6 +1099,45 @@ Begin Window CapWindow
       Visible         =   True
       Width           =   92
    End
+   Begin Canvas Blinker
+      AcceptFocus     =   ""
+      AcceptTabs      =   ""
+      AutoDeactivate  =   True
+      Backdrop        =   ""
+      DoubleBuffer    =   True
+      Enabled         =   True
+      EraseBackground =   False
+      Height          =   10
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Left            =   7
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   32
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Top             =   89
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   10
+   End
+   Begin Timer BlinkTimer
+      Height          =   32
+      Index           =   -2147483648
+      Left            =   667
+      LockedInPosition=   False
+      Mode            =   0
+      Period          =   100
+      Scope           =   0
+      TabPanelIndex   =   0
+      Top             =   -9
+      Width           =   32
+   End
 End
 #tag EndWindow
 
@@ -1135,7 +1174,35 @@ End
 		  PacketSrc.Priority = 5
 		  PacketSrc.Start()
 		  If ActiveCapture.Source <> Nil Then AdaptorPath.Text = ActiveCapture.Source.Name
+		  BlinkTimer.Mode = Timer.ModeMultiple
 		  Self.Show
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub DrawGradientOval(g As Graphics, X As Integer, Y As Integer, Width As Integer, Height As Integer, StartColor As Color, EndColor As Color)
+		  Dim ratio, endratio as Double
+		  
+		  Dim buffer, mask As Picture
+		  buffer = New Picture(Width, Height, 32)
+		  mask = New Picture(Width, Height, 32)
+		  mask.Graphics.ForeColor = &cFFFFFF00
+		  mask.Graphics.FillRect(0, 0, Width, Height)
+		  mask.Graphics.ForeColor = &c00000000
+		  mask.Graphics.FillOval(0, 0, Width, Height)
+		  
+		  Dim area As Graphics = buffer.Graphics
+		  For i As Integer = 0 To area.Height + 1
+		    ratio = ((area.Height - i) / area.Height)
+		    endratio = (i / area.Height)
+		    area.ForeColor = RGB(EndColor.Red * endratio + StartColor.Red * ratio, EndColor.Green * endratio + StartColor.Green * ratio, _
+		    EndColor.Blue * endratio + StartColor.Blue * ratio)
+		    area.DrawLine(0, i, Width, i)
+		  next
+		  
+		  buffer.ApplyMask(mask)
+		  g.DrawPicture(buffer, X, Y)
+		  
 		End Sub
 	#tag EndMethod
 
@@ -1227,6 +1294,14 @@ End
 		End Sub
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h21
+		Private mBlinkA As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mBlinkB As Boolean
+	#tag EndProperty
 
 	#tag Property, Flags = &h21
 		Private mByteCount As UInt64
@@ -1383,6 +1458,9 @@ End
 		  CapCount.Text = Format(mPacketCount, "###,###,###,##0")
 		  If Autoscroll.Value Then PacketList.ScrollPosition = PacketList.LastIndex
 		  ByteCount.Text = FormatBytes(mByteCount)
+		  
+		  If mBlinkB Then mBlinkA = False Else mBlinkA = True
+		  If mBlinkA Then mBlinkB = True Else mBlinkB = False
 		End Sub
 	#tag EndEvent
 	#tag Event
@@ -1416,6 +1494,33 @@ End
 		  mLastTime = now
 		  mLastCount = mPacketCount
 		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events Blinker
+	#tag Event
+		Sub Paint(g As Graphics)
+		  Dim gradstart, gradend As Color
+		  If mBlinkA Then
+		    gradstart = &c00FF0000
+		    gradend = &c00600000
+		  Else
+		    gradstart = &c00600000
+		    gradend = &c00200000
+		  End If
+		  g.AntiAlias = True
+		  DrawGradientOval(g, 0, 0, g.Width, g.Height, gradstart, gradend)
+		  
+		  mBlinkA = False
+		  mBlinkB = False
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events BlinkTimer
+	#tag Event
+		Sub Action()
+		  If mCapture = Nil Then Return
+		  Blinker.Invalidate(False)
 		End Sub
 	#tag EndEvent
 #tag EndEvents

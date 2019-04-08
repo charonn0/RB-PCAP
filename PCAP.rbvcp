@@ -45,6 +45,6 @@ DefaultEncoding=&h0
 AppIcon=PCAP.rbres;&h0
 OSXBundleID=
 DebuggerCommandLine=
-UseGDIPlus=True
+UseGDIPlus=False
 UseBuildsFolder=True
 IsWebProject=False

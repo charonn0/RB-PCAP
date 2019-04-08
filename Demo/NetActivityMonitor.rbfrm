@@ -93,8 +93,8 @@ End
 		  Dim ratio, endratio as Double
 		  
 		  Dim buffer, mask As Picture
-		  buffer = New Picture(Width, Height)
-		  mask = New Picture(Width, Height)
+		  buffer = New Picture(Width, Height, 32)
+		  mask = New Picture(Width, Height, 32)
 		  mask.Graphics.ForeColor = &cFFFFFF00
 		  mask.Graphics.FillRect(0, 0, Width, Height)
 		  mask.Graphics.ForeColor = &c00000000
