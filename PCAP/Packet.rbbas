@@ -5,6 +5,8 @@ Protected Class Packet
 		  ' copy the header struct and data block, since they might be freed by libpcap
 		  mHeader = pHeader.pcap_pkthdr(0)
 		  mRaw = New MemoryBlock(mHeader.caplen)
+		  mRaw.LittleEndian = False ' network byte order
+		  RawPacket.LittleEndian = False
 		  mRaw.StringValue(0, mHeader.caplen) = RawPacket.StringValue(0, mHeader.caplen)
 		End Sub
 	#tag EndMethod
@@ -37,9 +39,7 @@ Protected Class Packet
 	#tag Method, Flags = &h0
 		Function StringValue() As String
 		  If mRaw = Nil Then Return ""
-		  Dim tmp As MemoryBlock = mRaw
-		  tmp.LittleEndian = False ' network byte order
-		  Return tmp.StringValue(0, mHeader.caplen)
+		  Return mRaw.StringValue(0, mRaw.Size)
 		End Function
 	#tag EndMethod
 
@@ -50,7 +50,7 @@ Protected Class Packet
 			  Return mHeader
 			End Get
 		#tag EndGetter
-		Header As pcap_pkthdr
+		Attributes( hidden = true ) Header As pcap_pkthdr
 	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0
