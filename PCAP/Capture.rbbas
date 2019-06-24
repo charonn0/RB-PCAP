@@ -55,17 +55,8 @@ Protected Class Capture
 		 Shared Function CreateDead(LinkType As PCAP.LinkType, SnapLength As Integer) As PCAP.Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
-		  Dim p As Ptr
-		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
-		  p = pcap_open_dead(LinkType, SnapLength)
-		  If p <> Nil Then
-		    Dim ret As New PCAP.Capture(p, Nil)
-		    Return ret
-		  Else
-		    Dim err As New IOException
-		    err.Message = errmsg
-		    Raise err
-		  End If
+		  Dim p As Ptr = pcap_open_dead(LinkType, SnapLength)
+		  If p <> Nil Then Return New PCAP.Capture(p, Nil)
 		End Function
 	#tag EndMethod
 
