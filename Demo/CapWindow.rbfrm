@@ -46,6 +46,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   0
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Source:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -80,6 +81,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   1
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Packets seen:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -114,6 +116,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   2
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Packets dropped:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -148,6 +151,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   3
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "rpcap://sdfsdf"
       TextAlign       =   0
       TextColor       =   &h000000
@@ -182,6 +186,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   4
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   0
       TextAlign       =   0
       TextColor       =   &h000000
@@ -216,6 +221,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   5
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   0
       TextAlign       =   0
       TextColor       =   &h000000
@@ -343,6 +349,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   10
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   0
       TextAlign       =   0
       TextColor       =   &h000000
@@ -377,6 +384,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   11
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Bytes captured:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -485,6 +493,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   14
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Filter:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -550,6 +559,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   16
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   0
       TextAlign       =   0
       TextColor       =   &h000000
@@ -584,6 +594,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   17
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Packets captured:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -677,6 +688,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   20
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   0
       TextAlign       =   0
       TextColor       =   &h000000
@@ -711,6 +723,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   21
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Packets pending:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -724,6 +737,7 @@ Begin Window CapWindow
       Width           =   110
    End
    Begin PCAP.PacketFilter PacketSrc
+      Enabled         =   True
       Height          =   32
       Index           =   -2147483648
       IsRunning       =   ""
@@ -731,8 +745,11 @@ Begin Window CapWindow
       LockedInPosition=   False
       Priority        =   ""
       Scope           =   0
+      TabIndex        =   20
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   472
+      Visible         =   True
       Width           =   32
    End
    Begin Label Label8
@@ -757,6 +774,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   22
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Packet #:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -791,6 +809,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   23
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   ""
       TextAlign       =   0
       TextColor       =   &h000000
@@ -825,6 +844,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   24
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Timestamp:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -859,6 +879,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   25
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   ""
       TextAlign       =   0
       TextColor       =   &h000000
@@ -893,6 +914,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   26
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Length:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -927,6 +949,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   27
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   ""
       TextAlign       =   0
       TextColor       =   &h000000
@@ -961,6 +984,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   28
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Snaplen:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -995,6 +1019,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   29
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   ""
       TextAlign       =   0
       TextColor       =   &h000000
@@ -1008,6 +1033,7 @@ Begin Window CapWindow
       Width           =   87
    End
    Begin Timer ScrollTimer
+      Enabled         =   True
       Height          =   32
       Index           =   -2147483648
       Left            =   571
@@ -1015,11 +1041,15 @@ Begin Window CapWindow
       Mode            =   0
       Period          =   100
       Scope           =   0
+      TabIndex        =   29
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   148
+      Visible         =   True
       Width           =   32
    End
    Begin Timer PPSTimer
+      Enabled         =   True
       Height          =   32
       Index           =   -2147483648
       Left            =   631
@@ -1027,8 +1057,11 @@ Begin Window CapWindow
       Mode            =   2
       Period          =   1250
       Scope           =   0
+      TabIndex        =   30
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   -9
+      Visible         =   True
       Width           =   32
    End
    Begin Label PacketRate
@@ -1053,6 +1086,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   30
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   0
       TextAlign       =   0
       TextColor       =   &h000000
@@ -1087,6 +1121,7 @@ Begin Window CapWindow
       Selectable      =   False
       TabIndex        =   31
       TabPanelIndex   =   0
+      TabStop         =   True
       Text            =   "Packets/sec:"
       TextAlign       =   2
       TextColor       =   &h000000
@@ -1127,6 +1162,7 @@ Begin Window CapWindow
       Width           =   10
    End
    Begin Timer BlinkTimer
+      Enabled         =   True
       Height          =   32
       Index           =   -2147483648
       Left            =   667
@@ -1134,8 +1170,11 @@ Begin Window CapWindow
       Mode            =   0
       Period          =   100
       Scope           =   0
+      TabIndex        =   34
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   -9
+      Visible         =   True
       Width           =   32
    End
 End

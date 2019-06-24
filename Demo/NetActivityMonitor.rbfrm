@@ -52,6 +52,7 @@ Begin Window NetActivityMonitor
       Width           =   64
    End
    Begin Timer Timer1
+      Enabled         =   True
       Height          =   32
       Index           =   -2147483648
       Left            =   380
@@ -59,11 +60,15 @@ Begin Window NetActivityMonitor
       Mode            =   0
       Period          =   100
       Scope           =   0
+      TabIndex        =   1
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   14
+      Visible         =   True
       Width           =   32
    End
    Begin Thread CapThread
+      Enabled         =   True
       Height          =   32
       Index           =   -2147483648
       Left            =   380
@@ -71,8 +76,11 @@ Begin Window NetActivityMonitor
       Priority        =   1
       Scope           =   0
       StackSize       =   0
+      TabIndex        =   2
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   57
+      Visible         =   True
       Width           =   32
    End
 End

@@ -70,6 +70,7 @@ Begin Window LiveWire
       Width           =   600
    End
    Begin Timer Timer1
+      Enabled         =   True
       Height          =   32
       Index           =   -2147483648
       Left            =   675
@@ -77,8 +78,11 @@ Begin Window LiveWire
       Mode            =   0
       Period          =   100
       Scope           =   0
+      TabIndex        =   1
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   142
+      Visible         =   True
       Width           =   32
    End
    Begin ScrollBar ScrollBar1
@@ -110,14 +114,18 @@ Begin Window LiveWire
       Width           =   16
    End
    Begin PCAP.PacketFilter PacketSource
+      Enabled         =   True
       Height          =   32
       Index           =   -2147483648
       Left            =   675
       LockedInPosition=   False
       Priority        =   ""
       Scope           =   0
+      TabIndex        =   3
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   184
+      Visible         =   True
       Width           =   32
    End
 End
