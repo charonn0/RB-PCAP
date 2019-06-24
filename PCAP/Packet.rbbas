@@ -15,17 +15,13 @@ Protected Class Packet
 		Function Operator_Compare(FilterProgram As PCAP.Filter) As Integer
 		  ' This method overloads the comparison operator (=) allowing direct comparisons
 		  ' between a packet and a filter. Returns 0 if the packet would have been captured
-		  ' under the specified filter, or -1 if not.
+		  ' under the specified filter, or non-zero if not.
 		  '
 		  ' See:
 		  ' https://github.com/charonn0/RB-PCAP/wiki/PCAP.Packet.Operator_Compare
 		  
 		  If FilterProgram Is Nil Then Return 1
-		  If pcap_offline_filter(FilterProgram.Handle, mHeader, mRaw) = 0 Then
-		    Return -1
-		  Else
-		    Return 0
-		  End If
+		  Return pcap_offline_filter(FilterProgram.Handle, mHeader, mRaw)
 		End Function
 	#tag EndMethod
 
