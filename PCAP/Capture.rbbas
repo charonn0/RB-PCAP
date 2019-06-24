@@ -15,10 +15,19 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Sub Constructor(pcap_t As Ptr, Device As PCAP.Adaptor)
+		Protected Sub Constructor(pcap_t As Ptr, Device As PCAP.Adaptor, BufferSize As Integer)
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  mHandle = pcap_t
 		  mSource = Device
+		  
+		  If BufferSize > 0 Then
+		    #If TargetWin32 Then
+		      If pcap_setbuff(mHandle, BufferSize) <> 0 Then Raise New PCAPException("Unable to set buffer size!")
+		    #Else
+		      ' untested
+		      If pcap_set_buffer_size(mHandle, BufferSize) <> 0 Then Raise New PCAPException("Unable to set buffer size!")
+		    #endif
+		  End If
 		End Sub
 	#tag EndMethod
 
@@ -35,19 +44,7 @@ Protected Class Capture
 		  #else
 		    Dim p As Ptr = pcap_open_live(CaptureDevice.Name, SnapLength, Flags, TimeOut, errmsg)
 		  #endif
-		  If p = Nil Then Raise New PCAPException(errmsg)
-		  
-		  Dim ret As New PCAP.Capture(p, CaptureDevice)
-		  If BufferSize > 0 Then
-		    #If TargetWin32 Then
-		      Dim err As Integer = pcap_setbuff(ret.mHandle, BufferSize)
-		    #Else
-		      ' untested
-		      Dim err As Integer = pcap_set_buffer_size(ret.mHandle, BufferSize)
-		    #endif
-		    If err <> 0 Then Raise New PCAPException("Unable to set buffer size!")
-		  End If
-		  Return ret
+		  If p <> Nil Then Return New PCAP.Capture(p, CaptureDevice, BufferSize)
 		End Function
 	#tag EndMethod
 
@@ -56,7 +53,7 @@ Protected Class Capture
 		  If Not PCAP.IsAvailable Then Return Nil
 		  
 		  Dim p As Ptr = pcap_open_dead(LinkType, SnapLength)
-		  If p <> Nil Then Return New PCAP.Capture(p, Nil)
+		  If p <> Nil Then Return New PCAP.Capture(p, Nil, -1)
 		End Function
 	#tag EndMethod
 
@@ -121,8 +118,7 @@ Protected Class Capture
 		    Dim p As Ptr = pcap_open_offline(CaptureFile.AbsolutePath, errmsg)
 		  #endif
 		  If p = Nil Then Raise New PCAPException(errmsg)
-		  
-		  Return New PCAP.Capture(p, Nil)
+		  Return New PCAP.Capture(p, Nil, -1)
 		End Function
 	#tag EndMethod
 
