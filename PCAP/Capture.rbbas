@@ -5,10 +5,10 @@ Protected Class Capture
 		  ' Discontinues the packet capture and frees all resources.
 		  
 		  mCurrentFilter = Nil
-		  mSource = Nil
 		  mEOF = True
 		  If mHandle <> Nil Then pcap_close(mHandle)
 		  mHandle = Nil
+		  mSource = Nil
 		  
 		  
 		End Sub
