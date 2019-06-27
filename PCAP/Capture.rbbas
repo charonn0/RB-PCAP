@@ -115,6 +115,8 @@ Protected Class Capture
 		  #if TargetWin32 Then
 		    Dim p As Ptr = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 0, Nil, errmsg)
 		  #else
+		    #pragma Unused SnapLength
+		    #pragma Unused Flags
 		    Dim p As Ptr = pcap_open_offline(CaptureFile.AbsolutePath, errmsg)
 		  #endif
 		  If p = Nil Then Raise New PCAPException(errmsg)
