@@ -63,20 +63,6 @@ Protected Class Capture
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function EOF() As Boolean
-		  Return mEOF
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Epoch() As Double
-		  ' Returns the time stamp of the first packet in the capture. 
-		  
-		  Return mEpoch
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h1
 		Protected Function GetStatistics() As pcap_stat
 		  If mHandle = Nil Then Raise New PCAPException("No capture in progress")
@@ -91,19 +77,6 @@ Protected Class Capture
 		    If pcap_stats(mHandle, stat) <> 0 Then Raise New PCAPException(Me)
 		    Return stat
 		  #EndIf
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Handle() As Ptr
-		  Return mHandle
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function LastError() As String
-		  Dim mb As MemoryBlock = pcap_geterr(mHandle)
-		  If mb <> Nil Then Return mb.CString(0)
 		End Function
 	#tag EndMethod
 
@@ -148,12 +121,6 @@ Protected Class Capture
 		    Raise New PCAPException(Me)
 		    
 		  End Select
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Source() As PCAP.Adaptor
-		  Return mSource
 		End Function
 	#tag EndMethod
 
@@ -240,6 +207,35 @@ Protected Class Capture
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  Return mEOF
+			End Get
+		#tag EndGetter
+		EOF As Boolean
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  ' Returns the time stamp of the first packet in the capture.
+			  
+			  Return mEpoch
+			End Get
+		#tag EndGetter
+		Epoch As Double
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return mHandle
+			End Get
+		#tag EndGetter
+		Handle As Ptr
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
 			  return mSource <> Nil
 			End Get
 		#tag EndGetter
@@ -256,6 +252,17 @@ Protected Class Capture
 			End Get
 		#tag EndGetter
 		IsSwapped As Boolean
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  If mHandle = Nil Then Return ""
+			  Dim mb As MemoryBlock = pcap_geterr(mHandle)
+			  If mb <> Nil Then Return mb.CString(0)
+			End Get
+		#tag EndGetter
+		LastError As String
 	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0
@@ -343,6 +350,15 @@ Protected Class Capture
 			End Get
 		#tag EndGetter
 		SnapLength As Integer
+	#tag EndComputedProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return mSource
+			End Get
+		#tag EndGetter
+		Source As PCAP.Adaptor
 	#tag EndComputedProperty
 
 
