@@ -32,7 +32,7 @@ Protected Class Capture
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer, TimeOut As Integer, Flags As Integer, BufferSize As Integer = -1) As PCAP.Capture
+		 Shared Function Create(CaptureDevice As PCAP.Adaptor, SnapLength As Integer, TimeOut As Integer, Flags As Integer, BufferSize As Integer) As PCAP.Capture
 		  ' Creates a capture on the specified network interface. Packets begin accumulating in the
 		  ' kernel buffer immediately after this method returns successfully.
 		  
