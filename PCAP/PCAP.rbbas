@@ -398,6 +398,33 @@ Protected Module PCAP
 	#tag Constant, Name = PCAP_ERRBUF_SIZE, Type = Double, Dynamic = False, Default = \"256", Scope = Private
 	#tag EndConstant
 
+	#tag Constant, Name = PCAP_ERROR, Type = Double, Dynamic = False, Default = \"-1", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_ERROR_ACTIVATED, Type = Double, Dynamic = False, Default = \"-4", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_ERROR_BREAK, Type = Double, Dynamic = False, Default = \"-2", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_ERROR_IFACE_NOT_UP, Type = Double, Dynamic = False, Default = \"-9", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_ERROR_NOT_ACTIVATED, Type = Double, Dynamic = False, Default = \"-3", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_ERROR_NOT_RFMON, Type = Double, Dynamic = False, Default = \"-7", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_ERROR_NO_SUCH_DEVICE, Type = Double, Dynamic = False, Default = \"-5", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_ERROR_PERM_DENIED, Type = Double, Dynamic = False, Default = \"-8", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = PCAP_ERROR_RFMON_NOTSUP, Type = Double, Dynamic = False, Default = \"-6", Scope = Protected
+	#tag EndConstant
+
 	#tag Constant, Name = PCAP_IF_LOOPBACK, Type = Double, Dynamic = False, Default = \"&h00000001", Scope = Private
 	#tag EndConstant
 
