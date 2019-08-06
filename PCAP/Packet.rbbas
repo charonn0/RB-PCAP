@@ -33,9 +33,11 @@ Protected Class Packet
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValue() As String
+		Function StringValue(Offset As Integer = 0, Length As Integer = - 1) As String
 		  If mRaw = Nil Then Return ""
-		  Return mRaw.StringValue(0, mRaw.Size)
+		  If Offset < 0 Then Offset = 0
+		  If Length < 0 Then Length = mRaw.Size - Offset
+		  Return mRaw.StringValue(Offset, Length)
 		End Function
 	#tag EndMethod
 
