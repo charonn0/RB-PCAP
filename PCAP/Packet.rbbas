@@ -36,7 +36,8 @@ Protected Class Packet
 		Function StringValue(Offset As Integer = 0, Length As Integer = - 1) As String
 		  If mRaw = Nil Then Return ""
 		  If Offset < 0 Then Offset = 0
-		  If Length < 0 Then Length = mRaw.Size - Offset
+		  If Length < 0 Then Length = SnapLength - Offset
+		  If Offset + Length > SnapLength Then Raise New OutOfBoundsException
 		  Return mRaw.StringValue(Offset, Length)
 		End Function
 	#tag EndMethod
