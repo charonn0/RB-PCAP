@@ -27,7 +27,7 @@ Protected Class Filter
 		  If ActiveCapture <> Nil Then
 		    Return pcap_compile(ActiveCapture.Handle, program, Expression, Optimize, Netmask) = 0
 		  Else
-		    If pcap_compile_nopcap(65536, Integer(PCAP.LinkType.ETHERNET), program, Expression, Optimize, Netmask) <> 0 Then program = Nil
+		    If pcap_compile_nopcap(MAX_SNAP_LENGTH, Integer(PCAP.LinkType.ETHERNET), program, Expression, Optimize, Netmask) <> 0 Then program = Nil
 		    Return Program <> Nil
 		  End If
 		  
