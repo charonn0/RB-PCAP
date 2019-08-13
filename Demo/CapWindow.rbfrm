@@ -1421,6 +1421,43 @@ End
 		  If IsContextualClick Then Return True
 		End Function
 	#tag EndEvent
+	#tag Event
+		Function CompareRows(row1 as Integer, row2 as Integer, column as Integer, ByRef result as Integer) As Boolean
+		  Dim p1, p2 As PCAP.Packet
+		  p1 = Me.RowTag(row1)
+		  p2 = Me.RowTag(row2)
+		  
+		  If column = 0  Then ' timestamps
+		    Dim tm1, tm2 As Double
+		    tm1 = p1.TimeStamp
+		    tm2 = p2.TimeStamp
+		    If tm1 > tm2 Then
+		      result = 1
+		      Return True
+		    ElseIf tm1 < tm2 Then
+		      result = -1
+		      Return True
+		    Else
+		      Return True
+		    End If
+		    
+		  ElseIf column = 1 Then ' sizes
+		    Dim sz1, sz2 As Integer
+		    sz1 = p1.Length
+		    sz2 = p2.Length
+		    If sz1 > sz2 Then
+		      result = 1
+		      Return True
+		    ElseIf sz1 < sz2 Then
+		      result = -1
+		      Return True
+		    Else
+		      Return True
+		    End If
+		    
+		  End If
+		End Function
+	#tag EndEvent
 #tag EndEvents
 #tag Events PacketView
 	#tag Event
