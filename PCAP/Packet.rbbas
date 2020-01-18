@@ -1,13 +1,11 @@
 #tag Class
 Protected Class Packet
 	#tag Method, Flags = &h0
-		Sub Constructor(pHeader As Ptr, RawPacket As MemoryBlock)
-		  ' copy the header struct and data block, since they might be freed by libpcap
-		  mHeader = pHeader.pcap_pkthdr(0)
-		  mRaw = New MemoryBlock(mHeader.caplen)
+		Sub Constructor(pHeader As Ptr, RawPacket As Ptr)
+		  mHeader = pHeader.pcap_pkthdr
+		  mRaw = RawPacket
 		  mRaw.LittleEndian = False ' network byte order
-		  RawPacket.LittleEndian = False
-		  mRaw.StringValue(0, mHeader.caplen) = RawPacket.StringValue(0, mHeader.caplen)
+		  
 		End Sub
 	#tag EndMethod
 
@@ -26,7 +24,7 @@ Protected Class Packet
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Operator_Convert() As Ptr
+		Attributes( deprecated )  Function Operator_Convert() As Ptr
 		  ' converts to a Ptr to a memory block SnapLength bytes long containing raw packet data.
 		  Return mRaw
 		End Function
