@@ -11,7 +11,7 @@ Protected Class DumpFile
 		Protected Sub Constructor(DumpTo As FolderItem, ActiveCapture As PCAP.Capture)
 		  If Not PCAP.IsAvailable Then Raise New PlatformNotSupportedException
 		  
-		  mDump = pcap_dump_open(ActiveCapture.Handle, DumpTo.AbsolutePath)
+		  mDump = pcap_dump_open(ActiveCapture.Handle, DumpTo.AbsolutePath_)
 		  If mDump = Nil Then Raise New PCAPException(ActiveCapture)
 		  mDumpFile = DumpTo
 		End Sub

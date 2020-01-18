@@ -119,7 +119,7 @@ Class PacketFilter
 		      mCaptureLock.Release
 		    End Try
 		    #pragma BackgroundTasks On
-		    mEventTimer.Mode = Timer.ModeMultiple
+		    If mEventTimer.Mode <> Timer.ModeMultiple Then mEventTimer.Mode = Timer.ModeMultiple
 		    App.YieldToNextThread
 		  Loop
 		End Sub

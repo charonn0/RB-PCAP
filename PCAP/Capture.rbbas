@@ -86,11 +86,11 @@ Protected Class Capture
 		  
 		  Dim errmsg As New MemoryBlock(PCAP_ERRBUF_SIZE)
 		  #if TargetWin32 Then
-		    Dim p As Ptr = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath, SnapLength, Flags, 0, Nil, errmsg)
+		    Dim p As Ptr = pcap_open(PCAP_SRC_FILE_STRING + CaptureFile.AbsolutePath_, SnapLength, Flags, 0, Nil, errmsg)
 		  #else
 		    #pragma Unused SnapLength
 		    #pragma Unused Flags
-		    Dim p As Ptr = pcap_open_offline(CaptureFile.AbsolutePath, errmsg)
+		    Dim p As Ptr = pcap_open_offline(CaptureFile.AbsolutePath_, errmsg)
 		  #endif
 		  If p = Nil Then Raise New PCAPException(errmsg)
 		  Return New PCAP.Capture(p, Nil, -1)

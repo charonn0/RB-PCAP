@@ -406,7 +406,11 @@ End
 		  Soft Declare Function gzread Lib zlib1 (gzFile As Ptr, Buffer As Ptr, Length As UInt32) As Integer
 		  Soft Declare Function gzeof Lib zlib1 (gzFile As Ptr) As Boolean
 		  
-		  Dim strm As Ptr = gzOpen(CaptureFile.AbsolutePath, "rb")
+		  #If RBVersion > 2019 Then
+		    Dim strm As Ptr = gzOpen(CaptureFile.NativePath, "rb")
+		  #Else
+		    Dim strm As Ptr = gzOpen(CaptureFile.AbsolutePath, "rb")
+		  #endif
 		  If strm = Nil Then Return Nil
 		  Dim tmp As FolderItem = GetTemporaryFolderItem()
 		  Dim bs As BinaryStream = BinaryStream.Open(tmp, True)

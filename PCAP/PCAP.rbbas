@@ -1,5 +1,15 @@
 #tag Module
 Protected Module PCAP
+	#tag Method, Flags = &h21
+		Private Function AbsolutePath_(Extends f As FolderItem) As String
+		  #If RBVersion > 2019 Then
+		    Return f.NativePath
+		  #Else
+		    Return f.AbsolutePath
+		  #endif
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Function BeginCapture(CaptureDevice As PCAP.Adaptor, PromiscuousMode As Boolean = False, SnapLength As Integer = PCAP.MAX_SNAP_LENGTH, TimeOut As Integer = 1000, BufferSize As Integer = -1) As PCAP.Capture
 		  ' Begins a capture operation on the specified device and returns it as a Capture object.
@@ -66,7 +76,7 @@ Protected Module PCAP
 		      Declare Function SetDllDirectoryW Lib "Kernel32" (PathName As WString) As Boolean
 		      Try
 		        If SpecialFolder.System.Child("Npcap").Exists Then
-		          Call SetDllDirectoryW(SpecialFolder.System.Child("Npcap").AbsolutePath)
+		          Call SetDllDirectoryW(SpecialFolder.System.Child("Npcap").AbsolutePath_)
 		        End If
 		      Catch
 		      End Try

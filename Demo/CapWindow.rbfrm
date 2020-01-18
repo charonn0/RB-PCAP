@@ -1322,7 +1322,11 @@ End
 	#tag Method, Flags = &h0
 		Sub OpenCapture(ActiveCapture As PCAP.Capture, SourceFile As FolderItem, InitialFilter As PCAP.Filter)
 		  mCapture = ActiveCapture
-		  AdaptorPath.Text = SourceFile.AbsolutePath
+		  #If RBVersion > 2019 Then
+		    AdaptorPath.Text = SourceFile.NativePath
+		  #Else
+		    AdaptorPath.Text = SourceFile.AbsolutePath
+		  #endif
 		  mFilter = InitialFilter
 		  If mFilter <> Nil Then FilterString.Text = mFilter.Expression
 		  Self.Title = "Reading capture file"
