@@ -49,6 +49,15 @@ Protected Class DumpFile
 	#tag EndMethod
 
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  If mDump <> Nil Then Return pcap_dump_file(mDump)
+			End Get
+		#tag EndGetter
+		FileHandle As Integer
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h21
 		Private mDump As Ptr
 	#tag EndProperty
@@ -60,6 +69,8 @@ Protected Class DumpFile
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
+			  ' Returns the current position of the file pointer, i.e. the length of the PCAP file so far.
+			  
 			  If mDump <> Nil Then Return pcap_dump_ftell(mDump)
 			End Get
 		#tag EndGetter
