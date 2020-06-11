@@ -1143,7 +1143,7 @@ Begin Window CapWindow
       Enabled         =   True
       EraseBackground =   False
       Height          =   10
-      HelpTag         =   ""
+      HelpTag         =   "Blinkenlight"
       Index           =   -2147483648
       InitialParent   =   ""
       Left            =   7
