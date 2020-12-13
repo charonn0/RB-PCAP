@@ -498,8 +498,8 @@ Protected Module PCAP
 	#tag EndStructure
 
 	#tag Structure, Name = timeval, Flags = &h21
-		tv_sec As Integer
-		tv_usec As Integer
+		tv_sec As Int32
+		tv_usec As Int32
 	#tag EndStructure
 
 
