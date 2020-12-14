@@ -160,6 +160,9 @@ End
 #tag Events Canvas1
 	#tag Event
 		Sub Paint(g As Graphics)
+		  #If RBVersion >= 2012.02 Then
+		    #pragma Unused areas
+		  #endif
 		  Dim gradstart, gradend As Color
 		  If A Then
 		    gradstart = &c00FF0000

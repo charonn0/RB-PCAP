@@ -76,6 +76,9 @@ Inherits Canvas
 
 	#tag Event
 		Sub Paint(g As Graphics)
+		  #If RBVersion >= 2012.02 Then
+		    #pragma Unused areas
+		  #endif
 		  #If TargetWin32 Then
 		    If Buffer = Nil Or Buffer.Width <> g.Width Or Buffer.Height <> g.Height Then
 		      App.UseGDIPlus = False
