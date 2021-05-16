@@ -114,6 +114,7 @@ Class PacketFilter
 		      Do Until mKill Or mSource.EOF
 		        p = mSource.ReadNext()
 		        If p <> Nil Then mPackets.Insert(0, p)
+		        If UBound(mPackets) > 128 Then Exit Do
 		      Loop Until p = Nil
 		    Finally
 		      mCaptureLock.Release

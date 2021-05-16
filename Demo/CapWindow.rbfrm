@@ -1319,6 +1319,14 @@ End
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub LoadCaptureProgressAbortHandler(Sender As LoadCaptureProgress)
+		  #pragma Unused Sender
+		  PacketSrc.Stop()
+		  Self.Close()
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub OpenCapture(ActiveCapture As PCAP.Capture, SourceFile As FolderItem, InitialFilter As PCAP.Filter)
 		  mCapture = ActiveCapture
@@ -1331,9 +1339,14 @@ End
 		  If mFilter <> Nil Then FilterString.Text = mFilter.Expression
 		  Self.Title = "Reading capture file"
 		  PacketSrc.Source = mCapture
-		  PacketSrc.Priority = 10
+		  PacketSrc.Priority = 5
 		  PacketSrc.Start
 		  Self.Show
+		  mWaitWindow = New LoadCaptureProgress
+		  AddHandler mWaitWindow.Abort, WeakAddressOf LoadCaptureProgressAbortHandler
+		  mWaitWindow.TotalLength = SourceFile.Length
+		  mWaitWindow.ShowProgress(SourceFile.NativePath)
+		  Self.Visible = False
 		End Sub
 	#tag EndMethod
 
@@ -1376,6 +1389,10 @@ End
 
 	#tag Property, Flags = &h21
 		Private mScrollLock As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mWaitWindow As LoadCaptureProgress
 	#tag EndProperty
 
 
@@ -1541,6 +1558,7 @@ End
 		  
 		  If mBlinkB Then mBlinkA = False Else mBlinkA = True
 		  If mBlinkA Then mBlinkB = True Else mBlinkB = False
+		  If mWaitWindow <> Nil Then mWaitWindow.CurrentPosition = mByteCount
 		End Sub
 	#tag EndEvent
 	#tag Event
@@ -1549,6 +1567,11 @@ End
 		  StopStartBtn.Enabled = False
 		  PPSTimer.Mode = Timer.ModeOff
 		  PacketRate.Text = "∞"
+		  If mWaitWindow <> Nil Then
+		    mWaitWindow.Close()
+		    mWaitWindow = Nil
+		    Self.Visible = True
+		  End If
 		End Sub
 	#tag EndEvent
 #tag EndEvents
