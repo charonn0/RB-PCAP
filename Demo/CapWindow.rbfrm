@@ -1345,7 +1345,11 @@ End
 		  mWaitWindow = New LoadCaptureProgress
 		  AddHandler mWaitWindow.Abort, WeakAddressOf LoadCaptureProgressAbortHandler
 		  mWaitWindow.TotalLength = SourceFile.Length
-		  mWaitWindow.ShowProgress(SourceFile.NativePath)
+		  #If RBVersion > 2019 Then
+		    mWaitWindow.ShowProgress(SourceFile.NativePath)
+		  #Else
+		    mWaitWindow.ShowProgress(SourceFile.AbsolutePath)
+		  #endif
 		  Self.Visible = False
 		End Sub
 	#tag EndMethod
