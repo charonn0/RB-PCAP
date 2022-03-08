@@ -134,6 +134,7 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Close()
+		  PacketSource.Stop()
 		  If mPacketStream <> Nil Then mPacketStream.Close
 		  mPacketMB = Nil
 		End Sub
