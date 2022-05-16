@@ -103,7 +103,8 @@ Protected Class Capture
 		  
 		  Dim h, d As Ptr
 		  
-		  Select Case pcap_next_ex(mHandle, h, d)
+		  Dim err As Int32 = pcap_next_ex(mHandle, h, d)
+		  Select Case err
 		  Case 0 ' timeout
 		    Return Nil
 		    
