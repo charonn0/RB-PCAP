@@ -43,7 +43,11 @@ Class PacketFilter
 		Sub Pause()
 		  mKill = True
 		  Do Until mCaptureLock.TrySignal
-		    App.YieldToNextThread
+		    #If RBVersion > 2020 Then
+		      Thread.YieldToNext()
+		    #Else
+		      App.YieldToNextThread()
+		    #EndIf
 		  Loop
 		  Try
 		    Select Case mWorker.State
@@ -62,7 +66,11 @@ Class PacketFilter
 		Sub Start()
 		  mKill = False
 		  Do Until mCaptureLock.TrySignal
-		    App.YieldToNextThread
+		    #If RBVersion > 2020 Then
+		      Thread.YieldToNext()
+		    #Else
+		      App.YieldToNextThread()
+		    #EndIf
 		  Loop
 		  Try
 		    Select Case mWorker.State
@@ -83,7 +91,11 @@ Class PacketFilter
 		Sub Stop()
 		  mKill = True
 		  Do Until mCaptureLock.TrySignal
-		    App.YieldToNextThread
+		    #If RBVersion > 2020 Then
+		      Thread.YieldToNext()
+		    #Else
+		      App.YieldToNextThread()
+		    #EndIf
 		  Loop
 		  Try
 		    Select Case mWorker.State
@@ -102,11 +114,19 @@ Class PacketFilter
 		  mKill = False
 		  Do Until mKill
 		    If mSource = Nil Then
-		      App.YieldToNextThread
+		      #If RBVersion > 2020 Then
+		        Thread.YieldToNext()
+		      #Else
+		        App.YieldToNextThread()
+		      #EndIf
 		      Continue
 		    End If
 		    Do Until mCaptureLock.TrySignal
-		      App.YieldToNextThread
+		      #If RBVersion > 2020 Then
+		        Thread.YieldToNext()
+		      #Else
+		        App.YieldToNextThread()
+		      #EndIf
 		    Loop
 		    Dim p As PCAP.Packet
 		    Try
@@ -121,7 +141,11 @@ Class PacketFilter
 		    End Try
 		    #pragma BackgroundTasks On
 		    If mEventTimer.Mode <> Timer.ModeMultiple Then mEventTimer.Mode = Timer.ModeMultiple
-		    App.YieldToNextThread
+		    #If RBVersion > 2020 Then
+		      Thread.YieldToNext()
+		    #Else
+		      App.YieldToNextThread()
+		    #EndIf
 		  Loop
 		End Sub
 	#tag EndMethod
@@ -145,7 +169,11 @@ Class PacketFilter
 		#tag Setter
 			Set
 			  Do Until mCaptureLock.TrySignal
-			    App.YieldToNextThread
+			    #If RBVersion > 2020 Then
+			      Thread.YieldToNext()
+			    #Else
+			      App.YieldToNextThread()
+			    #EndIf
 			  Loop
 			  Try
 			    mSource.CurrentFilter = value
@@ -217,7 +245,11 @@ Class PacketFilter
 		#tag Setter
 			Set
 			  Do Until mCaptureLock.TrySignal
-			    App.YieldToNextThread
+			    #If RBVersion > 2020 Then
+			      Thread.YieldToNext()
+			    #Else
+			      App.YieldToNextThread()
+			    #EndIf
 			  Loop
 			  Try
 			    mSource = value
