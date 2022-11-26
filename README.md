@@ -23,7 +23,7 @@ Use [PCAP.GetCaptureDevice](https://github.com/charonn0/RB-PCAP/wiki/PCAP.GetCap
 ## Example
 This example captures 64KB of filtered packets from a local network adaptor and saves them to a standard PCAP file on the user's desktop.
 
-```vbnet
+```realbasic
   ' get the first available device
   Dim iface As PCAP.Adaptor = PCAP.GetCaptureDevice(0)
   ' open the device
