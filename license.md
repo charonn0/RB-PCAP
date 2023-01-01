@@ -1,5 +1,5 @@
 RB-PCAP
-Copyright (c) 2014-22, Andrew Lambert
+Copyright (c) 2014-23, Andrew Lambert
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
