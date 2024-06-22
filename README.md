@@ -7,6 +7,9 @@
 
 _This screen shot depicts the RB-PCAP demo running under Windows 7._
 
+## Become a sponsor
+If you use this code in a commercial project, or just want to show your appreciation, please consider sponsoring me through GitHub. https://github.com/sponsors/charonn0
+
 ## Synopsis
 This project supplies several object classes for dealing with different aspects of the libpcap/WinPcap api.
 
